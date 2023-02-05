@@ -32,13 +32,7 @@ class MyHomePage extends StatelessWidget {
         title: Text(title),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'POKOJE',
-            ),
-          ],
+        child: 
         ),
       ),
       floatingActionButton: FloatingActionButton(
