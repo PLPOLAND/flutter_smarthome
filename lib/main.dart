@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_smarthome/providers/devices_provider.dart';
+import 'package:flutter_smarthome/screens/homepage_screen.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,34 +13,19 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Pokoje'),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-      ),
-      body: Center(
-        child: 
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => DevicesProvider()),
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.yellow,
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add),
+        routes: {
+          '/': (context) => HomepageScreen(),
+          HomepageScreen.routeName: (context) => HomepageScreen(),
+        },
       ),
     );
   }

@@ -1,40 +1,33 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_smarthome/models/device.dart';
 
-import 'device_type.dart';
-
 class Light extends Device {
-  Light(
-      {int id = -1,
-      int roomId = -1,
-      int slaveId = -1,
-      int onSlaveId = -1,
-      String name = "No Name",
-      DeviceType type = DeviceType.light})
-      : super(
-            id: id,
-            roomId: roomId,
-            slaveId: slaveId,
-            onSlaveId: onSlaveId,
-            name: name,
-            type: type);
-
-  factory Light.fromJson(Map<String, dynamic> json) {
-    return Light(
-      id: json['id'],
-      roomId: json['roomId'],
-      slaveId: json['slaveId'],
-      onSlaveId: json['onSlaveId'],
-      name: json['name'],
-      type: DeviceType.values[json['type']],
-    );
+  Light({
+    int id = -1,
+    int roomId = -1,
+    int slaveId = -1,
+    int onSlaveId = -1,
+    String name = "No Name",
+    DeviceState state = DeviceState.off,
+  }) : super(id, roomId, slaveId, onSlaveId, name, DeviceType.light, state);
+  @override
+  void changeState() {
+    print("Light: $name, state: $state");
+    if (state == DeviceState.on) {
+      state = DeviceState.off;
+    } else if (state == DeviceState.off) {
+      state = DeviceState.on;
+    }
+    notifyListeners();
   }
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'roomId': roomId,
-        'slaveId': slaveId,
-        'onSlaveId': onSlaveId,
-        'name': name,
-        'type': type.index,
-      };
+  @override
+  void setState(DeviceState state) {
+    if (state == DeviceState.on || state == DeviceState.off) {
+      this.state = state;
+    } else {
+      throw Exception("Invalid state");
+    }
+    notifyListeners();
+  }
 }
