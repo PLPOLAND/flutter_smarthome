@@ -17,27 +17,29 @@ class MainDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.home),
             title: Text('Homepage'),
-            onTap: () => Navigator.of(context).pushNamed('/'),
+            onTap: () => Navigator.of(context).pushReplacementNamed('/'),
           ),
           ListTile(
             leading: Icon(Icons.room_preferences),
             title: Text('Rooms'),
-            onTap: () => Navigator.of(context).pushNamed(RoomsPage.routeName),
+            onTap: () =>
+                Navigator.of(context).pushReplacementNamed(RoomsPage.routeName),
           ),
           ListTile(
             leading: Icon(Icons.storage),
             title: Text('Devices'),
-            onTap: () => Navigator.of(context).pushNamed('/devices'),
+            onTap: () => Navigator.of(context).pushReplacementNamed('/devices'),
           ),
           ListTile(
             leading: Icon(Icons.sensors),
             title: Text('Sensors'),
-            onTap: () => Navigator.of(context).pushNamed('/sensors'),
+            onTap: () => Navigator.of(context).pushReplacementNamed('/sensors'),
           ),
           ListTile(
             leading: Icon(Icons.settings),
             title: Text('Settings'),
-            onTap: () => Navigator.of(context).pushNamed('/settings'),
+            onTap: () =>
+                Navigator.of(context).pushReplacementNamed('/settings'),
           ),
         ],
       ),
