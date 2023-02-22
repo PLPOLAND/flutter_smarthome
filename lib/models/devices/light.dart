@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_smarthome/models/device.dart';
+import 'device.dart';
 
 class Light extends Device {
   Light({
@@ -29,5 +29,11 @@ class Light extends Device {
       throw Exception("Invalid state");
     }
     notifyListeners();
+  }
+
+  @override
+  String toString() {
+    String s = "Light: $name, state: $state";
+    return s + super.toString();
   }
 }

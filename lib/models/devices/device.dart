@@ -39,13 +39,18 @@ abstract class Device with ChangeNotifier {
     this.type = type;
     notifyListeners();
   }
+
+  @override
+  String toString() {
+    return ", id: $id, roomId: $roomId, slaveId: $slaveId, onSlaveId: $onSlaveId, name: $name, type: $type";
+  }
 }
 
 // Types of devices
 enum DeviceType {
   none,
   light,
-  plug,
+  outlet,
   blind,
   fan,
 }

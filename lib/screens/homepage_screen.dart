@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_smarthome/models/light.dart';
 import 'package:flutter_smarthome/providers/devices_provider.dart';
-import 'package:flutter_smarthome/widgets/lightWidget.dart';
+import 'package:flutter_smarthome/widgets/main_drawer.dart';
 import 'package:provider/provider.dart';
 
-import '../models/device.dart';
+import '../models/devices/blind.dart';
+import '../models/devices/device.dart';
+import '../models/devices/fan.dart';
+import '../models/devices/light.dart';
+import '../models/devices/outlet.dart';
+import '../models/sensors/sensor.dart';
+import '../providers/sensors_provider.dart';
+import '../widgets/deviceWidget.dart';
+import '../widgets/sensorWidget.dart';
 
 class HomepageScreen extends StatelessWidget {
   static const routeName = '/homepage';
@@ -13,34 +20,17 @@ class HomepageScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Device> devices = Provider.of<DevicesProvider>(context).devices;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Homepage'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            Text("Room 1"),
-            Divider(),
-            Container(
-              height: 200,
-              child: ListView.builder(
-                itemBuilder: (ctx, index) {
-                  if (devices[index] is Light) {
-                    return ChangeNotifierProvider.value(
-                        value: devices[index] as Light, child: LightWidget());
-                  } else {
-                    return Container();
-                  }
-                },
-                itemCount: devices.length,
-              ),
-            ),
-          ],
+      body: const Center(
+        child: Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Text("Homepage"),
         ),
       ),
+      drawer: const MainDrawer(),
     );
   }
 }
