@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => RoomsProvider()),
       ],
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Smarthome',
         theme: ThemeData(
           primarySwatch: Colors.purple,
         ),

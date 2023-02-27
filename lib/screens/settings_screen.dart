@@ -37,7 +37,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     widget._IPController.text = snapshot.data ?? "";
-                    return Text(snapshot.data ?? "No IP set");
+                    return Text(snapshot.data == ""
+                        ? "No IP set"
+                        : snapshot.data ?? "No IP set");
                   } else {
                     return const Text("Loading...");
                   }
@@ -64,18 +66,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
         context: context,
         builder: (context) => Dialog(
               insetPadding: const EdgeInsets.all(20),
-              child: TextField(
-                  controller: controller,
-                  autofocus: true,
-                  decoration: const InputDecoration(
-                    label: Text("Server IP"),
-                    hintText: "xxx.xxx.xxx.xxx",
-                  ),
-                  keyboardType: TextInputType.number,
-                  onSubmitted: (value) {
-                    //TODO Validate IP
-                    Navigator.of(context).pop(controller.text);
-                  }),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                    controller: controller,
+                    autofocus: true,
+                    decoration: const InputDecoration(
+                      label: Text("Server IP"),
+                      hintText: "xxx.xxx.xxx.xxx",
+                    ),
+                    keyboardType: TextInputType.number,
+                    onSubmitted: (value) {
+                      //TODO Validate IP
+                      Navigator.of(context).pop(controller.text);
+                    }),
+              ),
             )).then((value) {
       if (value != null) {
         controller.text = value;
