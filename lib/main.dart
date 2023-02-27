@@ -3,6 +3,7 @@ import 'package:flutter_smarthome/providers/devices_provider.dart';
 import 'package:flutter_smarthome/screens/homepage_screen.dart';
 import 'package:flutter_smarthome/screens/room_detail_page.dart';
 import 'package:flutter_smarthome/screens/rooms_page.dart';
+import 'package:flutter_smarthome/screens/settings_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'providers/room_provider.dart';
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
           HomepageScreen.routeName: (context) => HomepageScreen(),
           RoomDetailScreen.routeName: (context) => RoomDetailScreen(),
           RoomsPage.routeName: (context) => RoomsPage(),
+          SettingsScreen.routeName: (context) => SettingsScreen(),
         },
       ),
     );
