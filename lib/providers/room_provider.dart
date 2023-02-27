@@ -11,6 +11,7 @@ class RoomsProvider with ChangeNotifier {
   ];
 
   List<Room> get rooms => [..._rooms];
+  Room getRoomById(int id) => _rooms.firstWhere((room) => room.id == id);
 
   void addRoom(Room room) {
     _rooms.add(room);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_smarthome/providers/devices_provider.dart';
+import 'package:flutter_smarthome/screens/devices_screen.dart';
 import 'package:flutter_smarthome/screens/homepage_screen.dart';
 import 'package:flutter_smarthome/screens/room_detail_page.dart';
 import 'package:flutter_smarthome/screens/rooms_page.dart';
@@ -28,14 +29,15 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.red,
         ),
-        home: HomepageScreen(),
+        home: const HomepageScreen(),
         routes: {
-          HomepageScreen.routeName: (context) => HomepageScreen(),
-          RoomDetailScreen.routeName: (context) => RoomDetailScreen(),
-          RoomsPage.routeName: (context) => RoomsPage(),
+          HomepageScreen.routeName: (context) => const HomepageScreen(),
+          RoomDetailScreen.routeName: (context) => const RoomDetailScreen(),
+          RoomsPage.routeName: (context) => const RoomsPage(),
           SettingsScreen.routeName: (context) => SettingsScreen(),
+          DevicesScreen.routeName: (context) => const DevicesScreen(),
         },
       ),
     );

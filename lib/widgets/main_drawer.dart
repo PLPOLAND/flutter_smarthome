@@ -15,29 +15,29 @@ class MainDrawer extends StatelessWidget {
       body: Column(
         children: [
           ListTile(
-            leading: Icon(Icons.home),
-            title: Text('Homepage'),
+            leading: const Icon(Icons.home),
+            title: const Text('Homepage'),
             onTap: () => Navigator.of(context).pushReplacementNamed('/'),
           ),
           ListTile(
-            leading: Icon(Icons.room_preferences),
-            title: Text('Rooms'),
+            leading: const Icon(Icons.room_preferences),
+            title: const Text('Rooms'),
             onTap: () =>
                 Navigator.of(context).pushReplacementNamed(RoomsPage.routeName),
           ),
           ListTile(
-            leading: Icon(Icons.storage),
-            title: Text('Devices'),
+            leading: const Icon(Icons.storage),
+            title: const Text('Devices'),
             onTap: () => Navigator.of(context).pushReplacementNamed('/devices'),
           ),
           ListTile(
-            leading: Icon(Icons.sensors),
-            title: Text('Sensors'),
+            leading: const Icon(Icons.sensors),
+            title: const Text('Sensors'),
             onTap: () => Navigator.of(context).pushReplacementNamed('/sensors'),
           ),
           ListTile(
-            leading: Icon(Icons.settings),
-            title: Text('Settings'),
+            leading: const Icon(Icons.settings),
+            title: const Text('Settings'),
             onTap: () =>
                 Navigator.of(context).pushReplacementNamed('/settings'),
           ),
