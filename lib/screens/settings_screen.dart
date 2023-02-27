@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_smarthome/widgets/main_drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:masked_text_field/masked_text_field.dart';
 
 import '../widgets/settingsWidgets/settings_title.dart';
 
