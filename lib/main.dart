@@ -3,7 +3,7 @@ import 'package:flutter_smarthome/providers/devices_provider.dart';
 import 'package:flutter_smarthome/screens/devices_screen.dart';
 import 'package:flutter_smarthome/screens/homepage_screen.dart';
 import 'package:flutter_smarthome/screens/room_detail_page.dart';
-import 'package:flutter_smarthome/screens/rooms/add_room_screen.dart';
+import 'package:flutter_smarthome/screens/rooms/add_edit_room_screen.dart';
 import 'package:flutter_smarthome/screens/rooms_page.dart';
 import 'package:flutter_smarthome/screens/sensors_screen.dart';
 import 'package:flutter_smarthome/screens/settings_screen.dart';
