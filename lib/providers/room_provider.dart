@@ -13,13 +13,21 @@ class RoomsProvider with ChangeNotifier {
   List<Room> get rooms => [..._rooms];
   Room getRoomById(int id) => _rooms.firstWhere((room) => room.id == id);
 
-  void addRoom(Room room) {
+  Future<void> addRoom(Room room) async {
     _rooms.add(room);
     notifyListeners();
+    return Future.delayed(const Duration(
+        seconds: 1)); // todo remove this when http request is implemented
   }
 
   void removeRoom(Room room) {
     _rooms.remove(room);
+    notifyListeners();
+  }
+
+  updateRoom(Room room) {
+    final index = _rooms.indexWhere((element) => element.id == room.id);
+    _rooms[index] = room;
     notifyListeners();
   }
 }

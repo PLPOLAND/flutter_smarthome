@@ -18,6 +18,14 @@ class RoomsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Rooms'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              Navigator.of(context).pushNamed('/rooms/add-room');
+            },
+          ),
+        ],
       ),
       body: GridView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 10),
@@ -31,7 +39,7 @@ class RoomsPage extends StatelessWidget {
         itemBuilder: (context, index) {
           return ChangeNotifierProvider.value(
             value: rooms[index],
-            child: const RoomWidget(),
+            child: RoomWidget(),
           );
         },
       ),

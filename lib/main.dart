@@ -3,6 +3,7 @@ import 'package:flutter_smarthome/providers/devices_provider.dart';
 import 'package:flutter_smarthome/screens/devices_screen.dart';
 import 'package:flutter_smarthome/screens/homepage_screen.dart';
 import 'package:flutter_smarthome/screens/room_detail_page.dart';
+import 'package:flutter_smarthome/screens/rooms/add_room_screen.dart';
 import 'package:flutter_smarthome/screens/rooms_page.dart';
 import 'package:flutter_smarthome/screens/sensors_screen.dart';
 import 'package:flutter_smarthome/screens/settings_screen.dart';
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Smarthome',
         theme: ThemeData(
-          primarySwatch: Colors.purple,
+          primarySwatch: Colors.pink,
         ),
         home: const HomepageScreen(),
         routes: {
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
           SettingsScreen.routeName: (context) => SettingsScreen(),
           DevicesScreen.routeName: (context) => const DevicesScreen(),
           Sensors.routeName: (context) => const Sensors(),
+          AddEditRoomScreen.routeName: (context) => AddEditRoomScreen(),
         },
       ),
     );
