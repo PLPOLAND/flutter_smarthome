@@ -25,7 +25,7 @@ class Twilight extends Sensor {
     notifyListeners();
   }
 
-  bool get isDay => _value > dayValue;
+  bool get isDay => _value >= dayValue;
 
   double get value => _value;
 
