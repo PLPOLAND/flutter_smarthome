@@ -11,7 +11,7 @@ class Blind extends Device {
     DeviceState state = DeviceState.down,
   }) : super(id, roomId, slaveId, onSlaveId, name, DeviceType.blind, state);
   @override
-  void changeState() {
+  Future<void> changeState() async {
     print("Blind: $name, state: $state");
     if (state == DeviceState.up) {
       state = DeviceState.down;
@@ -19,6 +19,9 @@ class Blind extends Device {
       state = DeviceState.up;
     }
     notifyListeners();
+    return Future.delayed(Duration(
+        seconds:
+            1)); // TODO: change this line after implementing the http request
   }
 
   @override

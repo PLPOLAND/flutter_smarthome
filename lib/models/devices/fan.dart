@@ -11,7 +11,7 @@ class Fan extends Device {
     DeviceState state = DeviceState.off,
   }) : super(id, roomId, slaveId, onSlaveId, name, DeviceType.fan, state);
   @override
-  void changeState() {
+  Future<void> changeState() async {
     print("Fan: $name, state: $state");
     if (state == DeviceState.on) {
       state = DeviceState.off;
@@ -19,6 +19,9 @@ class Fan extends Device {
       state = DeviceState.on;
     }
     notifyListeners();
+    return Future.delayed(Duration(
+        seconds:
+            1)); // TODO: change this line after implementing the http request
   }
 
   @override

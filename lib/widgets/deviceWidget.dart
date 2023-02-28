@@ -4,9 +4,14 @@ import 'package:provider/provider.dart';
 import '../models/devices/device.dart';
 import '../providers/devices_provider.dart';
 
-class DeviceWidget extends StatelessWidget {
+class DeviceWidget extends StatefulWidget {
   const DeviceWidget({super.key});
 
+  @override
+  State<DeviceWidget> createState() => _DeviceWidgetState();
+}
+
+class _DeviceWidgetState extends State<DeviceWidget> {
   @override
   Widget build(BuildContext context) {
     final Device device = Provider.of<Device>(context);
@@ -63,8 +68,10 @@ class DeviceWidget extends StatelessWidget {
                 ]))
             : BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
-                color: Colors.grey.shade600,
-              );
+                gradient: LinearGradient(colors: [
+                  Colors.grey.shade600,
+                  Colors.grey.shade300,
+                ]));
 
     Icon deviceTrailingIcon = const Icon(Icons.power_settings_new);
     if (device.state == DeviceState.on) {
@@ -82,7 +89,8 @@ class DeviceWidget extends StatelessWidget {
           color: Theme.of(context).colorScheme.onPrimary);
     }
 
-    return Container(
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 300),
       clipBehavior: Clip.hardEdge,
       decoration: boxDecoration,
       margin: const EdgeInsets.fromLTRB(5, 10, 5, 0),

@@ -13,7 +13,7 @@ abstract class Device with ChangeNotifier {
       this.type, this.state);
 
   void setState(DeviceState state); // abstract setter for device state
-  void changeState(); // abstract method for changing device state
+  Future<void> changeState(); // abstract method for changing device state
 
   set room(int roomId) {
     this.roomId = roomId;

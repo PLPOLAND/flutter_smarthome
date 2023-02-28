@@ -11,7 +11,7 @@ class Light extends Device {
     DeviceState state = DeviceState.off,
   }) : super(id, roomId, slaveId, onSlaveId, name, DeviceType.light, state);
   @override
-  void changeState() {
+  Future<void> changeState() async {
     print("Light: $name, state: $state");
     if (state == DeviceState.on) {
       state = DeviceState.off;
@@ -19,6 +19,9 @@ class Light extends Device {
       state = DeviceState.on;
     }
     notifyListeners();
+    return Future.delayed(Duration(
+        seconds:
+            1)); // TODO: change this line after implementing the http request
   }
 
   @override
