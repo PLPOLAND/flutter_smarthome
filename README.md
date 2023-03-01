@@ -1,3 +1,4 @@
-# flutter smarthome app
+# Flutter SmartHome
 
-App for my SmartHome
+App for my SmartHome system.
+
