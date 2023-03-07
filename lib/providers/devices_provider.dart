@@ -19,13 +19,34 @@ class DevicesProvider with ChangeNotifier {
     return _devices.where((element) => element.roomId == roomId).toList();
   }
 
-  void addDevice(Device device) {
+  Future<void> addDevice(Device device) async {
     _devices.add(device);
     notifyListeners();
+    return Future.delayed(Duration(
+        seconds:
+            1)); // TODO change this line after implementing the http request
   }
 
-  void removeDevice(Device device) {
+  Future<void> removeDevice(Device device) async {
     _devices.remove(device);
     notifyListeners();
+    return Future.delayed(Duration(
+        seconds:
+            1)); // TODO change this line after implementing the http request
+  }
+
+  Device getDeviceById(int deviceId) {
+    return _devices.firstWhere((element) => element.id == deviceId);
+  }
+
+  Future<void> updateDevice(Device newDevice) async {
+    final index = _devices.indexWhere((element) => element.id == newDevice.id);
+    if (index >= 0) {
+      _devices[index] = newDevice;
+      notifyListeners();
+    }
+    return Future.delayed(Duration(
+        seconds:
+            1)); //TODO change this line after implementing the http request
   }
 }

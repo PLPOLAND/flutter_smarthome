@@ -13,6 +13,20 @@ class DevicesScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Devices'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              Navigator.of(context).pushNamed('/devices/add-edit-device');
+            },
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed('/devices/add-edit-device');
+        },
+        child: const Icon(Icons.add),
       ),
       drawer: const MainDrawer(),
       body: Consumer<DevicesProvider>(

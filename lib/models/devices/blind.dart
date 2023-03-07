@@ -7,9 +7,11 @@ class Blind extends Device {
     int roomId = -1,
     int slaveId = -1,
     int onSlaveId = -1,
+    int onSlavePin = -1,
     String name = "No Name",
     DeviceState state = DeviceState.down,
-  }) : super(id, roomId, slaveId, onSlaveId, name, DeviceType.blind, state);
+  }) : super(id, roomId, slaveId, onSlaveId, name, DeviceType.blind, state,
+            onSlavePin);
   @override
   Future<void> changeState() async {
     print("Blind: $name, state: $state");

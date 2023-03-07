@@ -31,17 +31,18 @@ class _RoomWidgetState extends State<RoomWidget> {
           end: Alignment.bottomRight,
         ),
       ),
-      child: InkWell(
-        onTap: () {
-          Navigator.of(context)
-              .pushNamed(RoomDetailScreen.routeName, arguments: room);
-        },
-        onLongPress: () {
-          setState(() {
-            _showOptions = !_showOptions;
-          });
-        },
-        child: Center(
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {
+            Navigator.of(context)
+                .pushNamed(RoomDetailScreen.routeName, arguments: room);
+          },
+          onLongPress: () {
+            setState(() {
+              _showOptions = !_showOptions;
+            });
+          },
           child: _showOptions
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -70,11 +71,35 @@ class _RoomWidgetState extends State<RoomWidget> {
                     ),
                   ],
                 )
-              : Text(
-                  room.name,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onPrimary,
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Expanded(
+                      child: Center(
+                        child: Text(
+                          room.name,
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium
+                              ?.copyWith(
+                                color: Theme.of(context).colorScheme.onPrimary,
+                              ),
+                        ),
                       ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          room.toggleFavorite();
+                        });
+                      },
+                      icon: Icon(
+                          room.isFavorite
+                              ? Icons.star
+                              : Icons.star_border_outlined,
+                          color: Theme.of(context).colorScheme.onPrimary),
+                    ),
+                  ],
                 ),
         ),
       ),

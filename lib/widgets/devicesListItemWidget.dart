@@ -117,24 +117,27 @@ class DevicesListItemWidget extends StatelessWidget {
       clipBehavior: Clip.hardEdge,
       decoration: boxDecoration,
       margin: const EdgeInsets.fromLTRB(5, 10, 5, 0),
-      child: InkWell(
-        onTap: () {
-          device.changeState();
-        },
-        child: ListTile(
-          leading: Column(
-            children: [deviceIcon],
-            mainAxisAlignment: MainAxisAlignment.center,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {
+            device.changeState();
+          },
+          child: ListTile(
+            leading: Column(
+              children: [deviceIcon],
+              mainAxisAlignment: MainAxisAlignment.center,
+            ),
+            title: Text(
+              device.name,
+              style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+            ),
+            subtitle: Text(
+              rooms.getRoomById(device.roomId).name,
+              style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+            ),
+            trailing: deviceTrailingIcon,
           ),
-          title: Text(
-            device.name,
-            style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-          ),
-          subtitle: Text(
-            rooms.getRoomById(device.roomId).name,
-            style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-          ),
-          trailing: deviceTrailingIcon,
         ),
       ),
     );

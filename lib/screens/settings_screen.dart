@@ -54,6 +54,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             const SettingsTitle("User Settings"),
             //TODO add theme settings etc.
+            const SettingsTitle("About"),
+            InkWell(
+              onTap: () {
+                showAboutDialog(
+                    context: context,
+                    applicationName: "SmartHome",
+                    applicationVersion: "0.0.1",
+                    applicationLegalese: "© 2021, Marek Pałdyna",
+                    applicationIcon: const Icon(Icons.home));
+              },
+              child: ListTile(
+                title: const Text('About'),
+              ),
+            ),
           ],
         ),
       ),

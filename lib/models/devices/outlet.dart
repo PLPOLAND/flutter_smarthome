@@ -7,9 +7,11 @@ class Outlet extends Device {
     int roomId = -1,
     int slaveId = -1,
     int onSlaveId = -1,
+    int onSlavePin = -1,
     String name = "No Name",
     DeviceState state = DeviceState.off,
-  }) : super(id, roomId, slaveId, onSlaveId, name, DeviceType.outlet, state);
+  }) : super(id, roomId, slaveId, onSlaveId, name, DeviceType.outlet, state,
+            onSlavePin);
   @override
   Future<void> changeState() async {
     print("Outlet: $name, state: $state");
@@ -19,7 +21,7 @@ class Outlet extends Device {
       state = DeviceState.on;
     }
     notifyListeners();
-    return Future.delayed(Duration(
+    return Future.delayed(const Duration(
         seconds:
             1)); // TODO: change this line after implementing the http request
   }

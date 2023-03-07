@@ -1,16 +1,18 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 abstract class Device with ChangeNotifier {
   int id;
   int roomId;
   int slaveId;
   int onSlaveId;
+  int onSlavePin;
   String name;
   DeviceType type;
   DeviceState state;
 
   Device(this.id, this.roomId, this.slaveId, this.onSlaveId, this.name,
-      this.type, this.state);
+      this.type, this.state, this.onSlavePin);
 
   void setState(DeviceState state); // abstract setter for device state
   Future<void> changeState(); // abstract method for changing device state
@@ -38,6 +40,23 @@ abstract class Device with ChangeNotifier {
   set deviceType(DeviceType type) {
     this.type = type;
     notifyListeners();
+  }
+
+  DeviceType get deviceType => type;
+
+  static IconData icon(DeviceType type) {
+    switch (type) {
+      case DeviceType.light:
+        return Icons.lightbulb_outline;
+      case DeviceType.outlet:
+        return Icons.power;
+      case DeviceType.blind:
+        return Icons.blinds;
+      case DeviceType.fan:
+        return Icons.heat_pump;
+      default:
+        return Icons.error;
+    }
   }
 
   @override

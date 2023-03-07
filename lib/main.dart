@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 
 import 'providers/room_provider.dart';
 import 'providers/sensors_provider.dart';
+import 'screens/devices/add_edit_device_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,7 +32,21 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Smarthome',
         theme: ThemeData(
-          primarySwatch: Colors.pink,
+          useMaterial3: true,
+          colorScheme: const ColorScheme(
+            brightness: Brightness.light,
+            primary: Colors.pink,
+            onPrimary: Colors.white,
+            primaryContainer: Color.fromARGB(255, 228, 145, 172),
+            secondary: Color.fromARGB(255, 250, 186, 134),
+            onSecondary: Colors.black,
+            background: Color.fromARGB(255, 255, 255, 255),
+            onBackground: Colors.black,
+            error: Colors.red,
+            onError: Colors.white,
+            surface: Colors.white,
+            onSurface: Colors.black,
+          ),
         ),
         home: const HomepageScreen(),
         routes: {
@@ -42,6 +57,8 @@ class MyApp extends StatelessWidget {
           DevicesScreen.routeName: (context) => const DevicesScreen(),
           Sensors.routeName: (context) => const Sensors(),
           AddEditRoomScreen.routeName: (context) => AddEditRoomScreen(),
+          AddEditDeviceScreen.routeName: (context) =>
+              const AddEditDeviceScreen(),
         },
       ),
     );

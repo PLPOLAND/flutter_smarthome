@@ -30,7 +30,7 @@ class _AddEditRoomScreenState extends State<AddEditRoomScreen> {
       Provider.of<RoomsProvider>(context, listen: false)
           .addRoom(
         Room(
-          name: nameContorller.text,
+          nameContorller.text,
         ),
       )
           .then((value) {
@@ -41,8 +41,8 @@ class _AddEditRoomScreenState extends State<AddEditRoomScreen> {
       Provider.of<RoomsProvider>(context, listen: false)
           .updateRoom(
         Room(
+          nameContorller.text,
           id: roomId,
-          name: nameContorller.text,
         ),
       )
           .then((value) {
