@@ -62,55 +62,64 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-              itemBuilder: (ctx, index) {
-                if (index < devices.length) {
-                  if (devices[index] is Light) {
-                    return ChangeNotifierProvider.value(
-                        value: devices[index], child: const DeviceWidget());
-                  } else if (devices[index] is Blind) {
-                    return ChangeNotifierProvider.value(
-                        value: devices[index], child: const DeviceWidget());
-                  } else if (devices[index] is Outlet) {
-                    return ChangeNotifierProvider.value(
-                        value: devices[index], child: const DeviceWidget());
-                  } else if (devices[index] is Fan) {
-                    return ChangeNotifierProvider.value(
-                        value: devices[index], child: const DeviceWidget());
-                  } else {
-                    return Card(
-                      color: Theme.of(context).colorScheme.error,
-                      child: Text(
-                        "Unknow Device Type",
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.onError),
-                      ),
-                    );
-                  }
-                } else if (index < devices.length + sensors.length) {
-                  return ChangeNotifierProvider.value(
-                      value: sensors[index - devices.length],
-                      child: const SensorWidget());
-                } else {
-                  return Card(
-                    color: Theme.of(context).colorScheme.error,
-                    child: Text(
-                      "Unknow Device Type",
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.onError),
-                    ),
-                  );
-                }
-              },
-              itemCount: devices.length + sensors.length,
+      body: devices.isEmpty && sensors.isEmpty
+          ? const Center(
+              child: Text("No sensors and devices there. Add some!"),
+            )
+          : Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                    itemBuilder: (ctx, index) {
+                      if (index < devices.length) {
+                        if (devices[index] is Light) {
+                          return ChangeNotifierProvider.value(
+                              value: devices[index],
+                              child: const DeviceWidget());
+                        } else if (devices[index] is Blind) {
+                          return ChangeNotifierProvider.value(
+                              value: devices[index],
+                              child: const DeviceWidget());
+                        } else if (devices[index] is Outlet) {
+                          return ChangeNotifierProvider.value(
+                              value: devices[index],
+                              child: const DeviceWidget());
+                        } else if (devices[index] is Fan) {
+                          return ChangeNotifierProvider.value(
+                              value: devices[index],
+                              child: const DeviceWidget());
+                        } else {
+                          return Card(
+                            color: Theme.of(context).colorScheme.error,
+                            child: Text(
+                              "Unknow Device Type",
+                              style: TextStyle(
+                                  color: Theme.of(context).colorScheme.onError),
+                            ),
+                          );
+                        }
+                      } else if (index < devices.length + sensors.length) {
+                        return ChangeNotifierProvider.value(
+                            value: sensors[index - devices.length],
+                            child: const SensorWidget());
+                      } else {
+                        return Card(
+                          color: Theme.of(context).colorScheme.error,
+                          child: Text(
+                            "Unknow Device Type",
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.onError),
+                          ),
+                        );
+                      }
+                    },
+                    itemCount: devices.length + sensors.length,
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
       floatingActionButton: SpeedDial(
         icon: Icons.add,
         children: [
@@ -126,7 +135,8 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
             child: Icon(Icons.sensors),
             // label: "Sensor",
             onTap: () {
-              // TODO
+              Navigator.of(context).pushNamed('/sensors/add-edit-sensor',
+                  arguments: {'roomId': room.id});
             },
           ),
         ],

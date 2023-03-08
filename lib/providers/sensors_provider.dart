@@ -8,10 +8,10 @@ import '../models/sensors/sensor.dart';
 
 class SensorsProvider with ChangeNotifier {
   final List<Sensor> _sensors = [
-    Thermometer(name: "Termometr 1", temperature: 27, roomId: 1),
-    Hygrometer(name: "Wilgotność 1", humidity: 0.55, roomId: 1),
-    Twilight(name: "Zmierzch 1", value: 0.45, roomId: 1),
-    Motion(name: "Ruch 1", isMotionDetected: true, roomId: 1),
+    Thermometer(id: 1, name: "Termometr 1", temperature: 27, roomId: 1),
+    Hygrometer(id: 2, name: "Wilgotność 1", humidity: 0.55, roomId: 1),
+    Twilight(id: 3, name: "Zmierzch 1", value: 0.45, roomId: 1, dayValue: 0.6),
+    Motion(id: 4, name: "Ruch 1", isMotionDetected: true, roomId: 1),
   ];
 
   List<Sensor> get sensors => [..._sensors];
@@ -20,13 +20,30 @@ class SensorsProvider with ChangeNotifier {
     return _sensors.where((sensor) => sensor.roomId == roomId).toList();
   }
 
-  void addDevice(Sensor device) {
+  Future<void> addSensor(Sensor device) async {
     _sensors.add(device);
     notifyListeners();
+    Future.delayed(const Duration(seconds: 1));
   }
 
-  void removeDevice(Sensor device) {
+  Future<void> removeSensor(Sensor device) async {
     _sensors.remove(device);
     notifyListeners();
+    Future.delayed(const Duration(seconds: 1));
+  }
+
+  getSensorById(int sensorId) {
+    return _sensors.firstWhere((sensor) => sensor.id == sensorId);
+  }
+
+  updateDevice(Sensor newSensor) {
+    final sensorIndex =
+        _sensors.indexWhere((sensor) => sensor.id == newSensor.id);
+    if (sensorIndex >= 0) {
+      _sensors[sensorIndex] = newSensor;
+      notifyListeners();
+    } else {
+      print("Error: Sensor not found");
+    }
   }
 }

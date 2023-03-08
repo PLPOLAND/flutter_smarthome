@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_smarthome/screens/sensors/add_edit_sensor_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/sensors_provider.dart';
@@ -15,18 +16,40 @@ class Sensors extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Sensors'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              Navigator.of(context).pushNamed(AddEditSensorScreen.routeName);
+            },
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed(AddEditSensorScreen.routeName);
+        },
+        child: const Icon(Icons.add),
       ),
       drawer: const MainDrawer(),
       body: Consumer<SensorsProvider>(
         builder: (context, data, _) {
-          return ListView.builder(
-            itemBuilder: (context, index) {
-              return ChangeNotifierProvider.value(
-                  value: data.sensors[index],
-                  child: const SensorsListItemWidget());
-            },
-            itemCount: data.sensors.length,
-          );
+          return data.sensors.isEmpty
+              ? const Center(
+                  child: Text(
+                    "There is no sensors yet. \nAdd some!",
+                    textAlign: TextAlign.center,
+                  ),
+                )
+              : ListView.builder(
+                  itemBuilder: (context, index) {
+                    return ChangeNotifierProvider.value(
+                      value: data.sensors[index],
+                      child: const SensorsListItemWidget(),
+                    );
+                  },
+                  itemCount: data.sensors.length,
+                );
         },
       ),
     );

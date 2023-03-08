@@ -63,14 +63,18 @@ class _DeviceWidgetState extends State<DeviceWidget> {
                 borderRadius: BorderRadius.circular(5),
                 gradient: LinearGradient(colors: [
                   Theme.of(context).colorScheme.primary,
-                  Color.alphaBlend(Colors.white.withAlpha(0x55),
+                  Color.alphaBlend(Colors.white.withAlpha(0x33),
                       Theme.of(context).colorScheme.primary),
                 ]))
             : BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
                 gradient: LinearGradient(colors: [
-                  Colors.grey.shade600,
-                  Colors.grey.shade300,
+                  Theme.of(context).brightness == Brightness.light
+                      ? Colors.grey.shade600
+                      : Colors.grey.shade500,
+                  Theme.of(context).brightness == Brightness.light
+                      ? Colors.grey.shade500
+                      : Colors.grey.shade400,
                 ]));
 
     Icon deviceTrailingIcon = const Icon(Icons.power_settings_new);

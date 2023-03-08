@@ -5,8 +5,10 @@ import 'package:flutter_smarthome/screens/homepage_screen.dart';
 import 'package:flutter_smarthome/screens/room_detail_page.dart';
 import 'package:flutter_smarthome/screens/rooms/add_edit_room_screen.dart';
 import 'package:flutter_smarthome/screens/rooms_page.dart';
+import 'package:flutter_smarthome/screens/sensors/add_edit_sensor_screen.dart';
 import 'package:flutter_smarthome/screens/sensors_screen.dart';
 import 'package:flutter_smarthome/screens/settings_screen.dart';
+import 'package:flutter_smarthome/themes/themes.dart';
 import 'package:provider/provider.dart';
 
 import 'providers/room_provider.dart';
@@ -23,6 +25,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    ThemesMenager();
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => DevicesProvider()),
@@ -33,20 +36,23 @@ class MyApp extends StatelessWidget {
         title: 'Smarthome',
         theme: ThemeData(
           useMaterial3: true,
-          colorScheme: const ColorScheme(
-            brightness: Brightness.light,
-            primary: Colors.pink,
-            onPrimary: Colors.white,
-            primaryContainer: Color.fromARGB(255, 228, 145, 172),
-            secondary: Color.fromARGB(255, 250, 186, 134),
-            onSecondary: Colors.black,
-            background: Color.fromARGB(255, 255, 255, 255),
-            onBackground: Colors.black,
-            error: Colors.red,
-            onError: Colors.white,
-            surface: Colors.white,
-            onSurface: Colors.black,
-          ),
+          colorScheme: ThemesMenager.getColorScheme(),
+
+          // const ColorScheme(
+          //   brightness: Brightness.light,
+          //   primary: Colors.pink,
+          //   onPrimary: Colors.white,
+          //   primaryContainer: Color.fromARGB(255, 228, 145, 172),
+          //   secondary: Color.fromARGB(255, 250, 186, 134),
+          //   onSecondary: Colors.black,
+          //   secondaryContainer: Color.fromARGB(255, 250, 186, 134),
+          //   background: Color(0xFFFFF5F5),
+          //   onBackground: Colors.black,
+          //   error: Colors.red,
+          //   onError: Colors.white,
+          //   surface: Color(0xFFFFF5F5),
+          //   onSurface: Colors.black,
+          // ),
         ),
         home: const HomepageScreen(),
         routes: {
@@ -59,6 +65,8 @@ class MyApp extends StatelessWidget {
           AddEditRoomScreen.routeName: (context) => AddEditRoomScreen(),
           AddEditDeviceScreen.routeName: (context) =>
               const AddEditDeviceScreen(),
+          AddEditSensorScreen.routeName: (context) =>
+              const AddEditSensorScreen(),
         },
       ),
     );

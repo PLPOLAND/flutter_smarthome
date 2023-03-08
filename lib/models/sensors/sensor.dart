@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 abstract class Sensor with ChangeNotifier {
   int id;
@@ -43,6 +44,23 @@ abstract class Sensor with ChangeNotifier {
     }
     this.adress = adress;
     notifyListeners();
+  }
+
+  static IconData sensorIcon(SensorType type) {
+    switch (type) {
+      case SensorType.thermometer:
+        return Icons.thermostat;
+      case SensorType.hygrometer:
+        return Icons.water_drop;
+      case SensorType.twilight:
+        return Icons.brightness_4;
+      case SensorType.motion:
+        return Icons.directions_run;
+      case SensorType.button:
+        return Icons.touch_app;
+      default:
+        return Icons.help;
+    }
   }
 
   @override

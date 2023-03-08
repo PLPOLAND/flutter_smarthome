@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_smarthome/models/room.dart';
 import 'package:flutter_smarthome/providers/room_provider.dart';
+import 'package:flutter_smarthome/screens/sensors/add_edit_sensor_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../models/devices/device.dart';
@@ -91,7 +92,10 @@ class SensorsListItemWidget extends StatelessWidget {
       children: [
         sensorTrailing,
         IconButton(
-          onPressed: () => editSenor(context),
+          onPressed: () => Navigator.of(context).pushNamed(
+            AddEditSensorScreen.routeName,
+            arguments: {'sensorId': sensor.id},
+          ),
           icon: const Icon(Icons.edit),
           color: Theme.of(context).colorScheme.onPrimary,
         ),
@@ -136,25 +140,5 @@ class SensorsListItemWidget extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  void editSenor(BuildContext context) {
-    //TODO implement edit sensor
-    showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text("Edit sensor"),
-            content: const Text("Editing sensor is not implemented yet."),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text("OK"),
-              ),
-            ],
-          );
-        });
   }
 }

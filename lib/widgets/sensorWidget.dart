@@ -48,13 +48,17 @@ class SensorWidget extends StatelessWidget {
         break;
       case SensorType.motion:
         var motion = sensor as Motion;
-        sensorIcon =
-            Icon(Icons.speed, color: Theme.of(context).colorScheme.onPrimary);
+        sensorIcon = Icon(
+          Icons.directions_run,
+          color: Theme.of(context).colorScheme.onPrimary,
+        );
         sensorTrailing = const Text("");
         if (!motion.isMotionDetected) {
           boxDecoration = BoxDecoration(
             borderRadius: BorderRadius.circular(5),
-            color: Colors.grey.shade600,
+            color: Theme.of(context).brightness == Brightness.light
+                ? Colors.grey.shade600
+                : Colors.grey.shade500,
           );
         }
         break;
@@ -70,7 +74,9 @@ class SensorWidget extends StatelessWidget {
         if (!twilight.isDay) {
           boxDecoration = BoxDecoration(
             borderRadius: BorderRadius.circular(5),
-            color: Colors.grey.shade600,
+            color: Theme.of(context).brightness == Brightness.light
+                ? Colors.grey.shade600
+                : Colors.grey.shade500,
           );
         }
         break;
