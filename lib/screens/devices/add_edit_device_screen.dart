@@ -55,6 +55,9 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
     if (!isValid) {
       return;
     }
+    setState(() {
+      showSaveIndicator = true;
+    });
     if (deviceId == null) {
       // add new device
       Device? device;
@@ -64,32 +67,32 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
           device = Light(
             name: nameController.text,
             roomId: selectedRoomId,
-            slaveId: slaveAddressController.text as int,
-            onSlavePin: slavePinController.text as int,
+            slaveId: int.parse(slaveAddressController.text),
+            onSlavePin: int.parse(slavePinController.text),
           );
           break;
         case DeviceType.blind:
           device = Blind(
             name: nameController.text,
             roomId: selectedRoomId,
-            slaveId: slaveAddressController.text as int,
-            onSlavePin: slavePinController.text as int,
+            slaveId: int.parse(slaveAddressController.text),
+            onSlavePin: int.parse(slavePinController.text),
           );
           break;
         case DeviceType.outlet:
           device = Outlet(
             name: nameController.text,
             roomId: selectedRoomId,
-            slaveId: slaveAddressController.text as int,
-            onSlavePin: slavePinController.text as int,
+            slaveId: int.parse(slaveAddressController.text),
+            onSlavePin: int.parse(slavePinController.text),
           );
           break;
         case DeviceType.fan:
           device = Fan(
             name: nameController.text,
             roomId: selectedRoomId,
-            slaveId: slaveAddressController.text as int,
-            onSlavePin: slavePinController.text as int,
+            slaveId: int.parse(slaveAddressController.text),
+            onSlavePin: int.parse(slavePinController.text),
           );
           break;
         default:
@@ -98,6 +101,12 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
       if (device != null) {
         await Provider.of<DevicesProvider>(context, listen: false)
             .addDevice(device);
+        setState(() {
+          showSaveIndicator = false;
+        });
+        if (context.mounted) {
+          Navigator.of(context).pop();
+        }
       }
     } else {
       // update device
@@ -112,8 +121,8 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
             onSlaveId: oldDevice.onSlaveId,
             name: nameController.text,
             roomId: selectedRoomId,
-            slaveId: slaveAddressController.text as int,
-            onSlavePin: slavePinController.text as int,
+            slaveId: int.parse(slaveAddressController.text),
+            onSlavePin: int.parse(slavePinController.text),
           );
           break;
         case DeviceType.blind:
@@ -122,8 +131,8 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
             onSlaveId: oldDevice.onSlaveId,
             name: nameController.text,
             roomId: selectedRoomId,
-            slaveId: slaveAddressController.text as int,
-            onSlavePin: slavePinController.text as int,
+            slaveId: int.parse(slaveAddressController.text),
+            onSlavePin: int.parse(slavePinController.text),
           );
           break;
         case DeviceType.outlet:
@@ -132,8 +141,8 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
             onSlaveId: oldDevice.onSlaveId,
             name: nameController.text,
             roomId: selectedRoomId,
-            slaveId: slaveAddressController.text as int,
-            onSlavePin: slavePinController.text as int,
+            slaveId: int.parse(slaveAddressController.text),
+            onSlavePin: int.parse(slavePinController.text),
           );
           break;
         case DeviceType.fan:
@@ -142,8 +151,8 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
             onSlaveId: oldDevice.onSlaveId,
             name: nameController.text,
             roomId: selectedRoomId,
-            slaveId: slaveAddressController.text as int,
-            onSlavePin: slavePinController.text as int,
+            slaveId: int.parse(slaveAddressController.text),
+            onSlavePin: int.parse(slavePinController.text),
           );
           break;
         default:
@@ -152,10 +161,40 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
       if (newDevice != null) {
         await Provider.of<DevicesProvider>(context, listen: false)
             .updateDevice(newDevice);
+        setState(() {
+          showSaveIndicator = false;
+        });
+        if (context.mounted) {
+          Navigator.of(context).pop();
+        }
       }
     }
+  }
 
-    // formKey.currentState!.save();
+  void showLoosingDataDialog(bool isEditing) {
+    showDialog(
+        context: context,
+        builder: ((context) => AlertDialog(
+              title: const Text("Are you sure?"),
+              content: isEditing
+                  ? const Text("You will lose all unsaved changes!")
+                  : const Text("You will lose all data!"),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('No'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Yes'),
+                ),
+              ],
+            )));
   }
 
   @override
@@ -168,8 +207,19 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
         title: Text(isEditing ? 'Edit Device' : 'Add Device'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.save),
-            onPressed: () => save(deviceId),
+            icon: showSaveIndicator
+                ? const SizedBox(
+                    height: 16,
+                    width: 16,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 1.5,
+                    ))
+                : const Icon(Icons.save),
+            onPressed: showSaveIndicator
+                ? null
+                : () {
+                    save(deviceId);
+                  },
           ),
         ],
       ),
@@ -266,10 +316,10 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
                       if (value!.isEmpty) {
                         return 'Please enter a number';
                       }
-                      if (value as int > 255) {
+                      if (int.parse(value) > 255) {
                         return 'Please enter a smaller number';
                       }
-                      if (value as int < 8) {
+                      if (int.parse(value) < 8) {
                         return 'Please enter a number bigger than 8';
                       }
                       return null;
@@ -290,10 +340,10 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
                       if (value!.isEmpty) {
                         return 'Please enter a number';
                       }
-                      if (value as int > 255) {
+                      if (int.parse(value) > 255) {
                         return 'Please enter a smaller number';
                       }
-                      if (value as int < 0) {
+                      if (int.parse(value) < 0) {
                         return 'Please enter a number bigger than 0';
                       }
                       return null;
@@ -311,17 +361,19 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
                         label: const Text('Cancel'),
                       ),
                       ElevatedButton.icon(
-                        onPressed: () {
-                          setState(() {
-                            showSaveIndicator = true;
-                            save(deviceId).then((value) {
-                              setState(() {
-                                showSaveIndicator = false;
-                              });
-                            });
-                          });
-                        },
-                        icon: const Icon(Icons.save),
+                        onPressed: showSaveIndicator
+                            ? null
+                            : () {
+                                save(deviceId);
+                              },
+                        icon: showSaveIndicator
+                            ? const SizedBox(
+                                height: 16,
+                                width: 16,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 1.5,
+                                ))
+                            : const Icon(Icons.save),
                         label: const Text('Save'),
                       ),
                     ],
@@ -331,32 +383,5 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
             )),
       ),
     );
-    ;
-  }
-
-  void showLoosingDataDialog(bool isEditing) {
-    showDialog(
-        context: context,
-        builder: ((context) => AlertDialog(
-              title: const Text("Are you sure?"),
-              content: isEditing
-                  ? const Text("You will lose all changes!")
-                  : const Text("You will lose all data!"),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('No'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Yes'),
-                ),
-              ],
-            )));
   }
 }

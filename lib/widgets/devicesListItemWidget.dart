@@ -9,6 +9,31 @@ import '../providers/devices_provider.dart';
 class DevicesListItemWidget extends StatelessWidget {
   const DevicesListItemWidget({super.key});
 
+  void showLoosingDataDialog(BuildContext context, Device device, Room room) {
+    showDialog(
+        context: context,
+        builder: ((context) => AlertDialog(
+              title: const Text("Are you sure?"),
+              content: Text("You will delete ${device.name} from ${room.name}"),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('No'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Provider.of<DevicesProvider>(context, listen: false)
+                        .removeDevice(device)
+                        .then((_) => Navigator.of(context).pop());
+                  },
+                  child: const Text('Yes'),
+                ),
+              ],
+            )));
+  }
+
   @override
   Widget build(BuildContext context) {
     final Device device = Provider.of<Device>(context);
@@ -86,29 +111,30 @@ class DevicesListItemWidget extends StatelessWidget {
     }
     deviceTrailingIcon = Row(
       mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
-        deviceTrailingIcon,
+        // deviceTrailingIcon,
         IconButton(
           onPressed: () {
             print("Edit ${device.name}");
-            //TODO implement editing devices
-            showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                      backgroundColor: Theme.of(context).colorScheme.error,
-                      title: Text(
-                        "TODO",
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.onError),
-                      ),
-                      content: Text(
-                        "Editing devices is not implemented yet.",
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.onError),
-                      ),
-                    ));
+            Navigator.of(context).pushNamed(
+              '/devices/add-edit-device',
+              arguments: device.id,
+            );
           },
-          icon: Icon(Icons.edit),
+          icon: const Icon(Icons.edit),
+          color: Theme.of(context).colorScheme.onPrimary,
+        ),
+        IconButton(
+          onPressed: () {
+            print("Delete ${device.name}");
+            showLoosingDataDialog(
+              context,
+              device,
+              rooms.getRoomById(device.roomId),
+            );
+          },
+          icon: const Icon(Icons.delete),
           color: Theme.of(context).colorScheme.onPrimary,
         ),
       ],
