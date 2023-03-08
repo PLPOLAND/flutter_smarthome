@@ -78,23 +78,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
       BuildContext context, TextEditingController controller) {
     showDialog(
         context: context,
-        builder: (context) => Dialog(
+        builder: (context) => SimpleDialog(
               insetPadding: const EdgeInsets.all(20),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                    controller: controller,
-                    autofocus: true,
-                    decoration: const InputDecoration(
-                      label: Text("Server IP"),
-                      hintText: "xxx.xxx.xxx.xxx",
-                    ),
-                    keyboardType: TextInputType.number,
-                    onSubmitted: (value) {
-                      //TODO Validate IP
-                      Navigator.of(context).pop(controller.text);
-                    }),
-              ),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: TextField(
+                      controller: controller,
+                      autofocus: true,
+                      decoration: const InputDecoration(
+                        label: Text("Server IP"),
+                        hintText: "xxx.xxx.xxx.xxx",
+                      ),
+                      keyboardType: TextInputType.number,
+                      onSubmitted: (value) {
+                        //TODO Validate IP
+                        Navigator.of(context).pop(controller.text);
+                      }),
+                ),
+              ],
             )).then((value) {
       if (value != null) {
         controller.text = value;
