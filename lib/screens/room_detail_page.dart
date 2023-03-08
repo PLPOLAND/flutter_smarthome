@@ -118,14 +118,15 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
             child: Icon(Icons.storage),
             // label: "Device",
             onTap: () {
-              //TODO: move to add device screen
+              Navigator.of(context).pushNamed('/devices/add-edit-device',
+                  arguments: {'roomId': room.id});
             },
           ),
           SpeedDialChild(
             child: Icon(Icons.sensors),
             // label: "Sensor",
             onTap: () {
-              //TODO: move to add sensor screen
+              // TODO
             },
           ),
         ],

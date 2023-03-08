@@ -37,7 +37,14 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
     super.didChangeDependencies();
     if (_needInit) {
       _needInit = false;
-      final deviceId = ModalRoute.of(context)!.settings.arguments;
+      int? deviceId;
+      int? roomId;
+      if (ModalRoute.of(context)!.settings.arguments != null) {
+        final args =
+            ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+        deviceId = args['deviceId'] as int?;
+        roomId = args['roomId'] as int?;
+      }
       if (deviceId != null) {
         final device = Provider.of<DevicesProvider>(context, listen: false)
             .getDeviceById(deviceId as int);
@@ -46,6 +53,8 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
         slavePinController.text = device.onSlavePin.toString();
         selectedRoomId = device.roomId;
         selectedDeviceType = device.deviceType;
+      } else if (roomId != null) {
+        selectedRoomId = roomId;
       }
     }
   }
@@ -199,7 +208,14 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final int? deviceId = ModalRoute.of(context)!.settings.arguments as int?;
+    int? deviceId;
+    int? roomId;
+    if (ModalRoute.of(context)!.settings.arguments != null) {
+      final args =
+          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      deviceId = args['deviceId'] as int?;
+      roomId = args['roomId'] as int?;
+    }
     final List<Room> rooms = Provider.of<RoomsProvider>(context).rooms;
     final bool isEditing = deviceId != null;
     return Scaffold(

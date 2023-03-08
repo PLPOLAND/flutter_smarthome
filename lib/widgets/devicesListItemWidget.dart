@@ -119,7 +119,7 @@ class DevicesListItemWidget extends StatelessWidget {
             print("Edit ${device.name}");
             Navigator.of(context).pushNamed(
               '/devices/add-edit-device',
-              arguments: device.id,
+              arguments: {'deviceId': device.id},
             );
           },
           icon: const Icon(Icons.edit),
