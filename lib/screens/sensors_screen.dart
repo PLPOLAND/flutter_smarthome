@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import '../providers/sensors_provider.dart';
 import '../widgets/devicesListItemWidget.dart';
 import '../widgets/main_drawer.dart';
-import '../widgets/sensorsListItemWidget.dart';
+import '../widgets/sensors_list_item_widget.dart';
 
 class Sensors extends StatelessWidget {
   static const routeName = '/sensors';

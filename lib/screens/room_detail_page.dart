@@ -12,8 +12,8 @@ import '../models/devices/outlet.dart';
 import '../models/room.dart';
 import '../models/sensors/sensor.dart';
 import '../providers/sensors_provider.dart';
-import '../widgets/deviceWidget.dart';
-import '../widgets/sensorWidget.dart';
+import '../widgets/device_widget.dart';
+import '../widgets/sensor_widget.dart';
 
 class RoomDetailScreen extends StatefulWidget {
   static const routeName = '/roomDetails';

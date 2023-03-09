@@ -4,7 +4,7 @@ import '../models/room.dart';
 import '../providers/room_provider.dart';
 import 'package:provider/provider.dart';
 
-import '../widgets/roomWidget.dart';
+import '../widgets/room_widget.dart';
 
 class RoomsPage extends StatelessWidget {
   static const routeName = '/rooms';

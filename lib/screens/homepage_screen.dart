@@ -10,8 +10,8 @@ import '../models/devices/light.dart';
 import '../models/devices/outlet.dart';
 import '../models/sensors/sensor.dart';
 import '../providers/sensors_provider.dart';
-import '../widgets/deviceWidget.dart';
-import '../widgets/sensorWidget.dart';
+import '../widgets/device_widget.dart';
+import '../widgets/sensor_widget.dart';
 
 class HomepageScreen extends StatelessWidget {
   static const routeName = '/homepage';
@@ -26,9 +26,13 @@ class HomepageScreen extends StatelessWidget {
       ),
       body: const Center(
         child: Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Text("Homepage"),
-        ),
+            padding: EdgeInsets.all(8.0),
+            child: SingleChildScrollView(
+              child: Text(
+                'Welcome to SmartHome!',
+                style: TextStyle(fontSize: 30),
+              ),
+            )),
       ),
       drawer: const MainDrawer(),
     );
