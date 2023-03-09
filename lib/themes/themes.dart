@@ -8,7 +8,7 @@ class ThemesMenager {
 
   ThemesMenager() {
     ThemesMenager.setTheme("blue"); //setting default theme
-    ThemesMenager.setThemeMode(ThemeMode.light); //setting default theme mode
+    ThemesMenager.setThemeMode(ThemeMode.dark); //setting default theme mode
     //for dynamic theme
     //TODO need testing
     DynamicColorBuilder(

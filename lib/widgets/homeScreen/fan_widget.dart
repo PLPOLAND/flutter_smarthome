@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_smarthome/models/devices/outlet.dart';
-import 'package:flutter_smarthome/themes/themes.dart';
+import 'package:flutter_smarthome/models/devices/fan.dart';
 
 import '../../models/devices/device.dart';
+import '../../themes/themes.dart';
 
-class OutletWidget extends StatefulWidget {
-  final Outlet outlet;
-  const OutletWidget({super.key, required this.outlet});
+class FanWidget extends StatefulWidget {
+  final Fan fan;
+  const FanWidget({super.key, required this.fan});
 
   @override
-  State<OutletWidget> createState() => _OutletWidgetState();
+  State<FanWidget> createState() => _FanWidgetState();
 }
 
-class _OutletWidgetState extends State<OutletWidget> {
+class _FanWidgetState extends State<FanWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -20,27 +20,27 @@ class _OutletWidgetState extends State<OutletWidget> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Icon(Device.icon(DeviceType.outlet)),
+          Icon(Device.icon(DeviceType.fan)),
           const SizedBox(width: 10),
           Expanded(
               flex: 2,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(widget.outlet.name),
+                  Text(widget.fan.name),
                   const SizedBox(width: 20),
-                  SizedBox(
+                  Container(
                     width: 100,
                     child: IconButton(
                       icon: Icon(Icons.power_settings_new),
                       onPressed: () {
                         setState(() {
-                          widget.outlet.changeState();
+                          widget.fan.changeState();
                         });
                       },
                       style: ButtonStyle(
                         backgroundColor: MaterialStatePropertyAll<Color>(
-                          widget.outlet.state == DeviceState.on
+                          widget.fan.state == DeviceState.on
                               ? Theme.of(context).colorScheme.secondaryContainer
                               : Color.alphaBlend(
                                   ThemesMenager.themeMode == ThemeMode.light

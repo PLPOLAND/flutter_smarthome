@@ -89,7 +89,7 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
           );
           break;
         case DeviceType.outlet:
-          device = Outlet(
+          device = Fan(
             name: nameController.text,
             roomId: selectedRoomId,
             slaveId: int.parse(slaveAddressController.text),
@@ -145,7 +145,7 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
           );
           break;
         case DeviceType.outlet:
-          newDevice = Outlet(
+          newDevice = Fan(
             id: oldDevice.id,
             onSlaveId: oldDevice.onSlaveID,
             name: nameController.text,

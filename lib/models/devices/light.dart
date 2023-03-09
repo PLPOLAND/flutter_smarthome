@@ -14,13 +14,13 @@ class Light extends Device {
             onSlavePin);
   @override
   Future<void> changeState() async {
-    print("Light: $name, state: $state");
     if (state == DeviceState.on) {
       super.setState(DeviceState.off);
     } else if (state == DeviceState.off) {
       super.setState(DeviceState.on);
     }
     notifyListeners();
+    print("Light: $name, state: $state");
     return Future.delayed(Duration(
         seconds:
             1)); // TODO: change this line after implementing the http request
@@ -28,12 +28,12 @@ class Light extends Device {
 
   @override
   void setState(DeviceState state) {
-    print("Light: $name, state: $state");
     if (state == DeviceState.on || state == DeviceState.off) {
       super.setState(state);
     } else {
       throw Exception("Invalid state");
     }
+    print("Light: $name, state: $state");
     notifyListeners();
   }
 

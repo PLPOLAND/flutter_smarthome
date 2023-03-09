@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smarthome/models/devices/device.dart';
 
 import '../../models/devices/light.dart';
+import '../../themes/themes.dart';
 
 class LightWidget extends StatefulWidget {
   final List<Light> lights;
@@ -41,10 +42,14 @@ class _LightWidgetState extends State<LightWidget> {
                   min: 0,
                   divisions: widget.lights.length,
                   activeColor: _sliderValue == 0
-                      ? Colors.grey
+                      ? ThemesMenager.themeMode == ThemeMode.light
+                          ? Colors.grey.withAlpha(0xA3)
+                          : Colors.black.withAlpha(0xA3)
                       : Theme.of(context).colorScheme.onPrimaryContainer,
                   inactiveColor: _sliderValue == 0
-                      ? Colors.grey
+                      ? ThemesMenager.themeMode == ThemeMode.light
+                          ? Colors.grey.withAlpha(0xA3)
+                          : Colors.black.withAlpha(0xA3)
                       : Theme.of(context).colorScheme.onPrimaryContainer,
                   label: _sliderValue == 0
                       ? 'Off'

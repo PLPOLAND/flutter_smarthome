@@ -14,12 +14,12 @@ class Outlet extends Device {
             onSlavePin);
   @override
   Future<void> changeState() async {
-    print("Outlet: $name, state: $state");
     if (state == DeviceState.on) {
       setState(DeviceState.off);
     } else if (state == DeviceState.off) {
       super.setState(DeviceState.on);
     }
+    print("Outlet: $name, state: $state");
     notifyListeners();
     return Future.delayed(const Duration(
         seconds:

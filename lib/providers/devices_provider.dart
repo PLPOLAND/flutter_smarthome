@@ -10,7 +10,7 @@ class DevicesProvider with ChangeNotifier {
   final List<Device> _devices = [
     Light(name: "Light 1", roomId: 1),
     Blind(name: "Blind 1", roomId: 1),
-    Outlet(name: "Outlet 1", roomId: 1),
+    Fan(name: "Outlet 1", roomId: 1),
     Fan(name: "Fan 1", roomId: 1),
   ];
 

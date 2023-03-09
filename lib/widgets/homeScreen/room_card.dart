@@ -5,8 +5,10 @@ import 'package:flutter_smarthome/widgets/homeScreen/blind_widget.dart';
 import 'package:flutter_smarthome/widgets/homeScreen/outlet_widget.dart';
 
 import '../../models/devices/blind.dart';
+import '../../models/devices/fan.dart';
 import '../../models/devices/light.dart';
 import '../../models/devices/outlet.dart';
+import 'fan_widget.dart';
 import 'light_widget.dart';
 
 class RoomCard extends StatelessWidget {
@@ -31,7 +33,7 @@ class RoomCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Room 1',
+                  'Łazienka Duża',
                   style: TextStyle(fontSize: 20),
                   textAlign: TextAlign.left,
                 ),
@@ -72,6 +74,8 @@ class RoomCard extends StatelessWidget {
           ),
           SizedBox(height: 10),
           OutletWidget(outlet: Outlet(id: 1, name: 'Outlet 1')),
+          SizedBox(height: 10),
+          FanWidget(fan: Fan(id: 1, name: 'Fan 1')),
         ],
       ),
     );

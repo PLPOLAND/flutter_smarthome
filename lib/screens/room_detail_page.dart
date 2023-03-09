@@ -82,7 +82,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                           return ChangeNotifierProvider.value(
                               value: devices[index],
                               child: const DeviceWidget());
-                        } else if (devices[index] is Outlet) {
+                        } else if (devices[index] is Fan) {
                           return ChangeNotifierProvider.value(
                               value: devices[index],
                               child: const DeviceWidget());
