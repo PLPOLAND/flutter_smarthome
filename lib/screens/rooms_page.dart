@@ -28,18 +28,21 @@ class RoomsPage extends StatelessWidget {
         ],
       ),
       body: GridView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         itemCount: rooms.length,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 3 / 2,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount:
+              MediaQuery.of(context).orientation == Orientation.portrait
+                  ? 2
+                  : 3,
+          childAspectRatio: 2 / 1,
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
         ),
         itemBuilder: (context, index) {
           return ChangeNotifierProvider.value(
             value: rooms[index],
-            child: RoomWidget(),
+            child: const RoomWidget(),
           );
         },
       ),

@@ -23,9 +23,9 @@ class _RoomWidgetState extends State<RoomWidget> {
         gradient: LinearGradient(
           // transform: GradientRotation(1),
           colors: [
-            Theme.of(context).colorScheme.primary,
+            Theme.of(context).colorScheme.primaryContainer,
             Color.alphaBlend(Colors.black.withAlpha(0x55),
-                Theme.of(context).colorScheme.primary),
+                Theme.of(context).colorScheme.primaryContainer),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
