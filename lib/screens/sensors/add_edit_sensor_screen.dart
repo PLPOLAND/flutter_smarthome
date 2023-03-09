@@ -321,30 +321,28 @@ class _AddEditSensorScreenState extends State<AddEditSensorScreen> {
                         if (isEditing) ...{
                           ButtonSegment<SensorType>(
                             value: SensorType.thermometer,
-                            icon:
-                                Icon(Sensor.sensorIcon(SensorType.thermometer)),
+                            icon: Icon(Sensor.icon(SensorType.thermometer)),
                             // label: const Text('Thermometer'),
                           ),
                           ButtonSegment<SensorType>(
                             value: SensorType.hygrometer,
-                            icon:
-                                Icon(Sensor.sensorIcon(SensorType.hygrometer)),
+                            icon: Icon(Sensor.icon(SensorType.hygrometer)),
                             // label: const Text('Hygrometer'),
                           )
                         },
                         ButtonSegment<SensorType>(
                           value: SensorType.motion,
-                          icon: Icon(Sensor.sensorIcon(SensorType.motion)),
+                          icon: Icon(Sensor.icon(SensorType.motion)),
                           // label: const Text('Motion'),
                         ),
                         ButtonSegment<SensorType>(
                           value: SensorType.twilight,
-                          icon: Icon(Sensor.sensorIcon(SensorType.twilight)),
+                          icon: Icon(Sensor.icon(SensorType.twilight)),
                           // label: const Text('Twilight'),
                         ),
                         ButtonSegment<SensorType>(
                           value: SensorType.button,
-                          icon: Icon(Sensor.sensorIcon(SensorType.button)),
+                          icon: Icon(Sensor.icon(SensorType.button)),
                           // label: const Text('Button'),
                         ),
                       ],

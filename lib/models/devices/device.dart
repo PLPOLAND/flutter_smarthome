@@ -2,47 +2,69 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 abstract class Device with ChangeNotifier {
-  int id;
-  int roomId;
-  int slaveId;
-  int onSlaveId;
-  int onSlavePin;
-  String name;
-  DeviceType type;
-  DeviceState state;
+  int _id;
+  int _roomId;
+  int _slaveId;
+  int _onSlaveId;
+  int _onSlavePin;
+  String _name;
+  DeviceType _type;
+  DeviceState _state;
 
-  Device(this.id, this.roomId, this.slaveId, this.onSlaveId, this.name,
-      this.type, this.state, this.onSlavePin);
+  Device(this._id, this._roomId, this._slaveId, this._onSlaveId, this._name,
+      this._type, this._state, this._onSlavePin);
 
-  void setState(DeviceState state); // abstract setter for device state
+  void setState(DeviceState state) {
+    this._state = state;
+    notifyListeners();
+  }
+
   Future<void> changeState(); // abstract method for changing device state
 
-  set room(int roomId) {
-    this.roomId = roomId;
+  set id(int id) {
+    this._id = id;
     notifyListeners();
   }
 
-  set slave(int slaveId) {
-    this.slaveId = slaveId;
+  set onSlavePin(int pin) {
+    this._onSlavePin = pin;
     notifyListeners();
   }
 
-  set onSlave(int onSlaveId) {
-    this.onSlaveId = onSlaveId;
+  set roomID(int roomId) {
+    this._roomId = roomId;
+    notifyListeners();
+  }
+
+  set slaveID(int slaveId) {
+    this._slaveId = slaveId;
+    notifyListeners();
+  }
+
+  set onSlaveID(int onSlaveId) {
+    this._onSlaveId = onSlaveId;
     notifyListeners();
   }
 
   set deviceName(String name) {
-    this.name = name;
+    this._name = name;
     notifyListeners();
   }
 
-  set deviceType(DeviceType type) {
-    this.type = type;
+  set type(DeviceType type) {
+    this._type = type;
     notifyListeners();
   }
 
-  DeviceType get deviceType => type;
+  int get id => _id;
+  int get onSlavePin => _onSlavePin;
+  int get roomID => _roomId;
+  int get slaveID => _slaveId;
+  int get onSlaveID => _onSlaveId;
+  String get name => _name;
+  DeviceState get state => _state;
+
+  DeviceType get type => _type;
 
   static IconData icon(DeviceType type) {
     switch (type) {
@@ -61,7 +83,7 @@ abstract class Device with ChangeNotifier {
 
   @override
   String toString() {
-    return ", id: $id, roomId: $roomId, slaveId: $slaveId, onSlaveId: $onSlaveId, name: $name, type: $type";
+    return ", id: $_id, roomId: $_roomId, slaveId: $_slaveId, onSlaveId: $_onSlaveId, name: $_name, type: $_type";
   }
 }
 

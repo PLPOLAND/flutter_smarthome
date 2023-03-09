@@ -16,9 +16,9 @@ class Outlet extends Device {
   Future<void> changeState() async {
     print("Outlet: $name, state: $state");
     if (state == DeviceState.on) {
-      state = DeviceState.off;
+      setState(DeviceState.off);
     } else if (state == DeviceState.off) {
-      state = DeviceState.on;
+      super.setState(DeviceState.on);
     }
     notifyListeners();
     return Future.delayed(const Duration(
@@ -29,7 +29,7 @@ class Outlet extends Device {
   @override
   void setState(DeviceState state) {
     if (state == DeviceState.on || state == DeviceState.off) {
-      this.state = state;
+      super.setState(state);
     } else {
       throw Exception("Invalid state"); //TODO: change to custom exception
     }

@@ -49,10 +49,10 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
         final device = Provider.of<DevicesProvider>(context, listen: false)
             .getDeviceById(deviceId as int);
         nameController.text = device.name;
-        slaveAddressController.text = device.slaveId.toString();
+        slaveAddressController.text = device.slaveID.toString();
         slavePinController.text = device.onSlavePin.toString();
-        selectedRoomId = device.roomId;
-        selectedDeviceType = device.deviceType;
+        selectedRoomId = device.roomID;
+        selectedDeviceType = device.type;
       } else if (roomId != null) {
         selectedRoomId = roomId;
       }
@@ -127,7 +127,7 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
         case DeviceType.light:
           newDevice = Light(
             id: oldDevice.id,
-            onSlaveId: oldDevice.onSlaveId,
+            onSlaveId: oldDevice.onSlaveID,
             name: nameController.text,
             roomId: selectedRoomId,
             slaveId: int.parse(slaveAddressController.text),
@@ -137,7 +137,7 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
         case DeviceType.blind:
           newDevice = Blind(
             id: oldDevice.id,
-            onSlaveId: oldDevice.onSlaveId,
+            onSlaveId: oldDevice.onSlaveID,
             name: nameController.text,
             roomId: selectedRoomId,
             slaveId: int.parse(slaveAddressController.text),
@@ -147,7 +147,7 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
         case DeviceType.outlet:
           newDevice = Outlet(
             id: oldDevice.id,
-            onSlaveId: oldDevice.onSlaveId,
+            onSlaveId: oldDevice.onSlaveID,
             name: nameController.text,
             roomId: selectedRoomId,
             slaveId: int.parse(slaveAddressController.text),
@@ -157,7 +157,7 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
         case DeviceType.fan:
           newDevice = Fan(
             id: oldDevice.id,
-            onSlaveId: oldDevice.onSlaveId,
+            onSlaveId: oldDevice.onSlaveID,
             name: nameController.text,
             roomId: selectedRoomId,
             slaveId: int.parse(slaveAddressController.text),

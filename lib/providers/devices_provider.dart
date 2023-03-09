@@ -16,7 +16,7 @@ class DevicesProvider with ChangeNotifier {
 
   List<Device> get devices => [..._devices];
   List<Device> getDevicesByRoomId(int roomId) {
-    return _devices.where((element) => element.roomId == roomId).toList();
+    return _devices.where((element) => element.roomID == roomId).toList();
   }
 
   Future<void> addDevice(Device device) async {

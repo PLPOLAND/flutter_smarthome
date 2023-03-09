@@ -36,7 +36,8 @@ class MyApp extends StatelessWidget {
         title: 'Smarthome',
         theme: ThemeData(
           useMaterial3: true,
-          colorScheme: ThemesMenager.getColorScheme(systemAutoBrightness: true),
+          colorScheme:
+              ThemesMenager.getColorScheme(systemAutoBrightness: false),
 
           // const ColorScheme(
           //   brightness: Brightness.light,

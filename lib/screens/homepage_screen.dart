@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_smarthome/providers/devices_provider.dart';
+import 'package:flutter_smarthome/widgets/homeScreen/room_card.dart';
 import 'package:flutter_smarthome/widgets/main_drawer.dart';
 import 'package:provider/provider.dart';
 
@@ -24,15 +25,11 @@ class HomepageScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text(''),
       ),
-      body: const Center(
+      body: SingleChildScrollView(
         child: Padding(
-            padding: EdgeInsets.all(8.0),
-            child: SingleChildScrollView(
-              child: Text(
-                'Welcome to SmartHome!',
-                style: TextStyle(fontSize: 30),
-              ),
-            )),
+          padding: const EdgeInsets.all(8.0),
+          child: RoomCard(),
+        ),
       ),
       drawer: const MainDrawer(),
     );

@@ -46,7 +46,7 @@ abstract class Sensor with ChangeNotifier {
     notifyListeners();
   }
 
-  static IconData sensorIcon(SensorType type) {
+  static IconData icon(SensorType type) {
     switch (type) {
       case SensorType.thermometer:
         return Icons.thermostat;

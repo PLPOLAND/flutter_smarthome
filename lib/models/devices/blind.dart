@@ -16,9 +16,9 @@ class Blind extends Device {
   Future<void> changeState() async {
     print("Blind: $name, state: $state");
     if (state == DeviceState.up) {
-      state = DeviceState.down;
+      super.setState(DeviceState.down);
     } else if (state == DeviceState.down) {
-      state = DeviceState.up;
+      super.setState(DeviceState.up);
     }
     notifyListeners();
     return Future.delayed(Duration(
@@ -28,8 +28,10 @@ class Blind extends Device {
 
   @override
   void setState(DeviceState state) {
-    if (state == DeviceState.up || state == DeviceState.down) {
-      this.state = state;
+    if (state == DeviceState.up ||
+        state == DeviceState.down ||
+        state == DeviceState.middle) {
+      super.setState(state);
     } else {
       throw Exception("Invalid state");
     }
