@@ -12,7 +12,7 @@ import '../../models/devices/blind.dart';
 import '../../models/devices/fan.dart';
 import '../../models/room.dart';
 import '../../models/sensors/motion.dart';
-import '../../models/sensors/termometer.dart';
+import '../../models/sensors/thermometer.dart';
 import '../../models/sensors/twilight.dart';
 import '../../providers/room_provider.dart';
 import '../../providers/sensors_provider.dart';

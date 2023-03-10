@@ -8,7 +8,7 @@ import '../models/devices/device.dart';
 import '../models/sensors/hygrometer.dart';
 import '../models/sensors/motion.dart';
 import '../models/sensors/sensor.dart';
-import '../models/sensors/termometer.dart';
+import '../models/sensors/thermometer.dart';
 import '../models/sensors/twilight.dart';
 import '../providers/devices_provider.dart';
 

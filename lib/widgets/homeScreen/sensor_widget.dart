@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_smarthome/models/sensors/hygrometer.dart';
-import 'package:flutter_smarthome/models/sensors/termometer.dart';
+import 'package:flutter_smarthome/models/sensors/thermometer.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/sensors/sensor.dart';
