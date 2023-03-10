@@ -31,13 +31,24 @@ class SensorsProvider with ChangeNotifier {
           _sensors.add(Thermometer.fromJson(sensor));
           break;
         case 'HYGROMETER':
+          throw Exception("Not implemented yet");
+          //TODO implement
           // _sensors.add(Hygrometer.fromJson(sensor));
           break;
         case 'TWILIGHT':
+          throw Exception("Not implemented yet");
+          //TODO implement
           // _sensors.add(Twilight.fromJson(sensor));
           break;
         case 'MOTION':
+          throw Exception("Not implemented yet");
+          //TODO implement
           // _sensors.add(Motion.fromJson(sensor));
+          break;
+        case 'BUTTON':
+          throw Exception("Not implemented yet");
+          //TODO implement
+          // _sensors.add(Button.fromJson(sensor));
           break;
         default:
           print("Error: Unknown sensor type");
