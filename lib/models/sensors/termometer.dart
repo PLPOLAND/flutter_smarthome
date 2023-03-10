@@ -19,7 +19,7 @@ class Thermometer extends Sensor {
       double temperature = -127.0})
       : super(id, roomId, slaveId, onSlaveId, name, SensorType.thermometer,
             adress) {
-    temperature = temperature;
+    this.temperature = temperature;
   }
 
   double _temperature = -127.0;
@@ -38,5 +38,17 @@ class Thermometer extends Sensor {
 
   String temperatureToString() {
     return _temperature.toStringAsFixed(1);
+  }
+
+  static Sensor fromJson(Map<String, Object> sensor) {
+    return Thermometer(
+      id: sensor['id'] as int,
+      roomId: sensor['room'] as int,
+      slaveId: sensor['slaveAdress'] as int,
+      onSlaveId: sensor['onSlaveID'] as int,
+      name: sensor['name'] as String,
+      adress: (sensor['addres'] as List).cast<int>(),
+      temperature: sensor['temperatura'] as double,
+    );
   }
 }
