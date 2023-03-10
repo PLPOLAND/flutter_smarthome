@@ -23,51 +23,56 @@ class _BlindWidgetState extends State<BlindWidget> {
           Expanded(
             flex: 2,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Center(child: Text("${widget.blind.name}")),
                 const SizedBox(width: 10),
-                SegmentedButton<DeviceState>(
-                    showSelectedIcon: false,
-                    segments: const [
-                      ButtonSegment<DeviceState>(
-                          value: DeviceState.down,
-                          icon: Icon(Icons.arrow_downward)),
-                      ButtonSegment<DeviceState>(
-                        value: DeviceState.middle,
-                        icon: Icon(Icons.pause),
-                      ),
-                      ButtonSegment<DeviceState>(
-                        value: DeviceState.up,
-                        icon: Icon(Icons.arrow_upward),
-                      )
-                    ],
-                    selected: {widget.blind.state},
-                    onSelectionChanged: (value) {
-                      setState(() {
-                        widget.blind.setState(value.first);
-                      });
-                    },
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.resolveWith((states) {
-                        if (states.contains(MaterialState.selected)) {
+                Container(
+                  width: 150,
+                  child: SegmentedButton<DeviceState>(
+                      showSelectedIcon: false,
+                      segments: const [
+                        ButtonSegment<DeviceState>(
+                            value: DeviceState.down,
+                            icon: Icon(Icons.arrow_downward)),
+                        ButtonSegment<DeviceState>(
+                          value: DeviceState.middle,
+                          icon: Icon(Icons.pause),
+                        ),
+                        ButtonSegment<DeviceState>(
+                          value: DeviceState.up,
+                          icon: Icon(Icons.arrow_upward),
+                        )
+                      ],
+                      selected: {widget.blind.state},
+                      onSelectionChanged: (value) {
+                        setState(() {
+                          widget.blind.setState(value.first);
+                        });
+                      },
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.resolveWith((states) {
+                          if (states.contains(MaterialState.selected)) {
+                            return Theme.of(context)
+                                .colorScheme
+                                .secondaryContainer;
+                          }
+                          return Theme.of(context).colorScheme.primaryContainer;
+                        }),
+                        foregroundColor:
+                            MaterialStateProperty.resolveWith((states) {
+                          if (states.contains(MaterialState.selected)) {
+                            return Theme.of(context)
+                                .colorScheme
+                                .onSecondaryContainer;
+                          }
                           return Theme.of(context)
                               .colorScheme
-                              .secondaryContainer;
-                        }
-                        return Theme.of(context).colorScheme.primaryContainer;
-                      }),
-                      foregroundColor:
-                          MaterialStateProperty.resolveWith((states) {
-                        if (states.contains(MaterialState.selected)) {
-                          return Theme.of(context)
-                              .colorScheme
-                              .onSecondaryContainer;
-                        }
-                        return Theme.of(context).colorScheme.onPrimaryContainer;
-                      }),
-                    )),
+                              .onPrimaryContainer;
+                        }),
+                      )),
+                ),
               ],
             ),
           ),
