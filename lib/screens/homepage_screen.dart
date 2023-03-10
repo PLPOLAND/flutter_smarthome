@@ -23,27 +23,39 @@ class HomepageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final rooms = Provider.of<RoomsProvider>(context).rooms;
+    final favRooms = rooms.where((element) => element.isFavorite).toList();
     return Scaffold(
       appBar: AppBar(
         title: const Text(''),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ListView.builder(
-            itemBuilder: (context, index) {
-              final room =
-                  rooms.where((element) => element.isFavorite).toList()[index];
-              return ChangeNotifierProvider.value(
-                  value: room, child: const RoomCard());
-            },
-            itemCount:
-                rooms.where((element) => element.isFavorite).toList().length,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-          ),
-        ),
-      ),
+      body: favRooms.isEmpty
+          ? const Center(
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                    "You didn't add any room to favorite list! \n Navigate to rooms list and click some stars!",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 20)),
+              ),
+            )
+          : SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListView.builder(
+                  itemBuilder: (context, index) {
+                    final room = favRooms[index];
+                    return ChangeNotifierProvider.value(
+                        value: room, child: const RoomCard());
+                  },
+                  itemCount: rooms
+                      .where((element) => element.isFavorite)
+                      .toList()
+                      .length,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                ),
+              ),
+            ),
       drawer: const MainDrawer(),
     );
   }
