@@ -31,7 +31,7 @@ abstract class Device with ChangeNotifier {
     notifyListeners();
   }
 
-  set roomID(int roomId) {
+  set roomId(int roomId) {
     this._roomId = roomId;
     notifyListeners();
   }
@@ -58,7 +58,7 @@ abstract class Device with ChangeNotifier {
 
   int get id => _id;
   int get onSlavePin => _onSlavePin;
-  int get roomID => _roomId;
+  int get roomId => _roomId;
   int get slaveID => _slaveId;
   int get onSlaveID => _onSlaveId;
   String get name => _name;

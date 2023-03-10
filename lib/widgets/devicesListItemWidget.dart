@@ -131,7 +131,7 @@ class DevicesListItemWidget extends StatelessWidget {
             showLoosingDataDialog(
               context,
               device,
-              rooms.getRoomById(device.roomID),
+              rooms.getRoomById(device.roomId),
             );
           },
           icon: const Icon(Icons.delete),
@@ -159,7 +159,7 @@ class DevicesListItemWidget extends StatelessWidget {
               style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
             ),
             subtitle: Text(
-              rooms.getRoomById(device.roomID).name,
+              rooms.getRoomById(device.roomId).name,
               style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
             ),
             trailing: deviceTrailingIcon,

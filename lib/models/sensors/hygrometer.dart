@@ -40,6 +40,8 @@ class Hygrometer extends Sensor {
     return "Hygrometer: ${super.toString()}, humidity: $_humidity";
   }
 
+  /// Returns humidity as a string with 0 decimal places (e.g. 0.5 -> 50)
+  /// @return humidity as a string with 0 decimal places
   String humidityToString() {
     return (_humidity * 100).toStringAsFixed(0);
   }

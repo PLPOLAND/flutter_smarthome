@@ -51,7 +51,7 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
         nameController.text = device.name;
         slaveAddressController.text = device.slaveID.toString();
         slavePinController.text = device.onSlavePin.toString();
-        selectedRoomId = device.roomID;
+        selectedRoomId = device.roomId;
         selectedDeviceType = device.type;
       } else if (roomId != null) {
         selectedRoomId = roomId;
