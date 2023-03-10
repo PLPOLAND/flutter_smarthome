@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_smarthome/dummy_data/dummy_data.dart';
 
 import '../models/devices/blind.dart';
 import '../models/devices/device.dart';
@@ -14,9 +15,43 @@ class DevicesProvider with ChangeNotifier {
     Fan(name: "Fan 1", roomId: 1),
   ];
 
+  DevicesProvider() {
+    fetchAndSetDevices();
+  }
+
   List<Device> get devices => [..._devices];
   List<Device> getDevicesByRoomId(int roomId) {
     return _devices.where((element) => element.roomId == roomId).toList();
+  }
+
+  Future<void> fetchAndSetDevices() async {
+    // TODO implement the http request
+
+    //DEMO
+    var input = dummy_devices;
+    _devices.clear();
+    for (var device in input) {
+      switch (device['typ']) {
+        case 'LIGHT':
+          _devices.add(Light.fromJson(device));
+          break;
+        case 'BLIND':
+          _devices.add(Blind.fromJson(device));
+          break;
+        case 'FAN':
+          _devices.add(Fan.fromJson(device));
+          break;
+        case 'OUTLET':
+          _devices.add(Outlet.fromJson(device));
+          break;
+        default:
+          print("Error: Unknown device type");
+      }
+    }
+
+    return Future.delayed(Duration(
+        seconds:
+            1)); // TODO change this line after implementing the http request
   }
 
   Future<void> addDevice(Device device) async {

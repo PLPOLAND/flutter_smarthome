@@ -41,4 +41,16 @@ class Outlet extends Device {
     String s = "Outlet: $name, state: $state";
     return s + super.toString();
   }
+
+  static Device fromJson(Map<String, Object> device) {
+    return Outlet(
+      id: device['id'] as int,
+      roomId: device['room'] as int,
+      slaveId: device['slaveID'] as int,
+      onSlaveId: device['onSlaveID'] as int,
+      onSlavePin: device['pin'] as int,
+      name: device['name'] as String,
+      state: device['state'] == "ON" ? DeviceState.on : DeviceState.off,
+    );
+  }
 }

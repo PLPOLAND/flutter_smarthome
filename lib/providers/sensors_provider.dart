@@ -4,6 +4,7 @@ import 'package:flutter_smarthome/models/sensors/motion.dart';
 import 'package:flutter_smarthome/models/sensors/termometer.dart';
 import 'package:flutter_smarthome/models/sensors/twilight.dart';
 
+import '../dummy_data/dummy_data.dart';
 import '../models/sensors/sensor.dart';
 
 class SensorsProvider with ChangeNotifier {
@@ -13,6 +14,38 @@ class SensorsProvider with ChangeNotifier {
     Twilight(id: 3, name: "Zmierzch 1", value: 0.45, roomId: 1, dayValue: 0.6),
     Motion(id: 4, name: "Ruch 1", isMotionDetected: true, roomId: 1),
   ];
+
+  SensorsProvider() {
+    fetchAndSetSensors();
+  }
+
+  Future<void> fetchAndSetSensors() async {
+    // TODO implement the http request
+
+    //DEMO
+    var input = dummy_sensors;
+    _sensors.clear();
+    for (var sensor in input) {
+      switch (sensor['typ']) {
+        case 'THERMOMETR':
+          _sensors.add(Thermometer.fromJson(sensor));
+          break;
+        case 'HYGROMETER':
+          // _sensors.add(Hygrometer.fromJson(sensor));
+          break;
+        case 'TWILIGHT':
+          // _sensors.add(Twilight.fromJson(sensor));
+          break;
+        case 'MOTION':
+          // _sensors.add(Motion.fromJson(sensor));
+          break;
+        default:
+          print("Error: Unknown sensor type");
+      }
+    }
+
+    return Future.delayed(const Duration(seconds: 1));
+  }
 
   List<Sensor> get sensors => [..._sensors];
 

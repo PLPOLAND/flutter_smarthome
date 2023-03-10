@@ -4,10 +4,20 @@ import '../models/room.dart';
 
 class RoomsProvider with ChangeNotifier {
   final List<Room> _rooms = [
-    Room("Sypialnia", id: 1),
-    Room("Kuchnia", id: 2),
-    Room("Łazienka", id: 3),
-    Room("Salon", id: 4),
+    Room("", id: 0),
+    Room("Garderoba", id: 1),
+    Room("Marcin", id: 2),
+    Room("Marek", id: 3),
+    Room("Gościnny", id: 4),
+    Room("Łazienka Mała", id: 5),
+    Room("Łazienka Duża", id: 6),
+    Room("Kotłownia", id: 7),
+    Room("Korytarz", id: 8),
+    Room("Rodzice", id: 9),
+    Room("Salon", id: 10),
+    Room("Kuchnia", id: 11),
+    Room("Taras", id: 12),
+    Room("Wiatrołap", id: 13),
   ];
 
   List<Room> get rooms => [..._rooms];

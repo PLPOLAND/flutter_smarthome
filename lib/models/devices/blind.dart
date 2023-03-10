@@ -43,4 +43,20 @@ class Blind extends Device {
     String s = "Blind: $name, state: $state";
     return s + super.toString();
   }
+
+  static Device fromJson(Map<String, Object> device) {
+    return Blind(
+      id: device['id'] as int,
+      roomId: device['room'] as int,
+      slaveId: device['slaveID'] as int,
+      onSlaveId: device['slaveID'] as int,
+      // onSlavePin: device['pin'] as int,
+      name: device['name'] as String,
+      state: device['state'] == "UP"
+          ? DeviceState.up
+          : device['state'] == "DOWN"
+              ? DeviceState.down
+              : DeviceState.middle,
+    );
+  }
 }

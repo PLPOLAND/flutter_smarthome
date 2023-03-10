@@ -142,7 +142,7 @@ class DevicesListItemWidget extends StatelessWidget {
     return Container(
       clipBehavior: Clip.hardEdge,
       decoration: boxDecoration,
-      margin: const EdgeInsets.fromLTRB(5, 10, 5, 0),
+      margin: const EdgeInsets.fromLTRB(5, 5, 5, 5),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
