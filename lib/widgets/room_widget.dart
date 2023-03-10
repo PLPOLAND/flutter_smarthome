@@ -49,7 +49,8 @@ class _RoomWidgetState extends State<RoomWidget> {
                   children: [
                     IconButton(
                       icon: Icon(Icons.arrow_back,
-                          color: Theme.of(context).colorScheme.onPrimary),
+                          color:
+                              Theme.of(context).colorScheme.onPrimaryContainer),
                       onPressed: () {
                         setState(() {
                           _showOptions = false;
@@ -58,7 +59,8 @@ class _RoomWidgetState extends State<RoomWidget> {
                     ),
                     IconButton(
                       icon: Icon(Icons.edit,
-                          color: Theme.of(context).colorScheme.onPrimary),
+                          color:
+                              Theme.of(context).colorScheme.onPrimaryContainer),
                       onPressed: () {
                         Navigator.of(context).pushNamed('/rooms/add-edit-room',
                             arguments: room.id);
@@ -66,7 +68,8 @@ class _RoomWidgetState extends State<RoomWidget> {
                     ),
                     IconButton(
                       icon: Icon(Icons.delete,
-                          color: Theme.of(context).colorScheme.onPrimary),
+                          color:
+                              Theme.of(context).colorScheme.onPrimaryContainer),
                       onPressed: () {},
                     ),
                   ],
@@ -78,12 +81,12 @@ class _RoomWidgetState extends State<RoomWidget> {
                       child: Center(
                         child: Text(
                           room.name,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium
-                              ?.copyWith(
-                                color: Theme.of(context).colorScheme.onPrimary,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimaryContainer,
+                                  ),
                         ),
                       ),
                     ),
@@ -97,7 +100,8 @@ class _RoomWidgetState extends State<RoomWidget> {
                           room.isFavorite
                               ? Icons.star
                               : Icons.star_border_outlined,
-                          color: Theme.of(context).colorScheme.onPrimary),
+                          color:
+                              Theme.of(context).colorScheme.onPrimaryContainer),
                     ),
                   ],
                 ),
