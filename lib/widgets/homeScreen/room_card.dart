@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smarthome/models/devices/device.dart';
 import 'package:flutter_smarthome/models/sensors/sensor.dart';
 import 'package:flutter_smarthome/widgets/homeScreen/blind_widget.dart';
+import 'package:flutter_smarthome/widgets/homeScreen/light_widget_container.dart';
 import 'package:flutter_smarthome/widgets/homeScreen/outlet_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -79,7 +80,7 @@ class RoomCard extends StatelessWidget {
           const SizedBox(height: 10),
           if (devices.isEmpty) const Center(child: Text('No devices')),
           if (devices.any((device) => device.type == DeviceType.light))
-            LightWidget(
+            LightWidgetContainer(
               lights: devices
                   .where((device) => device.type == DeviceType.light)
                   .map((e) => e as Light)
