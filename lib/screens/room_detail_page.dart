@@ -86,17 +86,35 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                           return ChangeNotifierProvider.value(
                               value: devices[index],
                               child: const DeviceWidget());
-                        } else if (devices[index] is Fan) {
+                        } else if (devices[index] is Outlet) {
                           return ChangeNotifierProvider.value(
                               value: devices[index],
                               child: const DeviceWidget());
                         } else {
-                          return Card(
-                            color: Theme.of(context).colorScheme.error,
-                            child: Text(
-                              "Unknow Device Type",
-                              style: TextStyle(
-                                  color: Theme.of(context).colorScheme.onError),
+                          return AnimatedContainer(
+                            duration: Duration(milliseconds: 300),
+                            clipBehavior: Clip.hardEdge,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color:
+                                  Theme.of(context).colorScheme.errorContainer,
+                            ),
+                            margin: const EdgeInsets.fromLTRB(5, 10, 5, 0),
+                            padding: const EdgeInsets.all(4),
+                            child: ListTile(
+                              leading: Icon(
+                                Icons.error,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onErrorContainer,
+                              ),
+                              title: Text(
+                                "Error: Unknow Device Type '${devices[index].type}'",
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onErrorContainer),
+                              ),
                             ),
                           );
                         }
