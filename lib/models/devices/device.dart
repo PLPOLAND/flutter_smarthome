@@ -71,13 +71,13 @@ abstract class Device with ChangeNotifier {
       case DeviceType.light:
         return Icons.lightbulb_outline;
       case DeviceType.outlet:
-        return Icons.power;
+        return Icons.power_outlined;
       case DeviceType.blind:
-        return Icons.blinds;
+        return Icons.blinds_outlined;
       case DeviceType.fan:
-        return Icons.heat_pump;
+        return Icons.heat_pump_outlined;
       default:
-        return Icons.error;
+        return Icons.error_outline;
     }
   }
 
