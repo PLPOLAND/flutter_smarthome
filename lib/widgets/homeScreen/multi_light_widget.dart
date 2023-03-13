@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_smarthome/models/devices/device.dart';
 
@@ -25,7 +27,7 @@ class _MultiLightWidgetState extends State<MultiLightWidget> {
       lightWidgets.add(
         Expanded(
           child: Container(
-            height: 30,
+            height: 40,
             decoration: BoxDecoration(
               color: widget.lights[i].state == DeviceState.on
                   ? Theme.of(context).colorScheme.secondaryContainer
@@ -75,17 +77,50 @@ class _MultiLightWidgetState extends State<MultiLightWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-      child: SizedBox(
-        width: 100,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            ..._buildLightWidgets(),
-          ],
-        ),
+    return SizedBox(
+      // width: 100,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          ..._buildLightWidgets(),
+          SizedBox(
+            width: 10,
+          ),
+          IconButton(
+            icon: Icon(Icons.power_settings_new),
+            onPressed: () {
+              setState(() {
+                var anyDeviceOff = widget.lights
+                    .any((element) => element.state == DeviceState.off);
+                widget.lights.forEach((element) {
+                  if (anyDeviceOff) {
+                    element.setState(DeviceState.on);
+                  } else {
+                    element.setState(DeviceState.off);
+                  }
+                });
+              });
+              if (widget.onClick != null) {
+                widget.onClick!();
+              }
+            },
+            style: ButtonStyle(
+              backgroundColor: MaterialStatePropertyAll<Color>(
+                !widget.lights
+                        .any((element) => element.state == DeviceState.off)
+                    ? Theme.of(context).colorScheme.secondaryContainer
+                    : Color.alphaBlend(
+                        ThemesMenager.themeMode == ThemeMode.light
+                            ? Colors.grey.withAlpha(0xA3)
+                            : Colors.black.withAlpha(0xA3),
+                        Theme.of(context).colorScheme.secondaryContainer),
+              ),
+              foregroundColor: MaterialStatePropertyAll<Color>(
+                  Theme.of(context).colorScheme.onSecondaryContainer),
+            ),
+          ),
+        ],
       ),
     );
   }
