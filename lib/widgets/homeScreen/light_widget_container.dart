@@ -32,22 +32,57 @@ class _LightWidgetContainerState extends State<LightWidgetContainer> {
           Expanded(
             flex: 2,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
-                  child: Text(
-                    _sliderValue == 0
-                        ? 'Off'
-                        : _sliderValue == widget.lights.length.toDouble()
-                            ? 'Full'
-                            : '${_sliderValue.toInt()}/${widget.lights.length}',
-                  ),
-                  flex: 1,
+                Text(
+                  _sliderValue == 0
+                      ? 'Off'
+                      : _sliderValue == widget.lights.length.toDouble()
+                          ? widget.lights.length == 1
+                              ? 'On'
+                              : 'Full'
+                          : '${_sliderValue.toInt()}/${widget.lights.length}',
                 ),
                 const SizedBox(width: 10),
-                Expanded(
-                  child: MultiLightWidget(lights: widget.lights),
-                  flex: 2,
+                SizedBox(
+                  width: widget.lights.length < 2
+                      ? 100
+                      : widget.lights.length < 5
+                          ? 150
+                          : 230,
+                  child: widget.lights.length < 2
+                      ? IconButton(
+                          icon: Icon(Icons.power_settings_new),
+                          onPressed: () {
+                            setState(() {
+                              widget.lights.first.changeState();
+                            });
+                          },
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStatePropertyAll<Color>(
+                              widget.lights.first.state == DeviceState.on
+                                  ? Theme.of(context)
+                                      .colorScheme
+                                      .secondaryContainer
+                                  : Color.alphaBlend(
+                                      ThemesMenager.themeMode == ThemeMode.light
+                                          ? Colors.grey.withAlpha(0xA3)
+                                          : Colors.black.withAlpha(0xA3),
+                                      Theme.of(context)
+                                          .colorScheme
+                                          .secondaryContainer),
+                            ),
+                            foregroundColor: MaterialStatePropertyAll<Color>(
+                                Theme.of(context)
+                                    .colorScheme
+                                    .onSecondaryContainer),
+                          ),
+                        )
+                      : MultiLightWidget(
+                          lights: widget.lights,
+                          onClick: () {
+                            setState(() {});
+                          }),
                 ),
               ],
             ),
