@@ -80,6 +80,11 @@ class SensorWidget extends StatelessWidget {
           );
         }
         break;
+      case SensorType.button:
+        sensorIcon = Icon(Icons.touch_app,
+            color: Theme.of(context).colorScheme.onPrimary);
+        sensorTrailing = const Text("");
+        break;
 
       default:
         sensorIcon =

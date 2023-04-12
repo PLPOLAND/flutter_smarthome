@@ -484,5 +484,82 @@ var dummy_sensors = [
     "max": 127.0,
     "min": 0.0,
     "slaveAdress": 11
+  },
+  {
+    "@type": "Button",
+    "id": 126,
+    "room": 13,
+    "onSlaveID": 3,
+    "addres": [0, 0, 0, 0, 0, 0, 0, 0],
+    "name": "Światło",
+    "typ": "BUTTON",
+    "pin": 14,
+    "funkcjeKlikniec": [
+      {
+        "state": "NONE",
+        "type": "CLICKED",
+        "clicks": 1,
+        "device": {
+          "@type": "Light",
+          "id": 53,
+          "room": 13,
+          "slaveID": 22,
+          "onSlaveID": 0,
+          "name": "Wiatrołap",
+          "typ": "LIGHT",
+          "swt": {"stan": "OFF", "pin": 13},
+          "pin": 13,
+          "state": "OFF"
+        }
+      },
+      {
+        "state": "NONE",
+        "type": "CLICKED",
+        "clicks": 2,
+        "device": {
+          "@type": "Light",
+          "id": 54,
+          "room": 13,
+          "slaveID": 22,
+          "onSlaveID": 1,
+          "name": "Podcień",
+          "typ": "LIGHT",
+          "swt": {"stan": "OFF", "pin": 12},
+          "pin": 12,
+          "state": "OFF"
+        }
+      }
+    ],
+    "slaveAdress": 22
+  },
+  {
+    "@type": "Button",
+    "id": 127,
+    "room": 13,
+    "onSlaveID": 4,
+    "addres": [0, 0, 0, 0, 0, 0, 0, 0],
+    "name": "Podcień",
+    "typ": "BUTTON",
+    "pin": 9,
+    "funkcjeKlikniec": [
+      {
+        "state": "NONE",
+        "type": "CLICKED",
+        "clicks": 1,
+        "device": {
+          "@type": "Light",
+          "id": 54,
+          "room": 13,
+          "slaveID": 22,
+          "onSlaveID": 1,
+          "name": "Podcień",
+          "typ": "LIGHT",
+          "swt": {"stan": "OFF", "pin": 12},
+          "pin": 12,
+          "state": "OFF"
+        }
+      }
+    ],
+    "slaveAdress": 22
   }
 ];

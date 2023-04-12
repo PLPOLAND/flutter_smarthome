@@ -5,6 +5,7 @@ import 'package:flutter_smarthome/screens/sensors/add_edit_sensor_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../models/devices/device.dart';
+import '../models/sensors/button.dart';
 import '../models/sensors/hygrometer.dart';
 import '../models/sensors/motion.dart';
 import '../models/sensors/sensor.dart';
@@ -79,6 +80,18 @@ class SensorsListItemWidget extends StatelessWidget {
             color: Colors.grey.shade600,
           );
         }
+        break;
+
+      case SensorType.button:
+        sensorIcon = Icon(Icons.touch_app,
+            color: Theme.of(context).colorScheme.onPrimary);
+        sensorTrailing = Text(
+          "Local functions: ${(sensor as Button).localFunctions.length}",
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onPrimary,
+            fontSize: Theme.of(context).textTheme.titleMedium?.fontSize,
+          ),
+        );
         break;
 
       default:

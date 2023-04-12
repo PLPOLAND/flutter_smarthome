@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_smarthome/models/sensors/hygrometer.dart';
 import 'package:flutter_smarthome/models/sensors/motion.dart';
@@ -5,6 +7,7 @@ import 'package:flutter_smarthome/models/sensors/thermometer.dart';
 import 'package:flutter_smarthome/models/sensors/twilight.dart';
 
 import '../dummy_data/dummy_data.dart';
+import '../models/sensors/button.dart';
 import '../models/sensors/sensor.dart';
 
 class SensorsProvider with ChangeNotifier {
@@ -46,14 +49,16 @@ class SensorsProvider with ChangeNotifier {
           // _sensors.add(Motion.fromJson(sensor));
           break;
         case 'BUTTON':
-          throw Exception("Not implemented yet");
-          //TODO implement
-          // _sensors.add(Button.fromJson(sensor));
+          // log("adding BUTTON");
+          // var button = Button.fromJson(sensor);
+          // log(button.toString());
+          _sensors.add(Button.fromJson(sensor));
           break;
         default:
           print("Error: Unknown sensor type");
       }
     }
+    // log(_sensors.toString());
 
     return Future.delayed(const Duration(seconds: 1));
   }
