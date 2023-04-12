@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_smarthome/themes/themes.dart';
 import 'package:flutter_smarthome/widgets/main_drawer.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../widgets/settingsWidgets/settings_title.dart';
@@ -53,7 +55,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
             const SettingsTitle("User Settings"),
-            //TODO add theme settings etc.
+            ThemesMenager.getSettingsRow(context),
+            //TODO add other settings etc.
             const SettingsTitle("About"),
             InkWell(
               onTap: () {
