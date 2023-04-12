@@ -1,3 +1,4 @@
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smarthome/providers/devices_provider.dart';
 import 'package:flutter_smarthome/screens/devices_screen.dart';
@@ -25,51 +26,41 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    ThemesMenager();
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) => ThemesMenager()),
         ChangeNotifierProvider(create: (context) => DevicesProvider()),
         ChangeNotifierProvider(create: (context) => SensorsProvider()),
         ChangeNotifierProvider(create: (context) => RoomsProvider()),
       ],
-      child: MaterialApp(
-        title: 'Smarthome',
-        theme: ThemeData(
-          useMaterial3: true,
-          colorScheme:
-              ThemesMenager.getColorScheme(systemAutoBrightness: false),
-
-          // const ColorScheme(
-          //   brightness: Brightness.light,
-          //   primary: Colors.pink,
-          //   onPrimary: Colors.white,
-          //   primaryContainer: Color.fromARGB(255, 228, 145, 172),
-          //   secondary: Color.fromARGB(255, 250, 186, 134),
-          //   onSecondary: Colors.black,
-          //   secondaryContainer: Color.fromARGB(255, 250, 186, 134),
-          //   background: Color(0xFFFFF5F5),
-          //   onBackground: Colors.black,
-          //   error: Colors.red,
-          //   onError: Colors.white,
-          //   surface: Color(0xFFFFF5F5),
-          //   onSurface: Colors.black,
-          // ),
-        ),
-        home: const HomepageScreen(),
-        routes: {
-          HomepageScreen.routeName: (context) => const HomepageScreen(),
-          RoomDetailScreen.routeName: (context) => const RoomDetailScreen(),
-          RoomsPage.routeName: (context) => const RoomsPage(),
-          SettingsScreen.routeName: (context) => SettingsScreen(),
-          DevicesScreen.routeName: (context) => const DevicesScreen(),
-          Sensors.routeName: (context) => const Sensors(),
-          AddEditRoomScreen.routeName: (context) => AddEditRoomScreen(),
-          AddEditDeviceScreen.routeName: (context) =>
-              const AddEditDeviceScreen(),
-          AddEditSensorScreen.routeName: (context) =>
-              const AddEditSensorScreen(),
-        },
-      ),
+      builder: (context, child) {
+        return DynamicColorBuilder(builder: (lightDynamic, darkDynamic) {
+          Provider.of<ThemesMenager>(context, listen: false)
+              .addDynamic(lightDynamic, darkDynamic);
+          return MaterialApp(
+            title: 'Smarthome',
+            theme: ThemeData(
+              useMaterial3: true,
+              colorScheme: Provider.of<ThemesMenager>(context)
+                  .getColorScheme(systemAutoBrightness: true),
+            ),
+            home: const HomepageScreen(),
+            routes: {
+              HomepageScreen.routeName: (context) => const HomepageScreen(),
+              RoomDetailScreen.routeName: (context) => const RoomDetailScreen(),
+              RoomsPage.routeName: (context) => const RoomsPage(),
+              SettingsScreen.routeName: (context) => SettingsScreen(),
+              DevicesScreen.routeName: (context) => const DevicesScreen(),
+              Sensors.routeName: (context) => const Sensors(),
+              AddEditRoomScreen.routeName: (context) => AddEditRoomScreen(),
+              AddEditDeviceScreen.routeName: (context) =>
+                  const AddEditDeviceScreen(),
+              AddEditSensorScreen.routeName: (context) =>
+                  const AddEditSensorScreen(),
+            },
+          );
+        });
+      },
     );
   }
 }

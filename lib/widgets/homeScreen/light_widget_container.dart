@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_smarthome/models/devices/device.dart';
 import 'package:flutter_smarthome/widgets/homeScreen/multi_light_widget.dart';
+import 'package:provider/provider.dart';
 
 import '../../models/devices/light.dart';
 import '../../themes/themes.dart';
@@ -65,7 +66,10 @@ class _LightWidgetContainerState extends State<LightWidgetContainer> {
                                       .colorScheme
                                       .secondaryContainer
                                   : Color.alphaBlend(
-                                      ThemesMenager.themeMode == ThemeMode.light
+                                      Provider.of<ThemesMenager>(context,
+                                                      listen: false)
+                                                  .themeMode ==
+                                              ThemeMode.light
                                           ? Colors.grey.withAlpha(0xA3)
                                           : Colors.black.withAlpha(0xA3),
                                       Theme.of(context)

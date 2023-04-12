@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_smarthome/models/devices/outlet.dart';
 import 'package:flutter_smarthome/themes/themes.dart';
+import 'package:provider/provider.dart';
 
 import '../../models/devices/device.dart';
 
@@ -43,7 +44,10 @@ class _OutletWidgetState extends State<OutletWidget> {
                           widget.outlet.state == DeviceState.on
                               ? Theme.of(context).colorScheme.secondaryContainer
                               : Color.alphaBlend(
-                                  ThemesMenager.themeMode == ThemeMode.light
+                                  Provider.of<ThemesMenager>(context,
+                                                  listen: false)
+                                              .themeMode ==
+                                          ThemeMode.light
                                       ? Colors.grey.withAlpha(0xA3)
                                       : Colors.black.withAlpha(0xA3),
                                   Theme.of(context)

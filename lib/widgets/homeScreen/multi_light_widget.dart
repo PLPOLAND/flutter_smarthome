@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_smarthome/models/devices/device.dart';
+import 'package:provider/provider.dart';
 
 import '../../models/devices/light.dart';
 import '../../themes/themes.dart';
@@ -32,7 +33,8 @@ class _MultiLightWidgetState extends State<MultiLightWidget> {
               color: widget.lights[i].state == DeviceState.on
                   ? Theme.of(context).colorScheme.secondaryContainer
                   : Color.alphaBlend(
-                      ThemesMenager.themeMode == ThemeMode.light
+                      Provider.of<ThemesMenager>(context).themeMode ==
+                              ThemeMode.light
                           ? Colors.grey.withAlpha(0xA3)
                           : Colors.black.withAlpha(0xA3),
                       Theme.of(context).colorScheme.secondaryContainer),
@@ -111,7 +113,8 @@ class _MultiLightWidgetState extends State<MultiLightWidget> {
                         .any((element) => element.state == DeviceState.off)
                     ? Theme.of(context).colorScheme.secondaryContainer
                     : Color.alphaBlend(
-                        ThemesMenager.themeMode == ThemeMode.light
+                        Provider.of<ThemesMenager>(context).themeMode ==
+                                ThemeMode.light
                             ? Colors.grey.withAlpha(0xA3)
                             : Colors.black.withAlpha(0xA3),
                         Theme.of(context).colorScheme.secondaryContainer),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_smarthome/models/devices/fan.dart';
+import 'package:provider/provider.dart';
 
 import '../../models/devices/device.dart';
 import '../../themes/themes.dart';
@@ -43,7 +44,10 @@ class _FanWidgetState extends State<FanWidget> {
                           widget.fan.state == DeviceState.on
                               ? Theme.of(context).colorScheme.secondaryContainer
                               : Color.alphaBlend(
-                                  ThemesMenager.themeMode == ThemeMode.light
+                                  Provider.of<ThemesMenager>(context,
+                                                  listen: false)
+                                              .themeMode ==
+                                          ThemeMode.light
                                       ? Colors.grey.withAlpha(0xA3)
                                       : Colors.black.withAlpha(0xA3),
                                   Theme.of(context)
