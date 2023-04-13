@@ -33,11 +33,16 @@ class DevicesScreen extends StatelessWidget {
         builder: (context, data, _) {
           return ListView.builder(
             itemBuilder: (context, index) {
+              if (index == data.devices.length) {
+                return const SizedBox(
+                  height: 80,
+                );
+              }
               return ChangeNotifierProvider.value(
                   value: data.devices[index],
                   child: const DevicesListItemWidget());
             },
-            itemCount: data.devices.length,
+            itemCount: data.devices.length + 1,
           );
         },
       ),
