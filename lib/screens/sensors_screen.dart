@@ -43,12 +43,17 @@ class Sensors extends StatelessWidget {
                 )
               : ListView.builder(
                   itemBuilder: (context, index) {
+                    if (index == data.sensors.length) {
+                      return const SizedBox(
+                        height: 80,
+                      );
+                    }
                     return ChangeNotifierProvider.value(
                       value: data.sensors[index],
                       child: const SensorsListItemWidget(),
                     );
                   },
-                  itemCount: data.sensors.length,
+                  itemCount: data.sensors.length + 1,
                 );
         },
       ),
