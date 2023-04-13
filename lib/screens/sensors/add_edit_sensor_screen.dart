@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_smarthome/models/devices/device.dart';
 import 'package:flutter_smarthome/models/devices/light.dart';
 import 'package:flutter_smarthome/models/devices/outlet.dart';
@@ -44,6 +47,8 @@ class _AddEditSensorScreenState extends State<AddEditSensorScreen> {
 
   bool anyChange = false;
 
+  List<ButtonLocalClickFunction> localFunctions = [];
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -75,18 +80,27 @@ class _AddEditSensorScreenState extends State<AddEditSensorScreen> {
   }
 
   Future<void> save(int? sensorId) async {
-    if (selectedSensorType == SensorType.button) {
-      showButtonSensorNotImplemented(); //TODO remove after fully implementing button sensor
+    var isValid = formKey.currentState!.validate(); //Validate form fields
+    for (var localFunction in localFunctions) {
+      //Validate local functions fields (if any)
+      if (localFunction.deviceID == -1 || localFunction.clicks <= 0) {
+        isValid = false;
+        break;
+      }
     }
-    final isValid = formKey.currentState!.validate();
     if (!isValid) {
-      return;
+      print('Form is not valid');
+      return; //If form is not valid, return
     }
     setState(() {
+      //Show save indicator
       showSaveIndicator = true;
+      HapticFeedback.lightImpact();
     });
     if (sensorId == null) {
+      // if adding new sensor
       // add new device
+      print('Adding new sensor');
       Sensor? sensor;
 
       switch (selectedSensorType) {
@@ -96,6 +110,7 @@ class _AddEditSensorScreenState extends State<AddEditSensorScreen> {
             roomId: selectedRoomId,
             slaveId: int.parse(slaveAddressController.text),
             onSlavePin: int.parse(slavePinController.text),
+            localFunctions: localFunctions,
           );
           break;
         case SensorType.motion:
@@ -133,6 +148,7 @@ class _AddEditSensorScreenState extends State<AddEditSensorScreen> {
       Sensor oldDevice = Provider.of<SensorsProvider>(context, listen: false)
           .getSensorById(sensorId);
       Sensor? newSensor;
+      print('Updating sensor');
 
       switch (selectedSensorType) {
         case SensorType.button:
@@ -143,6 +159,7 @@ class _AddEditSensorScreenState extends State<AddEditSensorScreen> {
             roomId: selectedRoomId,
             slaveId: int.parse(slaveAddressController.text),
             onSlavePin: int.parse(slavePinController.text),
+            localFunctions: localFunctions,
           );
           break;
         case SensorType.motion:
@@ -462,7 +479,16 @@ class _AddEditSensorScreenState extends State<AddEditSensorScreen> {
                   if (selectedSensorType == SensorType.button)
                     const SizedBox(height: 10),
                   if (selectedSensorType == SensorType.button)
-                    ButtonLocalClickFunctionsWidget(sensorID: sensorId),
+                    ButtonLocalClickFunctionsWidget(
+                        sensorID: sensorId,
+                        roomID: selectedRoomId,
+                        anyChange: () {
+                          anyChange = true;
+                        },
+                        saveFunctions:
+                            (List<ButtonLocalClickFunction> functions) {
+                          localFunctions = functions;
+                        }),
                   const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,

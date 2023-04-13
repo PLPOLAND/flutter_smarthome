@@ -103,5 +103,25 @@ enum DeviceState {
   off,
   up, //for blinds
   down, //for blinds
-  middle, //for blinds
+  middle; //for blinds
+
+  @override
+  String toString() {
+    switch (this) {
+      case DeviceState.none:
+        return "none";
+      case DeviceState.on:
+        return "on";
+      case DeviceState.off:
+        return "off";
+      case DeviceState.up:
+        return "up";
+      case DeviceState.down:
+        return "down";
+      case DeviceState.middle:
+        return "middle";
+      default:
+        return "none";
+    }
+  }
 }

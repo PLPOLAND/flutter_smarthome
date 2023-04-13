@@ -51,13 +51,20 @@ class Button extends Sensor {
 class ButtonLocalClickFunction {
   int deviceID;
   int clicks;
+  DeviceState? state;
 
-  ButtonLocalClickFunction({required this.deviceID, required this.clicks});
+  ButtonLocalClickFunction(
+      {required this.deviceID, required this.clicks, this.state});
 
   static ButtonLocalClickFunction fromJson(Map<String, dynamic> json) {
     return ButtonLocalClickFunction(
       deviceID: json['device']['id'],
       clicks: json['clicks'],
+      state: json['state'] != null
+          ? DeviceState.values.firstWhere((element) =>
+              element.toString().toLowerCase() ==
+              json['state'].toString().toLowerCase())
+          : null,
     );
   }
 }
