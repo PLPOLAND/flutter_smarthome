@@ -1,6 +1,7 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smarthome/providers/devices_provider.dart';
+import 'package:flutter_smarthome/screens/auth_screen.dart';
 import 'package:flutter_smarthome/screens/devices_screen.dart';
 import 'package:flutter_smarthome/screens/homepage_screen.dart';
 import 'package:flutter_smarthome/screens/room_detail_page.dart';
@@ -44,8 +45,9 @@ class MyApp extends StatelessWidget {
               colorScheme: Provider.of<ThemesMenager>(context)
                   .getColorScheme(systemAutoBrightness: true),
             ),
-            home: const HomepageScreen(),
+            home: const AuthScreen(),
             routes: {
+              AuthScreen.routeName: (context) => const AuthScreen(),
               HomepageScreen.routeName: (context) => const HomepageScreen(),
               RoomDetailScreen.routeName: (context) => const RoomDetailScreen(),
               RoomsPage.routeName: (context) => const RoomsPage(),
