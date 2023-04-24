@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../models/auth/auth.dart';
+
 class LoginScreen extends StatefulWidget {
   static const String routeName = '/login';
   const LoginScreen({Key? key}) : super(key: key);
@@ -11,8 +13,76 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _form = GlobalKey<FormState>();
 
+  List<String> servers = [];
+
   String currentNickname = '';
   String currentPassword = '';
+
+  @override
+  void initState() {
+    super.initState();
+    // Auth().scanForServer().listen((event) {
+    //   setState(() {
+    //     servers.add(event);
+    //   });
+    // });
+  }
+
+  /// returns a form field for the server address if no servers are found, otherwise a dropdown menu with the found servers
+  get serverFormWidget {
+    if (servers.isEmpty) {
+      return TextFormField(
+        decoration: InputDecoration(
+          labelText: 'Server',
+          labelStyle: Theme.of(context).textTheme.bodyLarge,
+          hintText: "xxx.xxx.xxx.xxx",
+          prefixIcon: Icon(
+            Icons.router,
+            color: Theme.of(context).colorScheme.onPrimaryContainer,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        validator: (val) {
+          if (val!.isEmpty) {
+            return 'Please enter a server address';
+          } else if (!RegExp(r"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$")
+              .hasMatch(val)) {
+            return 'Please enter a valid server address';
+          }
+          return null;
+        },
+        onSaved: (val) {
+          currentNickname = val!;
+        },
+      );
+    } else {
+      return DropdownButtonFormField(
+        items: servers
+            .map(
+              (e) => DropdownMenuItem(
+                value: e,
+                child: Text(e),
+              ),
+            )
+            .toList(),
+        decoration: InputDecoration(
+          labelText: 'Server',
+          labelStyle: Theme.of(context).textTheme.bodyLarge,
+          prefixIcon: Icon(
+            Icons.router,
+            color: Theme.of(context).colorScheme.onPrimaryContainer,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        value: servers.isNotEmpty ? servers.first : null,
+        onChanged: (val) {},
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +111,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   key: _form,
                   child: Column(
                     children: [
+                      serverFormWidget,
+                      const SizedBox(height: 10),
                       TextFormField(
                         decoration: InputDecoration(
                           labelText: 'Nickname',

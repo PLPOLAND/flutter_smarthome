@@ -54,9 +54,7 @@ class WelcomeScreen extends StatelessWidget {
                       ],
                     ),
                     TextButton(
-                      onPressed: () {
-                        Auth().scanForServer();
-                      },
+                      onPressed: () {},
                       child: const Text('Demo mode'),
                     ),
                   ],
