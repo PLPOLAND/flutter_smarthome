@@ -17,7 +17,7 @@ class Auth {
               headers: {
                 'Content-Type': 'application/json',
               },
-              sendTimeout: Duration(milliseconds: 100),
+              sendTimeout: const Duration(milliseconds: 100),
               // receiveTimeout: Duration(milliseconds: 100),
             ));
         if (response.statusCode == 200) {
@@ -34,7 +34,27 @@ class Auth {
     }
   }
 
-  // Future<String> scanTheIp(int i) async {
-  // return false;
-  // }
+  Future<bool> checkServer(String ip) async {
+    try {
+      // print('Trying 192.168.1.$i');
+      var response = await dio.get('http://$ip:8080/api/hello',
+          options: Options(
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            sendTimeout: const Duration(milliseconds: 100),
+            // receiveTimeout: Duration(milliseconds: 100),
+          ));
+      if (response.statusCode == 200) {
+        print(response.data);
+        if (response.data == 'hello') {
+          return true;
+        }
+      }
+    } on Exception catch (_) {
+      print('Error $ip');
+      return false;
+    }
+    return false;
+  }
 }

@@ -1,4 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:dynamic_color/dynamic_color.dart';
+import 'package:flutter/services.dart';
 
 import '../../models/auth/auth.dart';
 
@@ -12,50 +15,136 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _form = GlobalKey<FormState>();
+  final _ipTextController = TextEditingController();
 
   List<String> servers = [];
 
   String currentNickname = '';
   String currentPassword = '';
+  String currentIp = '';
+
+  var scanning = true;
+  var ipOk = false;
 
   @override
   void initState() {
     super.initState();
-    // Auth().scanForServer().listen((event) {
-    //   setState(() {
-    //     servers.add(event);
-    //   });
-    // });
+    scanning = true;
+    Auth().scanForServer().listen((ip) {
+      setState(() {
+        if (servers.isEmpty) {
+          currentIp = ip;
+        }
+        servers.add(ip); // add the found server to the list of servers
+      });
+    }).onDone(() {
+      // onDone is called when searching is finished
+      setState(() {
+        scanning = false;
+        if (servers.isEmpty) {
+          // if no servers were found, show a snackbar to inform the user to enter the server address manually
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                "Didn't find any servers. Please enter the server address manually.",
+                textAlign: TextAlign.center,
+              ),
+            ),
+          );
+        }
+      });
+    });
   }
 
   /// returns a form field for the server address if no servers are found, otherwise a dropdown menu with the found servers
   get serverFormWidget {
     if (servers.isEmpty) {
-      return TextFormField(
-        decoration: InputDecoration(
-          labelText: 'Server',
-          labelStyle: Theme.of(context).textTheme.bodyLarge,
-          hintText: "xxx.xxx.xxx.xxx",
-          prefixIcon: Icon(
-            Icons.router,
-            color: Theme.of(context).colorScheme.onPrimaryContainer,
+      return Row(
+        children: [
+          Expanded(
+            child: TextFormField(
+              controller: _ipTextController,
+              textInputAction: TextInputAction.next,
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+                signed: false,
+              ),
+              validator: (val) {
+                if (val!.isEmpty) {
+                  return 'Please enter a server address';
+                } else if (!RegExp(r"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$")
+                    .hasMatch(val)) {
+                  return 'Please enter a valid server address';
+                }
+                setState(() {
+                  ipOk = true;
+                });
+                return null;
+              },
+              onSaved: (val) async {
+                if (val != null &&
+                    val.isNotEmpty &&
+                    RegExp(r"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$").hasMatch(val)) {
+                  await Auth().checkServer(val).then((value) {
+                    setState(() {
+                      ipOk = value;
+                    });
+                  });
+                }
+              },
+              onFieldSubmitted: (val) async {
+                if (val.isNotEmpty &&
+                    RegExp(r"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$").hasMatch(val)) {
+                  await Auth().checkServer(val).then((value) {
+                    setState(() {
+                      ipOk = value;
+                    });
+                  });
+                }
+              },
+              onTapOutside: (event) async {
+                var val = _ipTextController.text;
+                if (val.isNotEmpty &&
+                    RegExp(r"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$").hasMatch(val)) {
+                  await Auth().checkServer(val).then((value) {
+                    setState(() {
+                      ipOk = value;
+                    });
+                  });
+                }
+              },
+              onChanged: (val) async {
+                if (ipOk) {
+                  setState(() {
+                    ipOk = false;
+                  });
+                }
+              },
+              decoration: InputDecoration(
+                labelText: 'Server',
+                labelStyle: Theme.of(context).textTheme.bodyLarge,
+                hintText: "xxx.xxx.xxx.xxx",
+                prefixIcon: Icon(
+                  Icons.router,
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
+                suffixIcon: ipOk
+                    ? Icon(
+                        Icons.done,
+                        color: Colors.green.harmonizeWith(
+                          Theme.of(context).colorScheme.onPrimaryContainer,
+                        ),
+                      )
+                    : null,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
           ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ),
-        validator: (val) {
-          if (val!.isEmpty) {
-            return 'Please enter a server address';
-          } else if (!RegExp(r"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$")
-              .hasMatch(val)) {
-            return 'Please enter a valid server address';
-          }
-          return null;
-        },
-        onSaved: (val) {
-          currentNickname = val!;
-        },
+          if (scanning) const SizedBox(width: 10),
+          if (scanning) const CircularProgressIndicator(),
+        ],
       );
     } else {
       return DropdownButtonFormField(
@@ -79,7 +168,9 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
         value: servers.isNotEmpty ? servers.first : null,
-        onChanged: (val) {},
+        onChanged: (val) {
+          currentIp = val.toString();
+        },
       );
     }
   }
@@ -113,7 +204,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       serverFormWidget,
                       const SizedBox(height: 10),
+                      //NickName Field
                       TextFormField(
+                        textInputAction: TextInputAction.next,
                         decoration: InputDecoration(
                           labelText: 'Nickname',
                           labelStyle: Theme.of(context).textTheme.bodyLarge,
@@ -142,7 +235,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         },
                       ),
                       const SizedBox(height: 10),
+                      //Password Field
                       TextFormField(
+                        textInputAction: TextInputAction.done,
                         decoration: InputDecoration(
                           labelText: 'Password',
                           labelStyle: Theme.of(context).textTheme.bodyLarge,
@@ -221,10 +316,51 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void login() {
+  void login() async {
     _form.currentState!.save();
     if (!_form.currentState!.validate()) {
       return; // Invalid!
+    }
+    if (servers.isEmpty) {
+      if (!ipOk) {
+        if (await Auth().checkServer(_ipTextController.text)) {
+          ipOk = true;
+          currentIp = _ipTextController.text;
+        } else {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: const Text('Server not found'),
+                backgroundColor: Theme.of(context).colorScheme.error,
+              ),
+            );
+          }
+          return;
+        }
+        return;
+      } else {
+        currentIp = _ipTextController.text;
+      }
+    }
+    try {
+      //TODO
+      Dio dio = Dio();
+      dio.post('http://$currentIp:8080/api/login',
+          data: {
+            'username': currentNickname,
+            'password': currentPassword,
+          },
+          options: Options(contentType: Headers.formUrlEncodedContentType));
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Server not found'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+      return;
     }
   }
 }

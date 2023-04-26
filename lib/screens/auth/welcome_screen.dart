@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_smarthome/models/auth/auth.dart';
 import 'package:flutter_smarthome/screens/auth/login_screen.dart';
+import 'package:flutter_smarthome/screens/homepage_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   static const routeName = '/auth';
@@ -54,7 +55,11 @@ class WelcomeScreen extends StatelessWidget {
                       ],
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).pushNamed(
+                          HomepageScreen.routeName,
+                        );
+                      },
                       child: const Text('Demo mode'),
                     ),
                   ],
