@@ -1,6 +1,4 @@
-import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
-import 'package:flutter_smarthome/models/auth/user_data.dart';
+part of 'auth_bloc.dart';
 
 enum AuthStatus { initial, authenticated, unauthenticated, error, loading }
 

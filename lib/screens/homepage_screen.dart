@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_smarthome/models/bloc/auth/auth_bloc.dart';
 import 'package:flutter_smarthome/providers/devices_provider.dart';
 import 'package:flutter_smarthome/providers/room_provider.dart';
 import 'package:flutter_smarthome/widgets/homeScreen/room_card.dart';
@@ -26,7 +27,8 @@ class HomepageScreen extends StatelessWidget {
     final favRooms = rooms.where((element) => element.isFavorite).toList();
     return Scaffold(
       appBar: AppBar(
-        title: const Text(''),
+        title:
+            Text("Witaj ${context.read<AuthBloc>().state.userData.showName}!"),
       ),
       body: favRooms.isEmpty
           ? const Center(

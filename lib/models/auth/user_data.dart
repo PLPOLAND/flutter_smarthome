@@ -14,4 +14,22 @@ class UserData {
         email = '',
         token = '',
         avatarFile = null;
+
+  static UserData fromJson(Map body) {
+    print(body);
+    return UserData(
+      body['nick'] as String, body['imie'] as String,
+      body['email'] as String, body['token'] as String, null,
+      // body['avatarFile'] as String?,
+    );
+  }
+
+  @override
+  String toString() {
+    return 'UserData { nickName: $nickName, showName: $showName, email: $email, token: $token, avatarFile: $avatarFile }';
+  }
+
+  String toJson() {
+    return '{ "nick": "$nickName", "imie": "$showName", "email": "$email", "token": "$token" }';
+  }
 }
