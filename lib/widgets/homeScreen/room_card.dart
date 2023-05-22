@@ -15,7 +15,6 @@ import '../../providers/devices_provider.dart';
 import '../../providers/sensors_provider.dart';
 import 'sensor_widget.dart';
 import 'fan_widget.dart';
-import 'light_widget.dart';
 
 class RoomCard extends StatelessWidget {
   const RoomCard({super.key});
@@ -55,8 +54,8 @@ class RoomCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '${room.name}',
-                  style: TextStyle(fontSize: 20),
+                  room.name,
+                  style: const TextStyle(fontSize: 20),
                   textAlign: TextAlign.left,
                 ),
                 Row(
@@ -69,7 +68,7 @@ class RoomCard extends StatelessWidget {
                           return ChangeNotifierProvider.value(
                               value: e, child: const SensorWidget());
                         }
-                        return Container(width: 0, height: 0);
+                        return const SizedBox(width: 0, height: 0);
                       }),
                     },
                   ],
@@ -86,7 +85,7 @@ class RoomCard extends StatelessWidget {
                   .map((e) => e as Light)
                   .toList(),
             ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           ...devices.where((device) => device.type == DeviceType.blind).map(
                 (e) => ChangeNotifierProvider.value(
                   value: e,

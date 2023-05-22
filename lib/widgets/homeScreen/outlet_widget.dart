@@ -33,7 +33,7 @@ class _OutletWidgetState extends State<OutletWidget> {
                   SizedBox(
                     width: 100,
                     child: IconButton(
-                      icon: Icon(Icons.power_settings_new),
+                      icon: const Icon(Icons.power_settings_new),
                       onPressed: () {
                         setState(() {
                           widget.outlet.changeState();

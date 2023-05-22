@@ -67,13 +67,13 @@ class _LightWidgetState extends State<LightWidget> {
                   },
                   onChangeEnd: (value) {
                     if (value == 0) {
-                      widget.lights.forEach((light) {
+                      for (var light in widget.lights) {
                         light.setState(DeviceState.off);
-                      });
+                      }
                     } else if (value == widget.lights.length.toDouble()) {
-                      widget.lights.forEach((light) {
+                      for (var light in widget.lights) {
                         light.setState(DeviceState.on);
-                      });
+                      }
                     } else {
                       for (var i = 0; i < widget.lights.length; i++) {
                         widget.lights[i].setState(i < value.toInt()

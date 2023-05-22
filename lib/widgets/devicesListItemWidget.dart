@@ -151,8 +151,8 @@ class DevicesListItemWidget extends StatelessWidget {
           },
           child: ListTile(
             leading: Column(
-              children: [deviceIcon],
               mainAxisAlignment: MainAxisAlignment.center,
+              children: [deviceIcon],
             ),
             title: Text(
               device.name,

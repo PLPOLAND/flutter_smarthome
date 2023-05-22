@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 abstract class Device with ChangeNotifier {
@@ -15,44 +14,44 @@ abstract class Device with ChangeNotifier {
       this._type, this._state, this._onSlavePin);
 
   void setState(DeviceState state) {
-    this._state = state;
+    _state = state;
     notifyListeners();
   }
 
   Future<void> changeState(); // abstract method for changing device state
 
   set id(int id) {
-    this._id = id;
+    _id = id;
     notifyListeners();
   }
 
   set onSlavePin(int pin) {
-    this._onSlavePin = pin;
+    _onSlavePin = pin;
     notifyListeners();
   }
 
   set roomId(int roomId) {
-    this._roomId = roomId;
+    _roomId = roomId;
     notifyListeners();
   }
 
   set slaveID(int slaveId) {
-    this._slaveId = slaveId;
+    _slaveId = slaveId;
     notifyListeners();
   }
 
   set onSlaveID(int onSlaveId) {
-    this._onSlaveId = onSlaveId;
+    _onSlaveId = onSlaveId;
     notifyListeners();
   }
 
   set deviceName(String name) {
-    this._name = name;
+    _name = name;
     notifyListeners();
   }
 
   set type(DeviceType type) {
-    this._type = type;
+    _type = type;
     notifyListeners();
   }
 

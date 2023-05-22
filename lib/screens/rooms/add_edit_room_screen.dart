@@ -6,7 +6,7 @@ import '../../models/room.dart';
 
 class AddEditRoomScreen extends StatefulWidget {
   static const routeName = '/rooms/add-edit-room';
-  AddEditRoomScreen({super.key});
+  const AddEditRoomScreen({super.key});
 
   @override
   State<AddEditRoomScreen> createState() => _AddEditRoomScreenState();

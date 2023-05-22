@@ -3,7 +3,6 @@ import 'package:flutter_smarthome/screens/sensors/add_edit_sensor_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/sensors_provider.dart';
-import '../widgets/devicesListItemWidget.dart';
 import '../widgets/main_drawer.dart';
 import '../widgets/sensors_list_item_widget.dart';
 

@@ -49,7 +49,7 @@ class DevicesProvider with ChangeNotifier {
       }
     }
 
-    return Future.delayed(Duration(
+    return Future.delayed(const Duration(
         seconds:
             1)); // TODO change this line after implementing the http request
   }
@@ -57,7 +57,7 @@ class DevicesProvider with ChangeNotifier {
   Future<void> addDevice(Device device) async {
     _devices.add(device);
     notifyListeners();
-    return Future.delayed(Duration(
+    return Future.delayed(const Duration(
         seconds:
             1)); // TODO change this line after implementing the http request
   }
@@ -65,7 +65,7 @@ class DevicesProvider with ChangeNotifier {
   Future<void> removeDevice(Device device) async {
     _devices.remove(device);
     notifyListeners();
-    return Future.delayed(Duration(
+    return Future.delayed(const Duration(
         seconds:
             1)); // TODO change this line after implementing the http request
   }
@@ -80,7 +80,7 @@ class DevicesProvider with ChangeNotifier {
       _devices[index] = newDevice;
       notifyListeners();
     }
-    return Future.delayed(Duration(
+    return Future.delayed(const Duration(
         seconds:
             1)); //TODO change this line after implementing the http request
   }

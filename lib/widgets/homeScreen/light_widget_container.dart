@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_smarthome/models/devices/device.dart';
@@ -19,7 +18,7 @@ class LightWidgetContainer extends StatefulWidget {
 class _LightWidgetContainerState extends State<LightWidgetContainer> {
   @override
   Widget build(BuildContext context) {
-    final double _sliderValue = widget.lights
+    final double sliderValue = widget.lights
         .where((element) => element.state == DeviceState.on)
         .length
         .toDouble();
@@ -36,13 +35,13 @@ class _LightWidgetContainerState extends State<LightWidgetContainer> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  _sliderValue == 0
+                  sliderValue == 0
                       ? 'Off'
-                      : _sliderValue == widget.lights.length.toDouble()
+                      : sliderValue == widget.lights.length.toDouble()
                           ? widget.lights.length == 1
                               ? 'On'
                               : 'Full'
-                          : '${_sliderValue.toInt()}/${widget.lights.length}',
+                          : '${sliderValue.toInt()}/${widget.lights.length}',
                 ),
                 const SizedBox(width: 10),
                 SizedBox(
@@ -53,7 +52,7 @@ class _LightWidgetContainerState extends State<LightWidgetContainer> {
                           : 230,
                   child: widget.lights.length < 2
                       ? IconButton(
-                          icon: Icon(Icons.power_settings_new),
+                          icon: const Icon(Icons.power_settings_new),
                           onPressed: () {
                             setState(() {
                               widget.lights.first.changeState();

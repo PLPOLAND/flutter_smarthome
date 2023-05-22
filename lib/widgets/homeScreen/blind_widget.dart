@@ -25,9 +25,9 @@ class _BlindWidgetState extends State<BlindWidget> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Center(child: Text("${widget.blind.name}")),
+                Center(child: Text(widget.blind.name)),
                 const SizedBox(width: 10),
-                Container(
+                SizedBox(
                   width: 150,
                   child: SegmentedButton<DeviceState>(
                       showSelectedIcon: false,

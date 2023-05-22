@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_smarthome/models/room.dart';
 import 'package:flutter_smarthome/providers/room_provider.dart';
 import 'package:flutter_smarthome/screens/sensors/add_edit_sensor_screen.dart';
 import 'package:provider/provider.dart';
 
-import '../models/devices/device.dart';
 import '../models/sensors/button.dart';
 import '../models/sensors/hygrometer.dart';
 import '../models/sensors/motion.dart';
 import '../models/sensors/sensor.dart';
 import '../models/sensors/thermometer.dart';
 import '../models/sensors/twilight.dart';
-import '../providers/devices_provider.dart';
 
 class SensorsListItemWidget extends StatelessWidget {
   const SensorsListItemWidget({super.key});

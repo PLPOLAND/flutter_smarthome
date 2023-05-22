@@ -1,19 +1,12 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_smarthome/models/devices/device.dart';
-import 'package:flutter_smarthome/models/devices/light.dart';
-import 'package:flutter_smarthome/models/devices/outlet.dart';
 import 'package:flutter_smarthome/models/sensors/button.dart';
 import 'package:flutter_smarthome/models/sensors/hygrometer.dart';
 import 'package:flutter_smarthome/models/sensors/sensor.dart';
-import 'package:flutter_smarthome/providers/devices_provider.dart';
 import 'package:flutter_smarthome/widgets/add_edit_sensor_screen/button_local_functions.dart';
 import 'package:provider/provider.dart';
 
-import '../../models/devices/blind.dart';
-import '../../models/devices/fan.dart';
 import '../../models/room.dart';
 import '../../models/sensors/motion.dart';
 import '../../models/sensors/thermometer.dart';

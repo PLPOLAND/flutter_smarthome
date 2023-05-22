@@ -37,14 +37,14 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
         title: Text(room.name),
         actions: [
           IconButton(
-            icon: Icon(Icons.edit),
+            icon: const Icon(Icons.edit),
             onPressed: () {
               Navigator.of(context)
                   .pushNamed('/rooms/add-edit-room', arguments: room.id);
             },
           ),
           IconButton(
-            icon: Icon(Icons.delete),
+            icon: const Icon(Icons.delete),
             onPressed: () {
               Provider.of<RoomsProvider>(context, listen: false)
                   .removeRoomById(room.id);
@@ -53,7 +53,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
             },
           ),
           IconButton(
-            icon: room.isFavorite ? Icon(Icons.star) : Icon(Icons.star_outline),
+            icon: room.isFavorite ? const Icon(Icons.star) : const Icon(Icons.star_outline),
             onPressed: () {
               setState(() {
                 room.toggleFavorite();
@@ -92,7 +92,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                               child: const DeviceWidget());
                         } else {
                           return AnimatedContainer(
-                            duration: Duration(milliseconds: 300),
+                            duration: const Duration(milliseconds: 300),
                             clipBehavior: Clip.hardEdge,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
@@ -142,7 +142,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
         icon: Icons.add,
         children: [
           SpeedDialChild(
-            child: Icon(Icons.storage),
+            child: const Icon(Icons.storage),
             // label: "Device",
             onTap: () {
               Navigator.of(context).pushNamed('/devices/add-edit-device',
@@ -150,7 +150,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
             },
           ),
           SpeedDialChild(
-            child: Icon(Icons.sensors),
+            child: const Icon(Icons.sensors),
             // label: "Sensor",
             onTap: () {
               Navigator.of(context).pushNamed('/sensors/add-edit-sensor',

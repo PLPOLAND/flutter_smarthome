@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'device.dart';
 
 class Light extends Device {
@@ -21,7 +20,7 @@ class Light extends Device {
     }
     notifyListeners();
     print("Light: $name, state: $state");
-    return Future.delayed(Duration(
+    return Future.delayed(const Duration(
         seconds:
             1)); // TODO: change this line after implementing the http request
   }

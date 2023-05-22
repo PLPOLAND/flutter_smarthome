@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_smarthome/themes/themes.dart';
 import 'package:flutter_smarthome/widgets/main_drawer.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../widgets/settingsWidgets/settings_title.dart';
@@ -10,7 +8,7 @@ import '../widgets/settingsWidgets/settings_title.dart';
 class SettingsScreen extends StatefulWidget {
   static const routeName = '/settings';
   SettingsScreen({super.key});
-  TextEditingController _IPController = TextEditingController();
+  final TextEditingController _IPController = TextEditingController();
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
 }
@@ -67,8 +65,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     applicationLegalese: "© 2021, Marek Pałdyna",
                     applicationIcon: const Icon(Icons.home));
               },
-              child: ListTile(
-                title: const Text('About'),
+              child: const ListTile(
+                title: Text('About'),
               ),
             ),
           ],
