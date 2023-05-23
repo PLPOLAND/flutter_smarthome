@@ -1,37 +1,50 @@
 part of 'devices_bloc.dart';
 
-enum DevicesStatus { initial, loading, loaded, error, updating }
+enum DevicesStatus {
+  initial,
+  demo,
+  loading,
+  updating,
+  loaded,
+  error,
+}
 
 extension DevicesStatusExtension on DevicesStatus {
-  bool get isUnknown => this == DevicesStatus.initial;
+  bool get isInitial => this == DevicesStatus.initial;
+
+  bool get isDemo => this == DevicesStatus.demo;
+
   bool get isLoading => this == DevicesStatus.loading;
-  bool get isLoaded => this == DevicesStatus.loaded;
-  bool get isError => this == DevicesStatus.error;
+
   bool get isUpdating => this == DevicesStatus.updating;
+
+  bool get isLoaded => this == DevicesStatus.loaded;
+
+  bool get isError => this == DevicesStatus.error;
 }
 
 class DevicesState extends Equatable {
   final DevicesStatus status;
   final List<Device> devices;
-  final List<Device> favoriteDevices;
 
   const DevicesState._({
     this.status = DevicesStatus.initial,
     this.devices = const [],
-    this.favoriteDevices = const [],
   });
 
   const DevicesState.initial() : this._();
+
+  const DevicesState.demo({
+    required List<Device> devices,
+  }) : this._(devices: devices, status: DevicesStatus.demo);
 
   const DevicesState.loading() : this._(status: DevicesStatus.loading);
 
   const DevicesState.loaded({
     required List<Device> devices,
-    required List<Device> favoriteDevices,
   }) : this._(
           status: DevicesStatus.loaded,
           devices: devices,
-          favoriteDevices: favoriteDevices,
         );
 
   const DevicesState.error() : this._(status: DevicesStatus.error);
@@ -39,11 +52,10 @@ class DevicesState extends Equatable {
   const DevicesState.updating() : this._(status: DevicesStatus.updating);
 
   @override
-  List<Object> get props => [status, devices, favoriteDevices];
+  List<Object> get props => [status, devices];
 
   @override
-  String toString() =>
-      'DevicesState { status: $status, devices: $devices, favoriteDevices: $favoriteDevices }';
+  String toString() => 'DevicesState { status: $status, devices: $devices}';
 
   DevicesState copyWith({
     DevicesStatus? status,
@@ -53,7 +65,6 @@ class DevicesState extends Equatable {
     return DevicesState._(
       status: status ?? this.status,
       devices: devices ?? this.devices,
-      favoriteDevices: favoriteDevices ?? this.favoriteDevices,
     );
   }
 }

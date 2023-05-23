@@ -8,7 +8,7 @@ import 'package:flutter_smarthome/models/devices/outlet.dart';
 import 'package:flutter_smarthome/models/sensors/button.dart';
 import 'package:flutter_smarthome/models/sensors/hygrometer.dart';
 import 'package:flutter_smarthome/models/sensors/sensor.dart';
-import 'package:flutter_smarthome/providers/devices_provider.dart';
+import 'package:flutter_smarthome/repositories/device_repository.dart';
 import 'package:flutter_smarthome/widgets/add_edit_sensor_screen/button_local_functions.dart';
 import 'package:provider/provider.dart';
 

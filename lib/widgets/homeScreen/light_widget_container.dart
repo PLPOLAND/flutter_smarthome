@@ -19,8 +19,8 @@ class LightWidgetContainer extends StatefulWidget {
 class _LightWidgetContainerState extends State<LightWidgetContainer> {
   @override
   Widget build(BuildContext context) {
-    final double _sliderValue = widget.lights
-        .where((element) => element.state == DeviceState.on)
+    final double sliderValue = widget.lights
+        .where((element) => element.state.deviceState == DeviceState.on)
         .length
         .toDouble();
     return Padding(
@@ -36,13 +36,13 @@ class _LightWidgetContainerState extends State<LightWidgetContainer> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  _sliderValue == 0
+                  sliderValue == 0
                       ? 'Off'
-                      : _sliderValue == widget.lights.length.toDouble()
+                      : sliderValue == widget.lights.length.toDouble()
                           ? widget.lights.length == 1
                               ? 'On'
                               : 'Full'
-                          : '${_sliderValue.toInt()}/${widget.lights.length}',
+                          : '${sliderValue.toInt()}/${widget.lights.length}',
                 ),
                 const SizedBox(width: 10),
                 SizedBox(
@@ -53,7 +53,7 @@ class _LightWidgetContainerState extends State<LightWidgetContainer> {
                           : 230,
                   child: widget.lights.length < 2
                       ? IconButton(
-                          icon: Icon(Icons.power_settings_new),
+                          icon: const Icon(Icons.power_settings_new),
                           onPressed: () {
                             setState(() {
                               widget.lights.first.changeState();
@@ -61,7 +61,8 @@ class _LightWidgetContainerState extends State<LightWidgetContainer> {
                           },
                           style: ButtonStyle(
                             backgroundColor: MaterialStatePropertyAll<Color>(
-                              widget.lights.first.state == DeviceState.on
+                              widget.lights.first.state.deviceState ==
+                                      DeviceState.on
                                   ? Theme.of(context)
                                       .colorScheme
                                       .secondaryContainer

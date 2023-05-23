@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'device.dart';
 
@@ -14,13 +16,12 @@ class Outlet extends Device {
             onSlavePin);
   @override
   Future<void> changeState() async {
-    if (state == DeviceState.on) {
+    if (state.deviceState == DeviceState.on) {
       setState(DeviceState.off);
-    } else if (state == DeviceState.off) {
+    } else if (state.deviceState == DeviceState.off) {
       super.setState(DeviceState.on);
     }
-    print("Outlet: $name, state: $state");
-    notifyListeners();
+    log("Outlet: $name, state: $state");
     return Future.delayed(const Duration(
         seconds:
             1)); // TODO: change this line after implementing the http request
@@ -33,7 +34,6 @@ class Outlet extends Device {
     } else {
       throw Exception("Invalid state"); //TODO: change to custom exception
     }
-    notifyListeners();
   }
 
   @override

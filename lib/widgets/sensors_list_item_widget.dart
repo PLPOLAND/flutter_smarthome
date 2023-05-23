@@ -11,7 +11,7 @@ import '../models/sensors/motion.dart';
 import '../models/sensors/sensor.dart';
 import '../models/sensors/thermometer.dart';
 import '../models/sensors/twilight.dart';
-import '../providers/devices_provider.dart';
+import '../repositories/device_repository.dart';
 
 class SensorsListItemWidget extends StatelessWidget {
   const SensorsListItemWidget({super.key});

@@ -44,7 +44,7 @@ class _BlindWidgetState extends State<BlindWidget> {
                           icon: Icon(Icons.arrow_upward),
                         )
                       ],
-                      selected: {widget.blind.state},
+                      selected: {widget.blind.state.deviceState},
                       onSelectionChanged: (value) {
                         setState(() {
                           widget.blind.setState(value.first);

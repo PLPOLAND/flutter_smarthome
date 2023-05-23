@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_smarthome/models/devices/device.dart';
 import 'package:flutter_smarthome/models/sensors/sensor.dart';
 import 'package:flutter_smarthome/widgets/homeScreen/blind_widget.dart';
@@ -11,7 +12,7 @@ import '../../models/devices/fan.dart';
 import '../../models/devices/light.dart';
 import '../../models/devices/outlet.dart';
 import '../../models/room.dart';
-import '../../providers/devices_provider.dart';
+import '../../repositories/device_repository.dart';
 import '../../providers/sensors_provider.dart';
 import 'sensor_widget.dart';
 import 'fan_widget.dart';
@@ -27,15 +28,14 @@ class RoomCard extends StatelessWidget {
         .sensors
         .where((sensor) => sensor.roomId == room.id)
         .toList();
-    final devices = Provider.of<DevicesProvider>(context)
+    final devices = context
+        .read<DevicesRepository>()
         .devices
         .where((device) => device.roomId == room.id)
         .toList();
 
     final bool anyThermometer =
         sensors.any((sensor) => sensor.type == SensorType.thermometer);
-    final bool anyHygrometer =
-        sensors.any((sensor) => sensor.type == SensorType.hygrometer);
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
@@ -69,7 +69,7 @@ class RoomCard extends StatelessWidget {
                           return ChangeNotifierProvider.value(
                               value: e, child: const SensorWidget());
                         }
-                        return Container(width: 0, height: 0);
+                        return const SizedBox(width: 0, height: 0);
                       }),
                     },
                   ],
@@ -86,48 +86,77 @@ class RoomCard extends StatelessWidget {
                   .map((e) => e as Light)
                   .toList(),
             ),
-          SizedBox(height: 10),
-          ...devices.where((device) => device.type == DeviceType.blind).map(
-                (e) => ChangeNotifierProvider.value(
-                  value: e,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      BlindWidget(
-                        blind: e as Blind,
-                      ),
-                      const SizedBox(height: 10),
-                    ],
-                  ),
-                ),
+          const SizedBox(height: 10),
+          ...devices
+              .where((device) => device.state.type == DeviceType.blind)
+              .map(
+                (e) => BlocBuilder(
+                    builder: (context, state) {
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          BlindWidget(
+                            blind: e as Blind,
+                          ),
+                          const SizedBox(height: 10),
+                        ],
+                      );
+                    },
+                    bloc: e),
               ),
-          ...devices.where((device) => device.type == DeviceType.outlet).map(
-                (e) => ChangeNotifierProvider.value(
-                  value: e,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      OutletWidget(
-                        outlet: e as Outlet,
-                      ),
-                      const SizedBox(height: 10),
-                    ],
+          ...devices
+              .where((device) => device.type == DeviceType.outlet)
+              .map((e) => BlocBuilder(builder: (context, state) {
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            OutletWidget(
+                              outlet: e as Outlet,
+                            ),
+                            const SizedBox(height: 10),
+                          ],
+                        );
+                      })
+                  // ChangeNotifierProvider.value(
+                  //   value: e,
+                  //   child: Column(
+                  //     mainAxisSize: MainAxisSize.min,
+                  //     children: [
+                  //       OutletWidget(
+                  //         outlet: e as Outlet,
+                  //       ),
+                  //       const SizedBox(height: 10),
+                  //     ],
+                  //   ),
+                  // ),
                   ),
-                ),
-              ),
           ...devices.where((device) => device.type == DeviceType.fan).map(
-                (e) => ChangeNotifierProvider.value(
-                  value: e,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      FanWidget(
-                        fan: e as Fan,
-                      ),
-                      const SizedBox(height: 10),
-                    ],
-                  ),
+                (e) => BlocBuilder(
+                  builder: (context, state) {
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        FanWidget(
+                          fan: e as Fan,
+                        ),
+                        const SizedBox(height: 10),
+                      ],
+                    );
+                  },
+                  bloc: e,
                 ),
+                // ChangeNotifierProvider.value(
+                //   value: e,
+                //   child: Column(
+                //     mainAxisSize: MainAxisSize.min,
+                //     children: [
+                //       FanWidget(
+                //         fan: e as Fan,
+                //       ),
+                //       const SizedBox(height: 10),
+                //     ],
+                //   ),
+                // ),
               ),
         ],
       ),

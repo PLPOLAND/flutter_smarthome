@@ -41,7 +41,7 @@ class _OutletWidgetState extends State<OutletWidget> {
                       },
                       style: ButtonStyle(
                         backgroundColor: MaterialStatePropertyAll<Color>(
-                          widget.outlet.state == DeviceState.on
+                          widget.outlet.state.deviceState == DeviceState.on
                               ? Theme.of(context).colorScheme.secondaryContainer
                               : Color.alphaBlend(
                                   Provider.of<ThemesMenager>(context,

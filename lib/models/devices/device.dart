@@ -1,70 +1,65 @@
+import 'dart:developer';
+
+import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-abstract class Device with ChangeNotifier {
-  int _id;
-  int _roomId;
-  int _slaveId;
-  int _onSlaveId;
-  int _onSlavePin;
-  String _name;
-  DeviceType _type;
-  DeviceState _state;
+abstract class Device extends Cubit<DeviceCubitState> {
+  Device(int id, int roomId, int slaveId, int onSlaveId, String name,
+      DeviceType type, DeviceState state, int onSlavePin)
+      : super(DeviceCubitState(
+            id, roomId, slaveId, onSlaveId, name, type, state, onSlavePin));
 
-  Device(this._id, this._roomId, this._slaveId, this._onSlaveId, this._name,
-      this._type, this._state, this._onSlavePin);
-
-  void setState(DeviceState state) {
-    this._state = state;
-    notifyListeners();
+  void setState(DeviceState newState) {
+    state.state = newState;
   }
 
   Future<void> changeState(); // abstract method for changing device state
 
   set id(int id) {
-    this._id = id;
-    notifyListeners();
+    state.id = id;
+    emit(state);
   }
 
   set onSlavePin(int pin) {
-    this._onSlavePin = pin;
-    notifyListeners();
+    state.onSlavePin = pin;
+    emit(state);
   }
 
   set roomId(int roomId) {
-    this._roomId = roomId;
-    notifyListeners();
+    state.roomId = roomId;
+    emit(state);
   }
 
   set slaveID(int slaveId) {
-    this._slaveId = slaveId;
-    notifyListeners();
+    state.slaveID = slaveId;
+    emit(state);
   }
 
   set onSlaveID(int onSlaveId) {
-    this._onSlaveId = onSlaveId;
-    notifyListeners();
+    state.onSlaveID = onSlaveId;
+    emit(state);
   }
 
   set deviceName(String name) {
-    this._name = name;
-    notifyListeners();
+    state.deviceName = name;
+    emit(state);
   }
 
   set type(DeviceType type) {
-    this._type = type;
-    notifyListeners();
+    state.type = type;
+    emit(state);
   }
 
-  int get id => _id;
-  int get onSlavePin => _onSlavePin;
-  int get roomId => _roomId;
-  int get slaveID => _slaveId;
-  int get onSlaveID => _onSlaveId;
-  String get name => _name;
-  DeviceState get state => _state;
+  int get id => state.id;
+  int get onSlavePin => state.onSlavePin;
+  int get roomId => state.roomId;
+  int get slaveID => state.slaveID;
+  int get onSlaveID => state.onSlaveID;
+  String get name => state.name;
+  DeviceState get deviceState => state.deviceState;
 
-  DeviceType get type => _type;
+  DeviceType get type => state.type;
 
   static IconData icon(DeviceType type) {
     switch (type) {
@@ -80,6 +75,68 @@ abstract class Device with ChangeNotifier {
         return Icons.error_outline;
     }
   }
+
+  @override
+  void onChange(Change<DeviceCubitState> change) {
+    super.onChange(change);
+    log(change.toString());
+  }
+}
+
+class DeviceCubitState {
+  int _id;
+  int _roomId;
+  int _slaveId;
+  int _onSlaveId;
+  int _onSlavePin;
+  String _name;
+  DeviceType _type;
+  DeviceState _state;
+
+  DeviceCubitState(this._id, this._roomId, this._slaveId, this._onSlaveId,
+      this._name, this._type, this._state, this._onSlavePin);
+
+  set state(DeviceState state) {
+    _state = state;
+  }
+
+  set id(int id) {
+    _id = id;
+  }
+
+  set onSlavePin(int pin) {
+    _onSlavePin = pin;
+  }
+
+  set roomId(int roomId) {
+    _roomId = roomId;
+  }
+
+  set slaveID(int slaveId) {
+    _slaveId = slaveId;
+  }
+
+  set onSlaveID(int onSlaveId) {
+    _onSlaveId = onSlaveId;
+  }
+
+  set deviceName(String name) {
+    _name = name;
+  }
+
+  set type(DeviceType type) {
+    _type = type;
+  }
+
+  int get id => _id;
+  int get onSlavePin => _onSlavePin;
+  int get roomId => _roomId;
+  int get slaveID => _slaveId;
+  int get onSlaveID => _onSlaveId;
+  String get name => _name;
+  DeviceState get deviceState => _state;
+
+  DeviceType get type => _type;
 
   @override
   String toString() {

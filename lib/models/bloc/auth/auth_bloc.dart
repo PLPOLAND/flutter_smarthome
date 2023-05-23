@@ -88,6 +88,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
       //TODO: implement login logic
     });
+    on<LogInDemo>(
+      (event, emit) {
+        print('LogInDemo event');
+        UserData userData =
+            UserData("demo", "demo", "demo@demo.pl", "demoToken", null);
+        emit(state.copyWith(status: AuthStatus.demo, userData: userData));
+      },
+    );
   }
 
   @override

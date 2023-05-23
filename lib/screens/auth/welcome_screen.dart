@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_smarthome/models/bloc/auth/auth_bloc.dart';
+import 'package:flutter_smarthome/models/bloc/devices/devices_bloc.dart';
 import 'package:flutter_smarthome/screens/auth/login_screen.dart';
 import 'package:flutter_smarthome/screens/homepage_screen.dart';
 
@@ -18,7 +19,7 @@ class WelcomeScreen extends StatelessWidget {
       return BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) async {
           log('WelcomeScreen: $state');
-          if (state.status.isAuthenticated) {
+          if (state.status.isAuthenticated || state.status.isDemo) {
             Navigator.of(context)
                 .pushReplacementNamed(HomepageScreen.routeName);
           }
@@ -74,6 +75,8 @@ class WelcomeScreen extends StatelessWidget {
                             ),
                             TextButton(
                               onPressed: () {
+                                context.read<DevicesBloc>().add(LoadDemo());
+                                context.read<AuthBloc>().add(LogInDemo());
                                 Navigator.of(context).pushNamed(
                                   HomepageScreen.routeName,
                                 );
@@ -88,6 +91,8 @@ class WelcomeScreen extends StatelessWidget {
                 ),
               ),
             );
+          } else if (state.status.isDemo) {
+            return const HomepageScreen();
           } else {
             return const Scaffold(
               body: Center(

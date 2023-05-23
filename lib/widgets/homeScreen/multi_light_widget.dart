@@ -30,7 +30,7 @@ class _MultiLightWidgetState extends State<MultiLightWidget> {
           child: Container(
             height: 40,
             decoration: BoxDecoration(
-              color: widget.lights[i].state == DeviceState.on
+              color: widget.lights[i].state.deviceState == DeviceState.on
                   ? Theme.of(context).colorScheme.secondaryContainer
                   : Color.alphaBlend(
                       Provider.of<ThemesMenager>(context).themeMode ==
@@ -86,22 +86,22 @@ class _MultiLightWidgetState extends State<MultiLightWidget> {
         mainAxisSize: MainAxisSize.max,
         children: [
           ..._buildLightWidgets(),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           IconButton(
             icon: Icon(Icons.power_settings_new),
             onPressed: () {
               setState(() {
-                var anyDeviceOff = widget.lights
-                    .any((element) => element.state == DeviceState.off);
-                widget.lights.forEach((element) {
+                var anyDeviceOff = widget.lights.any(
+                    (element) => element.state.deviceState == DeviceState.off);
+                for (var element in widget.lights) {
                   if (anyDeviceOff) {
                     element.setState(DeviceState.on);
                   } else {
                     element.setState(DeviceState.off);
                   }
-                });
+                }
               });
               if (widget.onClick != null) {
                 widget.onClick!();
@@ -109,8 +109,8 @@ class _MultiLightWidgetState extends State<MultiLightWidget> {
             },
             style: ButtonStyle(
               backgroundColor: MaterialStatePropertyAll<Color>(
-                !widget.lights
-                        .any((element) => element.state == DeviceState.off)
+                !widget.lights.any((element) =>
+                        element.state.deviceState == DeviceState.off)
                     ? Theme.of(context).colorScheme.secondaryContainer
                     : Color.alphaBlend(
                         Provider.of<ThemesMenager>(context).themeMode ==

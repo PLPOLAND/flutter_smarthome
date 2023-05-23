@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_smarthome/models/bloc/auth/auth_bloc.dart';
-import 'package:flutter_smarthome/providers/devices_provider.dart';
+import 'package:flutter_smarthome/repositories/device_repository.dart';
 import 'package:flutter_smarthome/providers/room_provider.dart';
 import 'package:flutter_smarthome/widgets/homeScreen/room_card.dart';
 import 'package:flutter_smarthome/widgets/main_drawer.dart';

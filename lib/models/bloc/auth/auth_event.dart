@@ -23,3 +23,5 @@ class LogIn extends AuthEvent {
   @override
   String toString() => 'LogginIn { email: $email, password: $password }';
 }
+
+class LogInDemo extends AuthEvent {}

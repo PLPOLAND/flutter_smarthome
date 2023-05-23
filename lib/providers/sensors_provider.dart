@@ -6,7 +6,7 @@ import 'package:flutter_smarthome/models/sensors/motion.dart';
 import 'package:flutter_smarthome/models/sensors/thermometer.dart';
 import 'package:flutter_smarthome/models/sensors/twilight.dart';
 
-import '../dummy_data/dummy_data.dart';
+import '../repositories/dummy_data/dummy_data.dart';
 import '../models/sensors/button.dart';
 import '../models/sensors/sensor.dart';
 

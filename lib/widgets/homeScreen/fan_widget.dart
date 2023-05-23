@@ -41,7 +41,7 @@ class _FanWidgetState extends State<FanWidget> {
                       },
                       style: ButtonStyle(
                         backgroundColor: MaterialStatePropertyAll<Color>(
-                          widget.fan.state == DeviceState.on
+                          widget.fan.state.deviceState == DeviceState.on
                               ? Theme.of(context).colorScheme.secondaryContainer
                               : Color.alphaBlend(
                                   Provider.of<ThemesMenager>(context,

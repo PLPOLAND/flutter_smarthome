@@ -20,7 +20,6 @@ class Blind extends Device {
     } else if (state == DeviceState.down) {
       super.setState(DeviceState.up);
     }
-    notifyListeners();
     return Future.delayed(Duration(
         seconds:
             1)); // TODO: change this line after implementing the http request
@@ -35,7 +34,6 @@ class Blind extends Device {
     } else {
       throw Exception("Invalid state");
     }
-    notifyListeners();
   }
 
   @override

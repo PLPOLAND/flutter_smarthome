@@ -1,13 +1,16 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_smarthome/models/room.dart';
 import 'package:flutter_smarthome/providers/room_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../models/devices/device.dart';
-import '../providers/devices_provider.dart';
+import '../repositories/device_repository.dart';
 
 class DevicesListItemWidget extends StatelessWidget {
-  const DevicesListItemWidget({super.key});
+  Device device;
+  DevicesListItemWidget(this.device, {super.key});
 
   void showLoosingDataDialog(BuildContext context, Device device, Room room) {
     showDialog(
@@ -24,7 +27,8 @@ class DevicesListItemWidget extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () {
-                    Provider.of<DevicesProvider>(context, listen: false)
+                    context
+                        .read<DevicesRepository>()
                         .removeDevice(device)
                         .then((_) => Navigator.of(context).pop());
                   },
@@ -36,13 +40,12 @@ class DevicesListItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Device device = Provider.of<Device>(context);
     final RoomsProvider rooms = Provider.of<RoomsProvider>(context);
     Icon deviceIcon = const Icon(Icons.error);
 
     switch (device.type) {
       case DeviceType.light:
-        if (device.state == DeviceState.on) {
+        if (device.state.deviceState == DeviceState.on) {
           deviceIcon = Icon(Icons.lightbulb,
               color: Theme.of(context).colorScheme.onPrimary);
         } else {
@@ -51,7 +54,7 @@ class DevicesListItemWidget extends StatelessWidget {
         }
         break;
       case DeviceType.blind:
-        if (device.state == DeviceState.up) {
+        if (device.state.deviceState == DeviceState.up) {
           deviceIcon = Icon(Icons.roller_shades,
               color: Theme.of(context).colorScheme.onPrimary);
         } else {
@@ -60,7 +63,7 @@ class DevicesListItemWidget extends StatelessWidget {
         }
         break;
       case DeviceType.outlet:
-        if (device.state == DeviceState.on) {
+        if (device.state.deviceState == DeviceState.on) {
           deviceIcon = Icon(Icons.outlet,
               color: Theme.of(context).colorScheme.onPrimary);
         } else {
@@ -69,7 +72,7 @@ class DevicesListItemWidget extends StatelessWidget {
         }
         break;
       case DeviceType.fan:
-        if (device.state == DeviceState.on) {
+        if (device.state.deviceState == DeviceState.on) {
           deviceIcon = Icon(Icons.heat_pump,
               color: Theme.of(context).colorScheme.onPrimary);
         } else {
@@ -80,32 +83,32 @@ class DevicesListItemWidget extends StatelessWidget {
       default:
     }
 
-    BoxDecoration boxDecoration =
-        device.state == DeviceState.up || device.state == DeviceState.on
-            ? BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                gradient: LinearGradient(colors: [
-                  Theme.of(context).colorScheme.primary,
-                  Color.alphaBlend(Colors.white.withAlpha(0x55),
-                      Theme.of(context).colorScheme.primary),
-                ]))
-            : BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                color: Colors.grey.shade600,
-              );
+    BoxDecoration boxDecoration = device.state.deviceState == DeviceState.up ||
+            device.state.deviceState == DeviceState.on
+        ? BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            gradient: LinearGradient(colors: [
+              Theme.of(context).colorScheme.primary,
+              Color.alphaBlend(Colors.white.withAlpha(0x55),
+                  Theme.of(context).colorScheme.primary),
+            ]))
+        : BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            color: Colors.grey.shade600,
+          );
 
     Widget deviceTrailingIcon = const Icon(Icons.power_settings_new);
-    if (device.state == DeviceState.on) {
+    if (device.state.deviceState == DeviceState.on) {
       deviceTrailingIcon = Icon(Icons.power_settings_new,
           color: Theme.of(context).colorScheme.onPrimary);
-    } else if (device.state == DeviceState.off) {
+    } else if (device.state.deviceState == DeviceState.off) {
       deviceTrailingIcon = Icon(Icons.power_settings_new_outlined,
           color: Theme.of(context).colorScheme.onPrimary);
-    } else if (device.state == DeviceState.up ||
-        device.state == DeviceState.middle) {
+    } else if (device.state.deviceState == DeviceState.up ||
+        device.state.deviceState == DeviceState.middle) {
       deviceTrailingIcon = Icon(Icons.arrow_downward,
           color: Theme.of(context).colorScheme.onPrimary);
-    } else if (device.state == DeviceState.down) {
+    } else if (device.state.deviceState == DeviceState.down) {
       deviceTrailingIcon = Icon(Icons.arrow_upward,
           color: Theme.of(context).colorScheme.onPrimary);
     }
@@ -116,7 +119,7 @@ class DevicesListItemWidget extends StatelessWidget {
         // deviceTrailingIcon,
         IconButton(
           onPressed: () {
-            print("Edit ${device.name}");
+            log("Edit ${device.name}");
             Navigator.of(context).pushNamed(
               '/devices/add-edit-device',
               arguments: {'deviceId': device.id},
@@ -127,7 +130,7 @@ class DevicesListItemWidget extends StatelessWidget {
         ),
         IconButton(
           onPressed: () {
-            print("Delete ${device.name}");
+            log("Delete ${device.name}");
             showLoosingDataDialog(
               context,
               device,
@@ -151,8 +154,8 @@ class DevicesListItemWidget extends StatelessWidget {
           },
           child: ListTile(
             leading: Column(
-              children: [deviceIcon],
               mainAxisAlignment: MainAxisAlignment.center,
+              children: [deviceIcon],
             ),
             title: Text(
               device.name,

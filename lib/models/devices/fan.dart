@@ -14,26 +14,24 @@ class Fan extends Device {
             onSlavePin);
   @override
   Future<void> changeState() async {
-    if (state == DeviceState.on) {
+    if (state.deviceState == DeviceState.on) {
       super.setState(DeviceState.off);
-    } else if (state == DeviceState.off) {
+    } else if (state.deviceState == DeviceState.off) {
       super.setState(DeviceState.on);
     }
-    notifyListeners();
     print("Fan: $name, state: $state");
-    return Future.delayed(Duration(
+    return Future.delayed(const Duration(
         seconds:
             1)); // TODO: change this line after implementing the http request
   }
 
   @override
-  void setState(DeviceState state) {
-    if (state == DeviceState.on || state == DeviceState.off) {
-      super.setState(state);
+  void setState(DeviceState newState) {
+    if (newState == DeviceState.on || newState == DeviceState.off) {
+      super.setState(newState);
     } else {
       throw Exception("Invalid state"); //TODO: change to custom exception
     }
-    notifyListeners();
   }
 
   @override

@@ -1,6 +1,13 @@
 part of 'auth_bloc.dart';
 
-enum AuthStatus { initial, authenticated, unauthenticated, error, loading }
+enum AuthStatus {
+  initial,
+  authenticated,
+  unauthenticated,
+  error,
+  loading,
+  demo
+}
 
 extension AuthStatusExtension on AuthStatus {
   bool get isUnknown => this == AuthStatus.initial;
@@ -8,6 +15,7 @@ extension AuthStatusExtension on AuthStatus {
   bool get isUnauthenticated => this == AuthStatus.unauthenticated;
   bool get isError => this == AuthStatus.error;
   bool get isLoading => this == AuthStatus.loading;
+  bool get isDemo => this == AuthStatus.demo;
 }
 
 class AuthState extends Equatable {
@@ -29,6 +37,8 @@ class AuthState extends Equatable {
   const AuthState.error(String message) : this._(status: AuthStatus.error);
 
   const AuthState.loading() : this._(status: AuthStatus.loading);
+
+  const AuthState.demo() : this._(status: AuthStatus.demo);
 
   @override
   List<Object> get props => [status, userData];

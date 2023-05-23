@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_smarthome/providers/devices_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_smarthome/repositories/device_repository.dart';
 import 'package:flutter_smarthome/providers/room_provider.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:provider/provider.dart';
@@ -29,7 +30,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
   Widget build(BuildContext context) {
     Room room = ModalRoute.of(context)!.settings.arguments as Room;
     List<Device> devices =
-        Provider.of<DevicesProvider>(context).getDevicesByRoomId(room.id);
+        context.read<DevicesRepository>().getDevicesByRoomId(room.id);
     List<Sensor> sensors =
         Provider.of<SensorsProvider>(context).getSensorsByRoomId(room.id);
     return Scaffold(
@@ -74,25 +75,18 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                         const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                     itemBuilder: (ctx, index) {
                       if (index < devices.length) {
-                        if (devices[index] is Light) {
-                          return ChangeNotifierProvider.value(
-                              value: devices[index],
-                              child: const DeviceWidget());
-                        } else if (devices[index] is Blind) {
-                          return ChangeNotifierProvider.value(
-                              value: devices[index],
-                              child: const DeviceWidget());
-                        } else if (devices[index] is Fan) {
-                          return ChangeNotifierProvider.value(
-                              value: devices[index],
-                              child: const DeviceWidget());
-                        } else if (devices[index] is Outlet) {
-                          return ChangeNotifierProvider.value(
-                              value: devices[index],
-                              child: const DeviceWidget());
+                        if (devices[index] is Light ||
+                            devices[index] is Blind ||
+                            devices[index] is Fan ||
+                            devices[index] is Outlet) {
+                          return BlocBuilder<Device, DeviceCubitState>(
+                              bloc: devices[index],
+                              builder: (context, state) {
+                                return DeviceWidget(devices[index]);
+                              });
                         } else {
                           return AnimatedContainer(
-                            duration: Duration(milliseconds: 300),
+                            duration: const Duration(milliseconds: 300),
                             clipBehavior: Clip.hardEdge,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
