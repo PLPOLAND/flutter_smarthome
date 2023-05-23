@@ -106,7 +106,9 @@ class RoomCard extends StatelessWidget {
               ),
           ...devices
               .where((device) => device.type == DeviceType.outlet)
-              .map((e) => BlocBuilder(builder: (context, state) {
+              .map((e) => BlocBuilder(
+                      bloc: e,
+                      builder: (context, state) {
                         return Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
