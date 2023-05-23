@@ -84,6 +84,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             status: AuthStatus.authenticated, userData: userData));
         sharedPrefs.setString("serverIp", RESTClient().getIP());
       } catch (e) {
+        emit(state.copyWith(
+            status: AuthStatus.error,
+            userData: null,
+            errorMessage: e.toString())); //TODO make better error handling
         print(e); // TODO: handle exception
       }
       //TODO: implement login logic

@@ -21,10 +21,12 @@ extension AuthStatusExtension on AuthStatus {
 class AuthState extends Equatable {
   final AuthStatus status;
   final UserData userData;
+  final String errorMessage;
 
   const AuthState._({
     this.status = AuthStatus.initial,
     this.userData = const UserData.nullData(),
+    this.errorMessage = '',
   });
 
   const AuthState.initial() : this._();
@@ -34,7 +36,8 @@ class AuthState extends Equatable {
   const AuthState.unauthenticated()
       : this._(status: AuthStatus.unauthenticated);
 
-  const AuthState.error(String message) : this._(status: AuthStatus.error);
+  const AuthState.error(String message)
+      : this._(status: AuthStatus.error, errorMessage: message);
 
   const AuthState.loading() : this._(status: AuthStatus.loading);
 
@@ -44,15 +47,18 @@ class AuthState extends Equatable {
   List<Object> get props => [status, userData];
 
   @override
-  String toString() => 'AuthState { status: $status, userData: $userData }';
+  String toString() =>
+      'AuthState { status: $status, userData: $userData , errorMessage: $errorMessage}';
 
   AuthState copyWith({
     AuthStatus? status,
     UserData? userData,
+    String? errorMessage,
   }) {
     return AuthState._(
       status: status ?? this.status,
       userData: userData ?? this.userData,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 }

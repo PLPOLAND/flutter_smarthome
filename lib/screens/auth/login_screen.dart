@@ -34,30 +34,6 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
     scanning = true;
-    // RESTClient().scanForServer().listen((ip) {
-    //   setState(() {
-    //     if (servers.isEmpty) {
-    //       currentIp = ip;
-    //     }
-    //     servers.add(ip); // add the found server to the list of servers
-    //   });
-    // }).onDone(() {
-    //   // onDone is called when searching is finished
-    //   setState(() {
-    //     scanning = false;
-    //     if (servers.isEmpty) {
-    //       // if no servers were found, show a snackbar to inform the user to enter the server address manually
-    //       ScaffoldMessenger.of(context).showSnackBar(
-    //         const SnackBar(
-    //           content: Text(
-    //             "Didn't find any servers. Please enter the server address manually.",
-    //             textAlign: TextAlign.center,
-    //           ),
-    //         ),
-    //       );
-    //     }
-    //   });
-    // });
   }
 
   Future<void> checkIfProvidedIpIsOk(String val) async {
@@ -172,7 +148,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               if (scanning) const SizedBox(width: 10),
-              if (scanning) const CircularProgressIndicator(), //TODO
+              if (scanning) const CircularProgressIndicator(),
             ],
           );
         } else {
@@ -270,6 +246,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 return 'Nickname can\'t start with a number';
                               } else if (value.length < 3) {
                                 return 'Nickname must be at least 3 characters long';
+                              } else if (value.contains(RegExp("  *"))) {
+                                return 'Nickname can\'t contain spaces';
                               }
                               return null;
                             },
@@ -313,7 +291,35 @@ class _LoginScreenState extends State<LoginScreen> {
                               Expanded(
                                 child: ElevatedButton(
                                   onPressed: login,
-                                  child: const Text('Login'),
+                                  child: BlocConsumer<AuthBloc, AuthState>(
+                                    listener: (context, state) {
+                                      if (state.status.isError) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content:
+                                                Text('${state.errorMessage}'),
+                                            backgroundColor: Theme.of(context)
+                                                .colorScheme
+                                                .error,
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    builder: (context, state) {
+                                      if (state.status == AuthStatus.loading) {
+                                        return LinearProgressIndicator(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimaryContainer,
+                                        );
+                                      } else if (state.status.isAuthenticated) {
+                                        return const Icon(Icons.done);
+                                      } else {
+                                        return const Text('Login');
+                                      }
+                                    },
+                                  ),
                                 ),
                               ),
                             ],

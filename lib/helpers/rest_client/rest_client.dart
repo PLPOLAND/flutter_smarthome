@@ -116,7 +116,7 @@ class RESTClient {
     if (res.isOk) {
       return res.body['token'] as String;
     } else if (res.isApiError) {
-      throw Exception(res.error);
+      throw Exception(res.error); //TODO make custom exception
     } else {
       throw Exception('Unknown error, status code: ${res.statusCode}');
     }
