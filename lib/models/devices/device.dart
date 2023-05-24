@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -84,7 +85,7 @@ abstract class Device extends Cubit<DeviceCubitState> {
   }
 }
 
-class DeviceCubitState {
+class DeviceCubitState extends Equatable {
   int _id;
   int _roomId;
   int _slaveId;
@@ -143,6 +144,10 @@ class DeviceCubitState {
   String toString() {
     return ", id: $_id, roomId: $_roomId, slaveId: $_slaveId, onSlaveId: $_onSlaveId, name: $_name, type: $_type";
   }
+
+  @override
+  List<Object?> get props =>
+      [_id, _roomId, _slaveId, _onSlaveId, _name, _type, _state, _onSlavePin];
 }
 
 // Types of devices
