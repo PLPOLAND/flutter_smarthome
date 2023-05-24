@@ -12,6 +12,7 @@ abstract class Device extends Cubit<DeviceCubitState> {
 
   void setState(DeviceState newState) {
     state.state = newState;
+    emit(state);
   }
 
   Future<void> changeState(); // abstract method for changing device state
