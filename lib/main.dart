@@ -60,7 +60,12 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider(create: (context) => RoomsProvider()),
           ],
           builder: (context, child) {
-            return DynamicColorBuilder(builder: (lightDynamic, darkDynamic) {
+            return BlocListener<AuthBloc, AuthState>(
+                listener: (context, state) {
+              if (state.status.isUnauthenticated) {
+                context.read<DevicesBloc>().add(StopUpdating());
+              }
+            }, child: DynamicColorBuilder(builder: (lightDynamic, darkDynamic) {
               Provider.of<ThemesMenager>(context, listen: false)
                   .addDynamic(lightDynamic, darkDynamic);
               return MaterialApp(
@@ -87,7 +92,7 @@ class MyApp extends StatelessWidget {
                       const AddEditSensorScreen(),
                 },
               );
-            });
+            }));
           },
         ),
       ),

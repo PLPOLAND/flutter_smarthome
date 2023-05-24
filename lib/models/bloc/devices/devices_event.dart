@@ -9,12 +9,19 @@ class DevicesEvent extends Equatable {
 
 class InitState extends DevicesEvent {}
 
+///Load devices from server, and start updating them time to time
 class LoadDevices extends DevicesEvent {}
 
+///Load demo data
 class LoadDemo extends DevicesEvent {}
 
+///Update list of devices
 class UpdateDevices extends DevicesEvent {}
 
+///Update state of devices
 class UpdateStateOfDevices extends DevicesEvent {}
+
+///Stop updating devices
+class StopUpdating extends DevicesEvent {}
 
 //TODO add more?

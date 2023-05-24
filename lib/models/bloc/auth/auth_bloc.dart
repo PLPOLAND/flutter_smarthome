@@ -74,23 +74,34 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       print('LogIn event');
       emit(state.copyWith(status: AuthStatus.loading));
       try {
-        String token = await RESTClient()
-            .logIn(nick: event.email, password: event.password);
-        UserData userData = await RESTClient().getUserData(token: token);
-        print(userData);
+        String token = await RESTClient().logIn(
+            nick: event.email,
+            password: event.password); //get token from server by logging in
+        UserData userData = await RESTClient()
+            .getUserData(token: token); //get user data from server
+        log(
+          userData.toString(),
+        );
         var sharedPrefs = await SharedPreferences.getInstance();
-        sharedPrefs.setString("userData", userData.toJson());
-        emit(state.copyWith(
-            status: AuthStatus.authenticated, userData: userData));
-        sharedPrefs.setString("serverIp", RESTClient().getIP());
+        sharedPrefs.setString(
+          "userData",
+          userData.toJson(),
+        ); //save user data to shared preferences
+        sharedPrefs.setString(
+          "serverIp",
+          RESTClient().getIP(),
+        ); //save server ip to shared preferences
+        emit(
+          state.copyWith(status: AuthStatus.authenticated, userData: userData),
+        ); //set state to authenticated
       } catch (e) {
+        //something went wrong while logging in or getting user data from server
         emit(state.copyWith(
             status: AuthStatus.error,
             userData: null,
             errorMessage: e.toString())); //TODO make better error handling
-        print(e); // TODO: handle exception
+        log(e.toString(), error: e); // TODO: handle exception
       }
-      //TODO: implement login logic
     });
     on<LogInDemo>(
       (event, emit) {

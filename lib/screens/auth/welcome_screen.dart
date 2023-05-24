@@ -19,6 +19,9 @@ class WelcomeScreen extends StatelessWidget {
       return BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) async {
           log('WelcomeScreen: $state');
+          if (state.status.isAuthenticated) {
+            context.read<DevicesBloc>().add(LoadDevices());
+          }
           if (state.status.isAuthenticated || state.status.isDemo) {
             Navigator.of(context)
                 .pushReplacementNamed(HomepageScreen.routeName);

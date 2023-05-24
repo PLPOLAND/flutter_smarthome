@@ -21,20 +21,14 @@ class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
   ///duration between updates of the state of devices
   final _deviceStateUpdateInterval = const Duration(seconds: 1);
 
-  DevicesRepository _devicesRepository;
+  final DevicesRepository _devicesRepository;
 
-  DevicesBloc(this._devicesRepository) : super(const DevicesState.initial()) {
+  DevicesBloc(this._devicesRepository) : super(DevicesState.initial()) {
     on<LoadDevices>((event, emit) async {
-      emit(state.copyWith(status: DevicesStatus.loading));
+      emit(state.copyWith(status: DevicesStatus.loading, stopUpdating: false));
       await _devicesRepository.loadDevices();
-      //Update list of devices every 5 minutes
-      Future.delayed(_deviceListUpdateInterval).then((value) {
-        add(UpdateDevices());
-      });
-      //Update state of devices every 1 second
-      Future.delayed(_deviceStateUpdateInterval).then((value) {
-        add(UpdateStateOfDevices());
-      });
+      add(UpdateDevices());
+      add(UpdateStateOfDevices());
       emit(state.copyWith(
         status: DevicesStatus.loaded,
         devices: _devicesRepository.devices,
@@ -49,22 +43,32 @@ class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
       ));
     });
     on<UpdateDevices>((event, emit) async {
+      log('Updating list of devices');
       emit(state.copyWith(status: DevicesStatus.updating));
       await _devicesRepository.updateListOfDevices();
-      //rerun this event after 5 minutes
+      //rerun this event after time
       Future.delayed(_deviceListUpdateInterval).then((value) {
-        add(UpdateDevices());
+        if (!state.stopUpdating) {
+          add(UpdateDevices());
+        }
       });
       emit(state.copyWith(status: DevicesStatus.loaded));
     });
     on<UpdateStateOfDevices>((event, emit) async {
+      log('Updating state of devices');
       emit(state.copyWith(status: DevicesStatus.updating));
       await _devicesRepository.updateStateOfDevices();
-      //rerun this event after 5 minutes
+      //rerun this event after time
       Future.delayed(_deviceStateUpdateInterval).then((value) {
-        add(UpdateDevices());
+        if (!state.stopUpdating) {
+          add(UpdateStateOfDevices());
+        }
       });
       emit(state.copyWith(status: DevicesStatus.loaded));
+    });
+    on<StopUpdating>((event, emit) async {
+      log('Stop updating devices');
+      emit(state.copyWith(stopUpdating: true));
     });
   }
 
