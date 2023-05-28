@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_smarthome/repositories/device_repository.dart';
-import 'package:flutter_smarthome/providers/room_provider.dart';
+import 'package:flutter_smarthome/repositories/rooms_repository.dart';
 import 'package:flutter_smarthome/repositories/sensors_repository.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:provider/provider.dart';
@@ -47,8 +47,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
           IconButton(
             icon: Icon(Icons.delete),
             onPressed: () {
-              Provider.of<RoomsProvider>(context, listen: false)
-                  .removeRoomById(room.id);
+              context.read<RoomsRepository>().removeRoomById(room.id);
               //TODO ask for confirmation
               Navigator.of(context).pop();
             },

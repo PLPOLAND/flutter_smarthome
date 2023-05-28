@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_smarthome/models/room.dart';
-import 'package:flutter_smarthome/providers/room_provider.dart';
+import 'package:flutter_smarthome/repositories/rooms_repository.dart';
 import 'package:provider/provider.dart';
 
 import '../models/devices/device.dart';
@@ -40,7 +40,7 @@ class DevicesListItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final RoomsProvider rooms = Provider.of<RoomsProvider>(context);
+    final RoomsRepository rooms = context.read<RoomsRepository>();
     Icon deviceIcon = const Icon(Icons.error);
 
     switch (device.type) {

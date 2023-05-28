@@ -3,12 +3,12 @@ import 'package:flutter_smarthome/models/devices/device.dart';
 import 'package:flutter_smarthome/models/devices/light.dart';
 import 'package:flutter_smarthome/models/devices/outlet.dart';
 import 'package:flutter_smarthome/repositories/device_repository.dart';
+import 'package:flutter_smarthome/repositories/rooms_repository.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/devices/blind.dart';
 import '../../models/devices/fan.dart';
 import '../../models/room.dart';
-import '../../providers/room_provider.dart';
 
 class AddEditDeviceScreen extends StatefulWidget {
   static const routeName = '/devices/add-edit-device';
@@ -214,7 +214,7 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
       deviceId = args['deviceId'] as int?;
       roomId = args['roomId'] as int?;
     }
-    final List<Room> rooms = Provider.of<RoomsProvider>(context).rooms;
+    final List<Room> rooms = context.read<RoomsRepository>().rooms;
     final bool isEditing = deviceId != null;
     return Scaffold(
       appBar: AppBar(

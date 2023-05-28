@@ -22,6 +22,6 @@ class UpdateDevices extends DevicesEvent {}
 class UpdateStateOfDevices extends DevicesEvent {}
 
 ///Stop updating devices
-class StopUpdating extends DevicesEvent {}
+class StopUpdatingDevicesList extends DevicesEvent {}
 
 //TODO add more?

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_smarthome/models/bloc/auth/auth_bloc.dart';
 import 'package:flutter_smarthome/models/bloc/devices/devices_bloc.dart';
+import 'package:flutter_smarthome/models/bloc/rooms/rooms_bloc.dart';
 import 'package:flutter_smarthome/screens/auth/login_screen.dart';
 import 'package:flutter_smarthome/screens/homepage_screen.dart';
 
@@ -85,7 +86,9 @@ class WelcomeScreen extends StatelessWidget {
                                 context
                                     .read<sensors.SensorsBloc>()
                                     .add(sensors.LoadDemo());
+                                context.read<RoomsBloc>().add(LoadDemoRooms());
                                 context.read<AuthBloc>().add(LogInDemo());
+
                                 Navigator.of(context).pushNamed(
                                   HomepageScreen.routeName,
                                 );

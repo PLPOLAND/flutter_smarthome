@@ -2,15 +2,15 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_smarthome/models/bloc/devices/devices_bloc.dart';
-import 'package:flutter_smarthome/models/bloc/sensors/sensors_bloc.dart'
-    as sensors;
+import 'package:flutter_smarthome/models/bloc/rooms/rooms_bloc.dart';
+import 'package:flutter_smarthome/models/bloc/sensors/sensors_bloc.dart';
 import 'package:flutter_smarthome/repositories/sensors_repository.dart';
 import 'package:provider/provider.dart';
 
 import 'helpers/rest_client/rest_client.dart';
 import 'models/bloc/auth/auth_bloc.dart';
 import 'repositories/device_repository.dart';
-import 'providers/room_provider.dart';
+import 'repositories/rooms_repository.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/auth/welcome_screen.dart';
 import 'screens/devices/add_edit_device_screen.dart';
@@ -49,6 +49,9 @@ class MyApp extends StatelessWidget {
         RepositoryProvider(create: (BuildContext context) {
           return SensorsRepository();
         }),
+        RepositoryProvider(create: (BuildContext context) {
+          return RoomsRepository();
+        }),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -58,21 +61,22 @@ class MyApp extends StatelessWidget {
           BlocProvider<DevicesBloc>(
             create: (context) => DevicesBloc(context.read<DevicesRepository>()),
           ),
-          BlocProvider<sensors.SensorsBloc>(
-            create: (context) =>
-                sensors.SensorsBloc(context.read<SensorsRepository>()),
+          BlocProvider<SensorsBloc>(
+            create: (context) => SensorsBloc(context.read<SensorsRepository>()),
+          ),
+          BlocProvider<RoomsBloc>(
+            create: (context) => RoomsBloc(context.read<RoomsRepository>()),
           ),
         ],
         child: MultiProvider(
           providers: [
             ChangeNotifierProvider(create: (context) => ThemesMenager()),
-            ChangeNotifierProvider(create: (context) => RoomsProvider()),
           ],
           builder: (context, child) {
             return BlocListener<AuthBloc, AuthState>(
                 listener: (context, state) {
               if (state.status.isUnauthenticated) {
-                context.read<DevicesBloc>().add(StopUpdating());
+                context.read<DevicesBloc>().add(StopUpdatingDevicesList());
               }
             }, child: DynamicColorBuilder(builder: (lightDynamic, darkDynamic) {
               Provider.of<ThemesMenager>(context, listen: false)

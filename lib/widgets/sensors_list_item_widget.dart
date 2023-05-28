@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_smarthome/models/room.dart';
-import 'package:flutter_smarthome/providers/room_provider.dart';
+import 'package:flutter_smarthome/repositories/rooms_repository.dart';
 import 'package:flutter_smarthome/screens/sensors/add_edit_sensor_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -19,7 +19,7 @@ class SensorsListItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final RoomsProvider rooms = Provider.of<RoomsProvider>(context);
+    final RoomsRepository rooms = Provider.of<RoomsRepository>(context);
     Icon sensorIcon = const Icon(Icons.error);
 
     Widget sensorTrailing = const Icon(Icons.error);

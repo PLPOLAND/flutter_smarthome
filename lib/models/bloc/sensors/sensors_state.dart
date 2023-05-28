@@ -26,32 +26,32 @@ extension SensorsStatusExtension on SensorsStatus {
 class SensorsState extends Equatable {
   final SensorsStatus status;
   final List<Sensor> sensors;
-  bool stopUpdating;
+  final bool stopUpdating;
 
-  SensorsState._({
+  const SensorsState._({
     this.status = SensorsStatus.initial,
     this.sensors = const [],
     this.stopUpdating = false,
   });
 
-  SensorsState.initial() : this._();
+  const SensorsState.initial() : this._();
 
-  SensorsState.demo({
+  const SensorsState.demo({
     required List<Sensor> sensors,
   }) : this._(sensors: sensors, status: SensorsStatus.demo);
 
-  SensorsState.loading() : this._(status: SensorsStatus.loading);
+  const SensorsState.loading() : this._(status: SensorsStatus.loading);
 
-  SensorsState.loaded({
+  const SensorsState.loaded({
     required List<Sensor> sensors,
   }) : this._(
           status: SensorsStatus.loaded,
           sensors: sensors,
         );
 
-  SensorsState.error() : this._(status: SensorsStatus.error);
+  const SensorsState.error() : this._(status: SensorsStatus.error);
 
-  SensorsState.updating() : this._(status: SensorsStatus.updating);
+  const SensorsState.updating() : this._(status: SensorsStatus.updating);
 
   @override
   List<Object> get props => [status, sensors, stopUpdating];

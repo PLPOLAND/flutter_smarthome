@@ -9,6 +9,7 @@ import 'package:flutter_smarthome/models/sensors/button.dart';
 import 'package:flutter_smarthome/models/sensors/hygrometer.dart';
 import 'package:flutter_smarthome/models/sensors/sensor.dart';
 import 'package:flutter_smarthome/repositories/device_repository.dart';
+import 'package:flutter_smarthome/repositories/rooms_repository.dart';
 import 'package:flutter_smarthome/widgets/add_edit_sensor_screen/button_local_functions.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +19,6 @@ import '../../models/room.dart';
 import '../../models/sensors/motion.dart';
 import '../../models/sensors/thermometer.dart';
 import '../../models/sensors/twilight.dart';
-import '../../providers/room_provider.dart';
 import '../../repositories/sensors_repository.dart';
 
 class AddEditSensorScreen extends StatefulWidget {
@@ -291,7 +291,7 @@ class _AddEditSensorScreenState extends State<AddEditSensorScreen> {
       sensorId = args['sensorId'] as int?;
       roomId = args['roomId'] as int?;
     }
-    final List<Room> rooms = Provider.of<RoomsProvider>(context).rooms;
+    final List<Room> rooms = context.read<RoomsRepository>().rooms;
     final bool isEditing = sensorId != null;
 
     return Scaffold(

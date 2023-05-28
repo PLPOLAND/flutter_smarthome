@@ -66,7 +66,7 @@ class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
       });
       emit(state.copyWith(status: DevicesStatus.loaded));
     });
-    on<StopUpdating>((event, emit) async {
+    on<StopUpdatingDevicesList>((event, emit) async {
       log('Stop updating devices');
       emit(state.copyWith(stopUpdating: true));
     });

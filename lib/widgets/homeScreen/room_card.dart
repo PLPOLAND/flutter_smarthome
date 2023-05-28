@@ -18,11 +18,11 @@ import 'sensor_widget.dart';
 import 'fan_widget.dart';
 
 class RoomCard extends StatelessWidget {
-  const RoomCard({super.key});
+  final Room room;
+  const RoomCard({required this.room, super.key});
 
   @override
   Widget build(BuildContext context) {
-    final room = Provider.of<Room>(context);
     final sensors =
         context.read<SensorsRepository>().getSensorsByRoomId(room.id);
     final devices = context
