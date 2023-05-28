@@ -13,7 +13,7 @@ class InitState extends SensorsEvent {}
 class LoadSensors extends SensorsEvent {}
 
 ///Load demo data
-class LoadDemo extends SensorsEvent {}
+class LoadDemoSensors extends SensorsEvent {}
 
 ///Update list of sensors
 class UpdateSensors extends SensorsEvent {}
@@ -22,6 +22,6 @@ class UpdateSensors extends SensorsEvent {}
 class UpdateStateOfSensors extends SensorsEvent {}
 
 ///Stop updating sensors
-class StopUpdating extends SensorsEvent {}
+class StopUpdatingSensors extends SensorsEvent {}
 
 //TODO add more?

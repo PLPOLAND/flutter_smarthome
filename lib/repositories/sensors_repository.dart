@@ -56,6 +56,7 @@ class SensorsRepository {
   }
 
   Future<void> loadSensors() async {
+    _sensors.clear();
     //TODO load from server
   }
 

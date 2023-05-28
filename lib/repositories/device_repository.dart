@@ -42,6 +42,7 @@ class DevicesRepository {
   }
 
   Future<void> loadDevices() async {
+    _devices.clear();
     //TODO load from server
   }
 

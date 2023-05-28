@@ -25,6 +25,7 @@ class WelcomeScreen extends StatelessWidget {
           if (state.status.isAuthenticated) {
             context.read<DevicesBloc>().add(LoadDevices());
             context.read<sensors.SensorsBloc>().add(sensors.LoadSensors());
+            context.read<RoomsBloc>().add(LoadRooms());
           }
           if (state.status.isAuthenticated || state.status.isDemo) {
             Navigator.of(context)
@@ -85,7 +86,7 @@ class WelcomeScreen extends StatelessWidget {
                                 context.read<DevicesBloc>().add(LoadDemo());
                                 context
                                     .read<sensors.SensorsBloc>()
-                                    .add(sensors.LoadDemo());
+                                    .add(sensors.LoadDemoSensors());
                                 context.read<RoomsBloc>().add(LoadDemoRooms());
                                 context.read<AuthBloc>().add(LogInDemo());
 

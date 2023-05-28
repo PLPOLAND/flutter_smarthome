@@ -29,7 +29,7 @@ class SensorsBloc extends Bloc<SensorsEvent, SensorsState> {
         sensors: _sensorsRepository.sensors,
       ));
     });
-    on<LoadDemo>((event, emit) async {
+    on<LoadDemoSensors>((event, emit) async {
       emit(state.copyWith(status: SensorsStatus.loading));
       await _sensorsRepository.loadDemoData();
       log('Demo data loaded');
@@ -63,7 +63,7 @@ class SensorsBloc extends Bloc<SensorsEvent, SensorsState> {
       });
       emit(state.copyWith(status: SensorsStatus.loaded));
     });
-    on<StopUpdating>((event, emit) async {
+    on<StopUpdatingSensors>((event, emit) async {
       log('Stop updating sensors');
       emit(state.copyWith(stopUpdating: true));
     });

@@ -6,6 +6,7 @@ class RoomsRepository {
   List<Room> get rooms => [..._rooms];
 
   Future<void> loadRooms() async {
+    _rooms.clear();
     //TODO load from server
   }
 

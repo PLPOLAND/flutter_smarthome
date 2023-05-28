@@ -77,6 +77,8 @@ class MyApp extends StatelessWidget {
                 listener: (context, state) {
               if (state.status.isUnauthenticated) {
                 context.read<DevicesBloc>().add(StopUpdatingDevicesList());
+                context.read<SensorsBloc>().add(StopUpdatingSensors());
+                context.read<RoomsBloc>().add(StopUpdatingRoomsList());
               }
             }, child: DynamicColorBuilder(builder: (lightDynamic, darkDynamic) {
               Provider.of<ThemesMenager>(context, listen: false)
