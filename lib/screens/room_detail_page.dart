@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_smarthome/repositories/device_repository.dart';
 import 'package:flutter_smarthome/providers/room_provider.dart';
+import 'package:flutter_smarthome/repositories/sensors_repository.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:provider/provider.dart';
 
@@ -12,7 +13,6 @@ import '../models/devices/light.dart';
 import '../models/devices/outlet.dart';
 import '../models/room.dart';
 import '../models/sensors/sensor.dart';
-import '../providers/sensors_provider.dart';
 import '../widgets/device_widget.dart';
 import '../widgets/sensor_widget.dart';
 
@@ -32,7 +32,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
     List<Device> devices =
         context.read<DevicesRepository>().getDevicesByRoomId(room.id);
     List<Sensor> sensors =
-        Provider.of<SensorsProvider>(context).getSensorsByRoomId(room.id);
+        context.read<SensorsRepository>().getSensorsByRoomId(room.id);
     return Scaffold(
       appBar: AppBar(
         title: Text(room.name),
@@ -113,9 +113,15 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                           );
                         }
                       } else if (index < devices.length + sensors.length) {
-                        return ChangeNotifierProvider.value(
-                            value: sensors[index - devices.length],
-                            child: const SensorWidget());
+                        return BlocBuilder<Sensor, SensorCubitState>(
+                            bloc: sensors[index - devices.length],
+                            builder: (context, state) {
+                              return SensorWidget(
+                                  sensor: sensors[index - devices.length]);
+                            });
+                        // return ChangeNotifierProvider.value(
+                        //     value: sensors[index - devices.length],
+                        //     child: const SensorWidget());
                       } else {
                         return Card(
                           color: Theme.of(context).colorScheme.error,

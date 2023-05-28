@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_smarthome/models/sensors/button.dart';
 import 'package:flutter_smarthome/repositories/device_repository.dart';
-import 'package:flutter_smarthome/providers/sensors_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/devices/device.dart';
+import '../../repositories/sensors_repository.dart';
 
 class ButtonLocalClickFunctionsWidget extends StatefulWidget {
   final int? sensorID;
@@ -166,7 +166,8 @@ class _ButtonLocalClickFunctionsWidgetState
   Widget build(BuildContext context) {
     if (widget.sensorID != null) {
       // if sensorID is null, it is a new sensor and we don't need to load the functions
-      final button = Provider.of<SensorsProvider>(context)
+      final button = context
+          .read<SensorsRepository>()
           .getSensorById(widget.sensorID!) as Button;
       if (button.localFunctions.isNotEmpty) {
         functions = button.localFunctions;

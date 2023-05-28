@@ -12,7 +12,6 @@ import '../models/devices/fan.dart';
 import '../models/devices/light.dart';
 import '../models/devices/outlet.dart';
 import '../models/sensors/sensor.dart';
-import '../providers/sensors_provider.dart';
 import '../widgets/device_widget.dart';
 import '../widgets/sensor_widget.dart';
 

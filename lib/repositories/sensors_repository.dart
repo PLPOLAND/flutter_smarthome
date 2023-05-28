@@ -10,25 +10,17 @@ import '../repositories/dummy_data/dummy_data.dart';
 import '../models/sensors/button.dart';
 import '../models/sensors/sensor.dart';
 
-class SensorsProvider with ChangeNotifier {
-  final List<Sensor> _sensors = [
-    Thermometer(id: 1, name: "Termometr 1", temperature: 27, roomId: 1),
-    Hygrometer(id: 2, name: "Wilgotność 1", humidity: 0.55, roomId: 1),
-    Twilight(id: 3, name: "Zmierzch 1", value: 0.45, roomId: 1, dayValue: 0.6),
-    Motion(id: 4, name: "Ruch 1", isMotionDetected: true, roomId: 1),
-  ];
+class SensorsRepository {
+  final List<Sensor> _sensors = [];
 
-  SensorsProvider() {
-    fetchAndSetSensors();
-  }
-
-  Future<void> fetchAndSetSensors() async {
+  Future<void> loadDemoData() async {
     // TODO implement the http request
 
     //DEMO
     var input = dummy_sensors;
     _sensors.clear();
     for (var sensor in input) {
+      log(sensor.toString());
       switch (sensor['typ']) {
         case 'THERMOMETR':
           _sensors.add(Thermometer.fromJson(sensor));
@@ -63,6 +55,10 @@ class SensorsProvider with ChangeNotifier {
     return Future.delayed(const Duration(seconds: 1));
   }
 
+  Future<void> loadSensors() async {
+    //TODO load from server
+  }
+
   List<Sensor> get sensors => [..._sensors];
 
   List<Sensor> getSensorsByRoomId(int roomId) {
@@ -71,28 +67,36 @@ class SensorsProvider with ChangeNotifier {
 
   Future<void> addSensor(Sensor device) async {
     _sensors.add(device);
-    notifyListeners();
     Future.delayed(const Duration(seconds: 1));
   }
 
   Future<void> removeSensor(Sensor device) async {
     _sensors.remove(device);
-    notifyListeners();
     Future.delayed(const Duration(seconds: 1));
   }
 
-  getSensorById(int sensorId) {
+  Sensor getSensorById(int sensorId) {
     return _sensors.firstWhere((sensor) => sensor.id == sensorId);
   }
 
-  updateDevice(Sensor newSensor) {
+  Future<void> updateSensor(Sensor newSensor) {
     final sensorIndex =
         _sensors.indexWhere((sensor) => sensor.id == newSensor.id);
     if (sensorIndex >= 0) {
       _sensors[sensorIndex] = newSensor;
-      notifyListeners();
     } else {
       print("Error: Sensor not found");
     }
+    return Future.delayed(const Duration(seconds: 1));
+  }
+
+  Future<void> updateListOfSensors() async {
+    //TODO implement
+    return Future.delayed(const Duration(seconds: 1));
+  }
+
+  Future<void> updateStateOfSensors() async {
+    //TODO implement
+    return Future.delayed(const Duration(seconds: 1));
   }
 }

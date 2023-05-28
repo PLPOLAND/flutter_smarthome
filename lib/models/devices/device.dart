@@ -11,46 +11,40 @@ abstract class Device extends Cubit<DeviceCubitState> {
       : super(DeviceCubitState(
             id, roomId, slaveId, onSlaveId, name, type, state, onSlavePin));
 
+  Device.state(DeviceCubitState state) : super(state);
+
   void setState(DeviceState newState) {
-    state.state = newState;
-    emit(state);
+    emit(state.copyWith(state: newState));
   }
 
   Future<void> changeState(); // abstract method for changing device state
 
   set id(int id) {
-    state.id = id;
-    emit(state);
+    emit(state.copyWith(id: id));
   }
 
   set onSlavePin(int pin) {
-    state.onSlavePin = pin;
-    emit(state);
+    emit(state.copyWith(onSlavePin: pin));
   }
 
   set roomId(int roomId) {
-    state.roomId = roomId;
-    emit(state);
+    emit(state.copyWith(roomId: roomId));
   }
 
   set slaveID(int slaveId) {
-    state.slaveID = slaveId;
-    emit(state);
+    emit(state.copyWith(slaveId: slaveId));
   }
 
   set onSlaveID(int onSlaveId) {
-    state.onSlaveID = onSlaveId;
-    emit(state);
+    emit(state.copyWith(onSlaveId: onSlaveId));
   }
 
   set deviceName(String name) {
-    state.deviceName = name;
-    emit(state);
+    emit(state.copyWith(name: name));
   }
 
   set type(DeviceType type) {
-    state.type = type;
-    emit(state);
+    emit(state.copyWith(type: type));
   }
 
   int get id => state.id;
@@ -86,49 +80,17 @@ abstract class Device extends Cubit<DeviceCubitState> {
 }
 
 class DeviceCubitState extends Equatable {
-  int _id;
-  int _roomId;
-  int _slaveId;
-  int _onSlaveId;
-  int _onSlavePin;
-  String _name;
-  DeviceType _type;
-  DeviceState _state;
+  final int _id;
+  final int _roomId;
+  final int _slaveId;
+  final int _onSlaveId;
+  final int _onSlavePin;
+  final String _name;
+  final DeviceType _type;
+  final DeviceState _state;
 
-  DeviceCubitState(this._id, this._roomId, this._slaveId, this._onSlaveId,
+  const DeviceCubitState(this._id, this._roomId, this._slaveId, this._onSlaveId,
       this._name, this._type, this._state, this._onSlavePin);
-
-  set state(DeviceState state) {
-    _state = state;
-  }
-
-  set id(int id) {
-    _id = id;
-  }
-
-  set onSlavePin(int pin) {
-    _onSlavePin = pin;
-  }
-
-  set roomId(int roomId) {
-    _roomId = roomId;
-  }
-
-  set slaveID(int slaveId) {
-    _slaveId = slaveId;
-  }
-
-  set onSlaveID(int onSlaveId) {
-    _onSlaveId = onSlaveId;
-  }
-
-  set deviceName(String name) {
-    _name = name;
-  }
-
-  set type(DeviceType type) {
-    _type = type;
-  }
 
   int get id => _id;
   int get onSlavePin => _onSlavePin;
@@ -142,12 +104,42 @@ class DeviceCubitState extends Equatable {
 
   @override
   String toString() {
-    return ", id: $_id, roomId: $_roomId, slaveId: $_slaveId, onSlaveId: $_onSlaveId, name: $_name, type: $_type";
+    return "{id: $_id, roomId: $_roomId, slaveId: $_slaveId, onSlaveId: $_onSlaveId, name: $_name, type: $_type, state: $_state}";
+  }
+
+  DeviceCubitState copyWith({
+    int? id,
+    int? roomId,
+    int? slaveId,
+    int? onSlaveId,
+    String? name,
+    DeviceType? type,
+    DeviceState? state,
+    int? onSlavePin,
+  }) {
+    return DeviceCubitState(
+      id ?? _id,
+      roomId ?? _roomId,
+      slaveId ?? _slaveId,
+      onSlaveId ?? _onSlaveId,
+      name ?? _name,
+      type ?? _type,
+      state ?? _state,
+      onSlavePin ?? _onSlavePin,
+    );
   }
 
   @override
-  List<Object?> get props =>
-      [_id, _roomId, _slaveId, _onSlaveId, _name, _type, _state, _onSlavePin];
+  List<Object?> get props => [
+        _id,
+        _roomId,
+        _slaveId,
+        _onSlaveId,
+        _name,
+        _type,
+        _state,
+        _onSlavePin,
+      ];
 }
 
 // Types of devices

@@ -18,8 +18,10 @@ class Light extends Device {
   Future<void> changeState() async {
     if (state.deviceState == DeviceState.on) {
       super.setState(DeviceState.off);
+      emit(state);
     } else if (state.deviceState == DeviceState.off) {
       super.setState(DeviceState.on);
+      emit(state);
     }
     log("Light: $name, state: ${state.deviceState}");
     return Future.delayed(const Duration(
@@ -31,6 +33,7 @@ class Light extends Device {
   void setState(DeviceState newState) {
     if (newState == DeviceState.on || newState == DeviceState.off) {
       super.setState(newState);
+      emit(state);
     } else {
       throw Exception("Invalid state");
     }

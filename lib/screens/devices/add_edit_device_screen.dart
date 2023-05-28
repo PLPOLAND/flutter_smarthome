@@ -85,7 +85,7 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
             name: nameController.text,
             roomId: selectedRoomId,
             slaveId: int.parse(slaveAddressController.text),
-            onSlavePin: int.parse(slavePinController.text),
+            onSlavePinUp: int.parse(slavePinController.text),
           );
           break;
         case DeviceType.outlet:
@@ -140,7 +140,7 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
             name: nameController.text,
             roomId: selectedRoomId,
             slaveId: int.parse(slaveAddressController.text),
-            onSlavePin: int.parse(slavePinController.text),
+            onSlavePinUp: int.parse(slavePinController.text),
           );
           break;
         case DeviceType.outlet:

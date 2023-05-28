@@ -14,11 +14,11 @@ import '../models/sensors/twilight.dart';
 import '../repositories/device_repository.dart';
 
 class SensorsListItemWidget extends StatelessWidget {
-  const SensorsListItemWidget({super.key});
+  final Sensor sensor;
+  const SensorsListItemWidget({required this.sensor, super.key});
 
   @override
   Widget build(BuildContext context) {
-    final Sensor sensor = Provider.of<Sensor>(context);
     final RoomsProvider rooms = Provider.of<RoomsProvider>(context);
     Icon sensorIcon = const Icon(Icons.error);
 

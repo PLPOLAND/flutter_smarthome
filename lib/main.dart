@@ -2,13 +2,15 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_smarthome/models/bloc/devices/devices_bloc.dart';
+import 'package:flutter_smarthome/models/bloc/sensors/sensors_bloc.dart'
+    as sensors;
+import 'package:flutter_smarthome/repositories/sensors_repository.dart';
 import 'package:provider/provider.dart';
 
 import 'helpers/rest_client/rest_client.dart';
 import 'models/bloc/auth/auth_bloc.dart';
 import 'repositories/device_repository.dart';
 import 'providers/room_provider.dart';
-import 'providers/sensors_provider.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/auth/welcome_screen.dart';
 import 'screens/devices/add_edit_device_screen.dart';
@@ -44,19 +46,26 @@ class MyApp extends StatelessWidget {
             return DevicesRepository();
           },
         ),
+        RepositoryProvider(create: (BuildContext context) {
+          return SensorsRepository();
+        }),
       ],
       child: MultiBlocProvider(
         providers: [
           BlocProvider<AuthBloc>(
-              create: (context) => AuthBloc()..add(AppStarted())),
-          BlocProvider(
-              create: (context) =>
-                  DevicesBloc(context.read<DevicesRepository>())),
+            create: (context) => AuthBloc()..add(AppStarted()),
+          ),
+          BlocProvider<DevicesBloc>(
+            create: (context) => DevicesBloc(context.read<DevicesRepository>()),
+          ),
+          BlocProvider<sensors.SensorsBloc>(
+            create: (context) =>
+                sensors.SensorsBloc(context.read<SensorsRepository>()),
+          ),
         ],
         child: MultiProvider(
           providers: [
             ChangeNotifierProvider(create: (context) => ThemesMenager()),
-            ChangeNotifierProvider(create: (context) => SensorsProvider()),
             ChangeNotifierProvider(create: (context) => RoomsProvider()),
           ],
           builder: (context, child) {

@@ -13,10 +13,9 @@ import '../../models/devices/light.dart';
 import '../../models/devices/outlet.dart';
 import '../../models/room.dart';
 import '../../repositories/device_repository.dart';
-import '../../providers/sensors_provider.dart';
+import '../../repositories/sensors_repository.dart';
 import 'sensor_widget.dart';
 import 'fan_widget.dart';
-import 'light_widget.dart';
 
 class RoomCard extends StatelessWidget {
   const RoomCard({super.key});
@@ -24,10 +23,8 @@ class RoomCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final room = Provider.of<Room>(context);
-    final sensors = Provider.of<SensorsProvider>(context)
-        .sensors
-        .where((sensor) => sensor.roomId == room.id)
-        .toList();
+    final sensors =
+        context.read<SensorsRepository>().getSensorsByRoomId(room.id);
     final devices = context
         .read<DevicesRepository>()
         .devices
@@ -66,8 +63,13 @@ class RoomCard extends StatelessWidget {
                       ...sensors.map((e) {
                         if (e.type == SensorType.thermometer ||
                             e.type == SensorType.hygrometer) {
-                          return ChangeNotifierProvider.value(
-                              value: e, child: const SensorWidget());
+                          return BlocBuilder<Sensor, SensorCubitState>(
+                              builder: (context, state) {
+                                return SensorWidget(
+                                  sensor: e,
+                                );
+                              },
+                              bloc: e);
                         }
                         return const SizedBox(width: 0, height: 0);
                       }),

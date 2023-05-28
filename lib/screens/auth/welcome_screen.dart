@@ -7,6 +7,8 @@ import 'package:flutter_smarthome/models/bloc/devices/devices_bloc.dart';
 import 'package:flutter_smarthome/screens/auth/login_screen.dart';
 import 'package:flutter_smarthome/screens/homepage_screen.dart';
 
+import '../../models/bloc/sensors/sensors_bloc.dart' as sensors;
+
 class WelcomeScreen extends StatelessWidget {
   static const routeName = '/auth';
   const WelcomeScreen({super.key});
@@ -21,6 +23,7 @@ class WelcomeScreen extends StatelessWidget {
           log('WelcomeScreen: $state');
           if (state.status.isAuthenticated) {
             context.read<DevicesBloc>().add(LoadDevices());
+            context.read<sensors.SensorsBloc>().add(sensors.LoadSensors());
           }
           if (state.status.isAuthenticated || state.status.isDemo) {
             Navigator.of(context)
@@ -79,6 +82,9 @@ class WelcomeScreen extends StatelessWidget {
                             TextButton(
                               onPressed: () {
                                 context.read<DevicesBloc>().add(LoadDemo());
+                                context
+                                    .read<sensors.SensorsBloc>()
+                                    .add(sensors.LoadDemo());
                                 context.read<AuthBloc>().add(LogInDemo());
                                 Navigator.of(context).pushNamed(
                                   HomepageScreen.routeName,
