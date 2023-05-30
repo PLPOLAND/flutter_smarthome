@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_smarthome/providers/room_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_smarthome/models/bloc/auth/auth_bloc.dart';
+import 'package:flutter_smarthome/models/room.dart';
+import 'package:flutter_smarthome/repositories/device_repository.dart';
 import 'package:flutter_smarthome/widgets/homeScreen/room_card.dart';
 import 'package:flutter_smarthome/widgets/main_drawer.dart';
 import 'package:provider/provider.dart';
 
+import '../models/devices/blind.dart';
+import '../models/devices/device.dart';
+import '../models/devices/fan.dart';
+import '../models/devices/light.dart';
+import '../models/devices/outlet.dart';
+import '../models/sensors/sensor.dart';
+import '../repositories/rooms_repository.dart';
+import '../widgets/device_widget.dart';
+import '../widgets/sensor_widget.dart';
 
 class HomepageScreen extends StatelessWidget {
   static const routeName = '/homepage';
@@ -12,11 +24,12 @@ class HomepageScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final rooms = Provider.of<RoomsProvider>(context).rooms;
+    final rooms = context.read<RoomsRepository>().rooms;
     final favRooms = rooms.where((element) => element.isFavorite).toList();
     return Scaffold(
       appBar: AppBar(
-        title: const Text(''),
+        title:
+            Text("Witaj ${context.read<AuthBloc>().state.userData.showName}!"),
       ),
       body: favRooms.isEmpty
           ? const Center(
@@ -34,8 +47,14 @@ class HomepageScreen extends StatelessWidget {
                 child: ListView.builder(
                   itemBuilder: (context, index) {
                     final room = favRooms[index];
-                    return ChangeNotifierProvider.value(
-                        value: room, child: const RoomCard());
+                    return BlocBuilder<Room, RoomCubitState>(
+                      bloc: room,
+                      builder: (context, state) {
+                        return RoomCard(room: room);
+                      },
+                    );
+                    // return ChangeNotifierProvider.value(
+                    //     value: room, child: const RoomCard());
                   },
                   itemCount: rooms
                       .where((element) => element.isFavorite)

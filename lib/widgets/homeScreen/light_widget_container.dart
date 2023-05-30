@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_smarthome/models/devices/device.dart';
 import 'package:flutter_smarthome/widgets/homeScreen/multi_light_widget.dart';
@@ -19,7 +18,7 @@ class _LightWidgetContainerState extends State<LightWidgetContainer> {
   @override
   Widget build(BuildContext context) {
     final double sliderValue = widget.lights
-        .where((element) => element.state == DeviceState.on)
+        .where((element) => element.state.deviceState == DeviceState.on)
         .length
         .toDouble();
     return Padding(
@@ -60,7 +59,8 @@ class _LightWidgetContainerState extends State<LightWidgetContainer> {
                           },
                           style: ButtonStyle(
                             backgroundColor: MaterialStatePropertyAll<Color>(
-                              widget.lights.first.state == DeviceState.on
+                              widget.lights.first.state.deviceState ==
+                                      DeviceState.on
                                   ? Theme.of(context)
                                       .colorScheme
                                       .secondaryContainer

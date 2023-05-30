@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:flutter/foundation.dart';
 import 'device.dart';
 
 class Light extends Device {
@@ -13,32 +16,33 @@ class Light extends Device {
             onSlavePin);
   @override
   Future<void> changeState() async {
-    if (state == DeviceState.on) {
+    if (state.deviceState == DeviceState.on) {
       super.setState(DeviceState.off);
-    } else if (state == DeviceState.off) {
+      emit(state);
+    } else if (state.deviceState == DeviceState.off) {
       super.setState(DeviceState.on);
+      emit(state);
     }
-    notifyListeners();
-    print("Light: $name, state: $state");
+    log("Light: $name, state: ${state.deviceState}");
     return Future.delayed(const Duration(
         seconds:
             1)); // TODO: change this line after implementing the http request
   }
 
   @override
-  void setState(DeviceState state) {
-    if (state == DeviceState.on || state == DeviceState.off) {
-      super.setState(state);
+  void setState(DeviceState newState) {
+    if (newState == DeviceState.on || newState == DeviceState.off) {
+      super.setState(newState);
+      emit(state);
     } else {
       throw Exception("Invalid state");
     }
-    print("Light: $name, state: $state");
-    notifyListeners();
+    log("Light: $name, state: ${state.deviceState}");
   }
 
   @override
   String toString() {
-    String s = "Light: $name, state: $state";
+    String s = "Light: $name, state: ${state.deviceState}";
     return s + super.toString();
   }
 

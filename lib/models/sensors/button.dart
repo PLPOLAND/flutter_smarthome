@@ -2,9 +2,6 @@ import '../devices/device.dart';
 import 'sensor.dart';
 
 class Button extends Sensor {
-  int onSlavePin;
-  late List<ButtonLocalClickFunction> localFunctions;
-
   /// Creates a button sensor
   /// @param id - id of the sensor, set by SmartHomeHost
   /// @param roomId - id of the room where the sensor is located
@@ -18,12 +15,33 @@ class Button extends Sensor {
     required int roomId,
     int slaveId = -1,
     int onSlaveId = -1,
-    required this.onSlavePin,
+    required int onSlavePin,
     required String name,
     List<ButtonLocalClickFunction>? localFunctions,
-  }) : super(id, roomId, slaveId, onSlaveId, name, SensorType.button, null) {
-    this.localFunctions = localFunctions ?? [];
+  }) : super.state(ButtonCubitState(
+            id: id,
+            roomId: roomId,
+            slaveId: slaveId,
+            onSlaveId: onSlaveId,
+            name: name,
+            type: SensorType.button,
+            onSlavePin: onSlavePin,
+            localFunctions: localFunctions ?? []));
+
+  set onSlavePin(int pin) {
+    ButtonCubitState st = state as ButtonCubitState;
+    emit(st.copyWith(onSlavePin: pin));
   }
+
+  int get onSlavePin => (state as ButtonCubitState).onSlavePin;
+
+  set localFunctions(List<ButtonLocalClickFunction> functions) {
+    ButtonCubitState st = state as ButtonCubitState;
+    emit(st.copyWith(localFunctions: functions));
+  }
+
+  List<ButtonLocalClickFunction> get localFunctions =>
+      (state as ButtonCubitState).localFunctions;
 
   @override
   String toString() {
@@ -65,6 +83,63 @@ class ButtonLocalClickFunction {
               element.toString().toLowerCase() ==
               json['state'].toString().toLowerCase())
           : null,
+    );
+  }
+}
+
+class ButtonCubitState extends SensorCubitState {
+  final int _onSlavePin;
+  final List<ButtonLocalClickFunction> _localFunctions;
+
+  const ButtonCubitState({
+    int id = -1,
+    required int roomId,
+    int slaveId = -1,
+    int onSlaveId = -1,
+    required String name,
+    required SensorType type,
+    required int onSlavePin,
+    required List<ButtonLocalClickFunction> localFunctions,
+  })  : _onSlavePin = onSlavePin,
+        _localFunctions = localFunctions,
+        super(id, roomId, slaveId, onSlaveId, name, type, null);
+
+  int get onSlavePin => _onSlavePin;
+  List<ButtonLocalClickFunction> get localFunctions => _localFunctions;
+
+  @override
+  List<Object?> get props => [
+        ...super.props,
+        onSlavePin,
+        localFunctions,
+      ];
+
+  @override
+  String toString() {
+    return "Button: ${super.toString()}, onSlavePin: $onSlavePin";
+  }
+
+  @override
+  ButtonCubitState copyWith({
+    int? id,
+    int? roomId,
+    int? slaveId,
+    int? onSlaveId,
+    String? name,
+    List<int>? adress,
+    SensorType? type,
+    int? onSlavePin,
+    List<ButtonLocalClickFunction>? localFunctions,
+  }) {
+    return ButtonCubitState(
+      id: id ?? this.id,
+      roomId: roomId ?? this.roomId,
+      slaveId: slaveId ?? this.slaveId,
+      onSlaveId: onSlaveId ?? this.onSlaveId,
+      name: name ?? this.name,
+      type: type ?? this.type,
+      onSlavePin: onSlavePin ?? this.onSlavePin,
+      localFunctions: localFunctions ?? this.localFunctions,
     );
   }
 }

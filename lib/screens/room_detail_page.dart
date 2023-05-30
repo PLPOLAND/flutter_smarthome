@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_smarthome/providers/devices_provider.dart';
-import 'package:flutter_smarthome/providers/room_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_smarthome/repositories/device_repository.dart';
+import 'package:flutter_smarthome/repositories/rooms_repository.dart';
+import 'package:flutter_smarthome/repositories/sensors_repository.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:provider/provider.dart';
 
@@ -11,7 +13,6 @@ import '../models/devices/light.dart';
 import '../models/devices/outlet.dart';
 import '../models/room.dart';
 import '../models/sensors/sensor.dart';
-import '../providers/sensors_provider.dart';
 import '../widgets/device_widget.dart';
 import '../widgets/sensor_widget.dart';
 
@@ -29,9 +30,9 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
   Widget build(BuildContext context) {
     Room room = ModalRoute.of(context)!.settings.arguments as Room;
     List<Device> devices =
-        Provider.of<DevicesProvider>(context).getDevicesByRoomId(room.id);
+        context.read<DevicesRepository>().getDevicesByRoomId(room.id);
     List<Sensor> sensors =
-        Provider.of<SensorsProvider>(context).getSensorsByRoomId(room.id);
+        context.read<SensorsRepository>().getSensorsByRoomId(room.id);
     return Scaffold(
       appBar: AppBar(
         title: Text(room.name),
@@ -46,8 +47,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
           IconButton(
             icon: const Icon(Icons.delete),
             onPressed: () {
-              Provider.of<RoomsProvider>(context, listen: false)
-                  .removeRoomById(room.id);
+              context.read<RoomsRepository>().removeRoomById(room.id);
               //TODO ask for confirmation
               Navigator.of(context).pop();
             },
@@ -74,22 +74,15 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                         const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                     itemBuilder: (ctx, index) {
                       if (index < devices.length) {
-                        if (devices[index] is Light) {
-                          return ChangeNotifierProvider.value(
-                              value: devices[index],
-                              child: const DeviceWidget());
-                        } else if (devices[index] is Blind) {
-                          return ChangeNotifierProvider.value(
-                              value: devices[index],
-                              child: const DeviceWidget());
-                        } else if (devices[index] is Fan) {
-                          return ChangeNotifierProvider.value(
-                              value: devices[index],
-                              child: const DeviceWidget());
-                        } else if (devices[index] is Outlet) {
-                          return ChangeNotifierProvider.value(
-                              value: devices[index],
-                              child: const DeviceWidget());
+                        if (devices[index] is Light ||
+                            devices[index] is Blind ||
+                            devices[index] is Fan ||
+                            devices[index] is Outlet) {
+                          return BlocBuilder<Device, DeviceCubitState>(
+                              bloc: devices[index],
+                              builder: (context, state) {
+                                return DeviceWidget(devices[index]);
+                              });
                         } else {
                           return AnimatedContainer(
                             duration: const Duration(milliseconds: 300),
@@ -119,9 +112,15 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                           );
                         }
                       } else if (index < devices.length + sensors.length) {
-                        return ChangeNotifierProvider.value(
-                            value: sensors[index - devices.length],
-                            child: const SensorWidget());
+                        return BlocBuilder<Sensor, SensorCubitState>(
+                            bloc: sensors[index - devices.length],
+                            builder: (context, state) {
+                              return SensorWidget(
+                                  sensor: sensors[index - devices.length]);
+                            });
+                        // return ChangeNotifierProvider.value(
+                        //     value: sensors[index - devices.length],
+                        //     child: const SensorWidget());
                       } else {
                         return Card(
                           color: Theme.of(context).colorScheme.error,

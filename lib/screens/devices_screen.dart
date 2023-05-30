@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_smarthome/providers/devices_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_smarthome/models/bloc/devices/devices_bloc.dart';
+import 'package:flutter_smarthome/models/devices/device.dart';
+import 'package:flutter_smarthome/repositories/device_repository.dart';
 import 'package:flutter_smarthome/widgets/devicesListItemWidget.dart';
 import 'package:flutter_smarthome/widgets/main_drawer.dart';
 import 'package:provider/provider.dart';
@@ -29,20 +32,22 @@ class DevicesScreen extends StatelessWidget {
         child: const Icon(Icons.add),
       ),
       drawer: const MainDrawer(),
-      body: Consumer<DevicesProvider>(
-        builder: (context, data, _) {
+      body: BlocConsumer<DevicesBloc, DevicesState>(
+        listener: ((context, state) {}),
+        builder: (context, state) {
           return ListView.builder(
             itemBuilder: (context, index) {
-              if (index == data.devices.length) {
+              if (index == state.devices.length) {
                 return const SizedBox(
                   height: 80,
                 );
               }
-              return ChangeNotifierProvider.value(
-                  value: data.devices[index],
-                  child: const DevicesListItemWidget());
+              return BlocBuilder<Device, DeviceCubitState>(
+                  bloc: state.devices[index],
+                  builder: (context, locState) =>
+                      DevicesListItemWidget(state.devices[index]));
             },
-            itemCount: data.devices.length + 1,
+            itemCount: state.devices.length + 1,
           );
         },
       ),

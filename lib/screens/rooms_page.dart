@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_smarthome/models/bloc/rooms/rooms_bloc.dart';
+import 'package:flutter_smarthome/repositories/rooms_repository.dart';
 import 'package:flutter_smarthome/widgets/main_drawer.dart';
 import '../models/room.dart';
-import '../providers/room_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/room_widget.dart';
@@ -13,7 +15,7 @@ class RoomsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Room> rooms = Provider.of<RoomsProvider>(context).rooms;
+    List<Room> rooms = context.read<RoomsRepository>().rooms;
 
     return Scaffold(
       appBar: AppBar(
@@ -27,25 +29,36 @@ class RoomsPage extends StatelessWidget {
           ),
         ],
       ),
-      body: GridView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        itemCount: rooms.length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount:
-              MediaQuery.of(context).orientation == Orientation.portrait
-                  ? 2
-                  : 3,
-          childAspectRatio: 2 / 1,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-        ),
-        itemBuilder: (context, index) {
-          return ChangeNotifierProvider.value(
-            value: rooms[index],
-            child: const RoomWidget(),
-          );
-        },
-      ),
+      body: BlocBuilder<RoomsBloc, RoomsState>(
+          bloc: context.read<RoomsBloc>(),
+          builder: (context, state) {
+            if (state.status.isLoaded || state.status.isDemo) {
+              return GridView.builder(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                itemCount: rooms.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount:
+                      MediaQuery.of(context).orientation == Orientation.portrait
+                          ? 2
+                          : 3,
+                  childAspectRatio: 2 / 1,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                ),
+                itemBuilder: (context, index) {
+                  return BlocBuilder(
+                    bloc: rooms[index],
+                    builder: (context, state) {
+                      return RoomWidget(room: rooms[index]);
+                    },
+                  );
+                },
+              );
+            } else {
+              return const Center(child: CircularProgressIndicator());
+            }
+          }),
       drawer: const MainDrawer(),
     );
   }

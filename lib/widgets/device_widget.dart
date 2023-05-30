@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/devices/device.dart';
+import '../repositories/device_repository.dart';
 
 class DeviceWidget extends StatefulWidget {
-  const DeviceWidget({super.key});
+  final Device device;
+  const DeviceWidget(this.device, {super.key});
 
   @override
   State<DeviceWidget> createState() => _DeviceWidgetState();
@@ -13,12 +15,11 @@ class DeviceWidget extends StatefulWidget {
 class _DeviceWidgetState extends State<DeviceWidget> {
   @override
   Widget build(BuildContext context) {
-    final Device device = Provider.of<Device>(context);
     Icon deviceIcon = const Icon(Icons.error);
 
-    switch (device.type) {
+    switch (widget.device.type) {
       case DeviceType.light:
-        if (device.state == DeviceState.on) {
+        if (widget.device.state.deviceState == DeviceState.on) {
           deviceIcon = Icon(Icons.lightbulb,
               color: Theme.of(context).colorScheme.onPrimary);
         } else {
@@ -27,7 +28,7 @@ class _DeviceWidgetState extends State<DeviceWidget> {
         }
         break;
       case DeviceType.blind:
-        if (device.state == DeviceState.up) {
+        if (widget.device.state.deviceState == DeviceState.up) {
           deviceIcon = Icon(Icons.roller_shades,
               color: Theme.of(context).colorScheme.onPrimary);
         } else {
@@ -36,7 +37,7 @@ class _DeviceWidgetState extends State<DeviceWidget> {
         }
         break;
       case DeviceType.outlet:
-        if (device.state == DeviceState.on) {
+        if (widget.device.state.deviceState == DeviceState.on) {
           deviceIcon = Icon(Icons.outlet,
               color: Theme.of(context).colorScheme.onPrimary);
         } else {
@@ -45,7 +46,7 @@ class _DeviceWidgetState extends State<DeviceWidget> {
         }
         break;
       case DeviceType.fan:
-        if (device.state == DeviceState.on) {
+        if (widget.device.state.deviceState == DeviceState.on) {
           deviceIcon = Icon(Icons.heat_pump,
               color: Theme.of(context).colorScheme.onPrimary);
         } else {
@@ -57,7 +58,8 @@ class _DeviceWidgetState extends State<DeviceWidget> {
     }
 
     BoxDecoration boxDecoration =
-        device.state == DeviceState.up || device.state == DeviceState.on
+        widget.device.state.deviceState == DeviceState.up ||
+                widget.device.state.deviceState == DeviceState.on
             ? BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
                 gradient: LinearGradient(colors: [
@@ -77,17 +79,17 @@ class _DeviceWidgetState extends State<DeviceWidget> {
                 ]));
 
     Icon deviceTrailingIcon = const Icon(Icons.power_settings_new);
-    if (device.state == DeviceState.on) {
+    if (widget.device.state.deviceState == DeviceState.on) {
       deviceTrailingIcon = Icon(Icons.power_settings_new,
           color: Theme.of(context).colorScheme.onPrimary);
-    } else if (device.state == DeviceState.off) {
+    } else if (widget.device.state.deviceState == DeviceState.off) {
       deviceTrailingIcon = Icon(Icons.power_settings_new_outlined,
           color: Theme.of(context).colorScheme.onPrimary);
-    } else if (device.state == DeviceState.up ||
-        device.state == DeviceState.middle) {
+    } else if (widget.device.state.deviceState == DeviceState.up ||
+        widget.device.state.deviceState == DeviceState.middle) {
       deviceTrailingIcon = Icon(Icons.arrow_downward,
           color: Theme.of(context).colorScheme.onPrimary);
-    } else if (device.state == DeviceState.down) {
+    } else if (widget.device.state.deviceState == DeviceState.down) {
       deviceTrailingIcon = Icon(Icons.arrow_upward,
           color: Theme.of(context).colorScheme.onPrimary);
     }
@@ -100,12 +102,12 @@ class _DeviceWidgetState extends State<DeviceWidget> {
       padding: const EdgeInsets.all(4),
       child: InkWell(
         onTap: () {
-          device.changeState();
+          widget.device.changeState();
         },
         child: ListTile(
           leading: deviceIcon,
           title: Text(
-            device.name,
+            widget.device.name,
             style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
           ),
           trailing: deviceTrailingIcon,

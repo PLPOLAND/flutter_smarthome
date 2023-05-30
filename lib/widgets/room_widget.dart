@@ -5,7 +5,8 @@ import 'package:provider/provider.dart';
 import '../models/room.dart';
 
 class RoomWidget extends StatefulWidget {
-  const RoomWidget({super.key});
+  final Room room;
+  const RoomWidget({required this.room, super.key});
 
   @override
   State<RoomWidget> createState() => _RoomWidgetState();
@@ -16,7 +17,7 @@ class _RoomWidgetState extends State<RoomWidget> {
 
   @override
   Widget build(BuildContext context) {
-    Room room = Provider.of<Room>(context);
+    Room room = widget.room;
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),

@@ -1,49 +1,51 @@
+import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-abstract class Sensor with ChangeNotifier {
-  int id;
-  int roomId;
-  int slaveId;
-  int onSlaveId;
-  String name;
-  List<int>? adress;
-  SensorType type;
+abstract class Sensor extends Cubit<SensorCubitState> {
+  Sensor(int id, int roomId, int slaveId, int onSlaveId, String name,
+      SensorType type, List<int>? adress)
+      : super(SensorCubitState(
+            id, roomId, slaveId, onSlaveId, name, type, adress));
 
-  Sensor(this.id, this.roomId, this.slaveId, this.onSlaveId, this.name,
-      this.type, this.adress);
+  Sensor.state(SensorCubitState state) : super(state);
 
-  set room(int roomId) {
-    this.roomId = roomId;
-    notifyListeners();
+  set id(int id) {
+    emit(state.copyWith(id: id));
   }
 
-  set slave(int slaveId) {
-    this.slaveId = slaveId;
-    notifyListeners();
+  set roomId(int roomId) {
+    emit(state.copyWith(roomId: roomId));
   }
 
-  set onSlave(int onSlaveId) {
-    this.onSlaveId = onSlaveId;
-    notifyListeners();
+  set slaveID(int slaveId) {
+    emit(state.copyWith(slaveId: slaveId));
   }
 
-  set deviceName(String name) {
-    this.name = name;
-    notifyListeners();
+  set onSlaveID(int onSlaveId) {
+    emit(state.copyWith(onSlaveId: onSlaveId));
+  }
+
+  set sensorName(String name) {
+    emit(state.copyWith(name: name));
   }
 
   set sensorType(SensorType type) {
-    this.type = type;
-    notifyListeners();
+    emit(state.copyWith(type: type));
   }
 
   set sensorAdress(List<int> adress) {
-    if (adress.length > 8 || adress.isEmpty) {
-      throw Exception("Invalid adress"); //TODO make custom exception
-    }
-    this.adress = adress;
-    notifyListeners();
+    emit(state.copyWith(adress: adress));
   }
+
+  int get id => state.id;
+  int get roomId => state.roomId;
+  int get slaveID => state.slaveId;
+  int get onSlaveID => state.onSlaveId;
+  String get name => state.name;
+  SensorType get type => state.type;
+  List<int>? get adress => state.adress;
 
   static IconData icon(SensorType type) {
     switch (type) {
@@ -61,10 +63,68 @@ abstract class Sensor with ChangeNotifier {
         return Icons.help;
     }
   }
+}
+
+class SensorCubitState extends Equatable {
+  final int _id;
+  final int _roomId;
+  final int _slaveId;
+  final int _onSlaveId;
+  final String _name;
+  final List<int>? _adress;
+  final SensorType _type;
+
+  const SensorCubitState(
+    int id,
+    int roomId,
+    int slaveId,
+    int onSlaveId,
+    String name,
+    SensorType type,
+    List<int>? adress,
+  )   : _id = id,
+        _roomId = roomId,
+        _slaveId = slaveId,
+        _onSlaveId = onSlaveId,
+        _name = name,
+        _type = type,
+        _adress = adress;
+
+  int get id => _id;
+  int get roomId => _roomId;
+  int get slaveId => _slaveId;
+  int get onSlaveId => _onSlaveId;
+  String get name => _name;
+  get adress => _adress;
+  SensorType get type => _type;
 
   @override
   String toString() {
-    return ", id: $id, roomId: $roomId, slaveId: $slaveId, onSlaveId: $onSlaveId, name: $name, type: $type";
+    return 'SensorCubitState{id: $id, roomId: $roomId, slaveId: $slaveId, onSlaveId: $onSlaveId, name: $name, adress: $_adress, type: $type}';
+  }
+
+  @override
+  List<Object?> get props =>
+      [id, roomId, slaveId, onSlaveId, name, _adress, type];
+
+  SensorCubitState copyWith({
+    int? id,
+    int? roomId,
+    int? slaveId,
+    int? onSlaveId,
+    String? name,
+    List<int>? adress,
+    SensorType? type,
+  }) {
+    return SensorCubitState(
+      id ?? this.id,
+      roomId ?? this.roomId,
+      slaveId ?? this.slaveId,
+      onSlaveId ?? this.onSlaveId,
+      name ?? this.name,
+      type ?? this.type,
+      adress ?? _adress,
+    );
   }
 }
 

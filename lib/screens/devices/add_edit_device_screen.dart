@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_smarthome/models/devices/device.dart';
 import 'package:flutter_smarthome/models/devices/light.dart';
-import 'package:flutter_smarthome/providers/devices_provider.dart';
+import 'package:flutter_smarthome/models/devices/outlet.dart';
+import 'package:flutter_smarthome/repositories/device_repository.dart';
+import 'package:flutter_smarthome/repositories/rooms_repository.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/devices/blind.dart';
 import '../../models/devices/fan.dart';
 import '../../models/room.dart';
-import '../../providers/room_provider.dart';
 
 class AddEditDeviceScreen extends StatefulWidget {
   static const routeName = '/devices/add-edit-device';
@@ -45,8 +46,8 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
         roomId = args['roomId'] as int?;
       }
       if (deviceId != null) {
-        final device = Provider.of<DevicesProvider>(context, listen: false)
-            .getDeviceById(deviceId);
+        final device =
+            context.read<DevicesRepository>().getDeviceById(deviceId);
         nameController.text = device.name;
         slaveAddressController.text = device.slaveID.toString();
         slavePinController.text = device.onSlavePin.toString();
@@ -84,7 +85,7 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
             name: nameController.text,
             roomId: selectedRoomId,
             slaveId: int.parse(slaveAddressController.text),
-            onSlavePin: int.parse(slavePinController.text),
+            onSlavePinUp: int.parse(slavePinController.text),
           );
           break;
         case DeviceType.outlet:
@@ -107,8 +108,7 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
           break;
       }
       if (device != null) {
-        await Provider.of<DevicesProvider>(context, listen: false)
-            .addDevice(device);
+        await context.read<DevicesRepository>().addDevice(device);
         setState(() {
           showSaveIndicator = false;
         });
@@ -118,8 +118,8 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
       }
     } else {
       // update device
-      Device oldDevice = Provider.of<DevicesProvider>(context, listen: false)
-          .getDeviceById(deviceId);
+      Device oldDevice =
+          context.read<DevicesRepository>().getDeviceById(deviceId);
       Device? newDevice;
 
       switch (selectedDeviceType) {
@@ -140,7 +140,7 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
             name: nameController.text,
             roomId: selectedRoomId,
             slaveId: int.parse(slaveAddressController.text),
-            onSlavePin: int.parse(slavePinController.text),
+            onSlavePinUp: int.parse(slavePinController.text),
           );
           break;
         case DeviceType.outlet:
@@ -167,8 +167,7 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
           break;
       }
       if (newDevice != null) {
-        await Provider.of<DevicesProvider>(context, listen: false)
-            .updateDevice(newDevice);
+        await context.read<DevicesRepository>().updateDevice(newDevice);
         setState(() {
           showSaveIndicator = false;
         });
@@ -215,7 +214,7 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
       deviceId = args['deviceId'] as int?;
       roomId = args['roomId'] as int?;
     }
-    final List<Room> rooms = Provider.of<RoomsProvider>(context).rooms;
+    final List<Room> rooms = context.read<RoomsRepository>().rooms;
     final bool isEditing = deviceId != null;
     return Scaffold(
       appBar: AppBar(

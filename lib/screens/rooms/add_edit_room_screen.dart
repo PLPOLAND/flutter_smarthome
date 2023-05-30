@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_smarthome/providers/room_provider.dart';
+import 'package:flutter_smarthome/repositories/rooms_repository.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/room.dart';
@@ -27,24 +27,27 @@ class _AddEditRoomScreenState extends State<AddEditRoomScreen> {
     }
     _form.currentState!.save();
     if (roomId == -1) {
-      Provider.of<RoomsProvider>(context, listen: false)
+      context
+          .read<RoomsRepository>()
           .addRoom(
-        Room(
-          nameContorller.text,
-        ),
-      )
+            Room(
+              id: -1,
+              name: nameContorller.text,
+            ),
+          )
           .then((value) {
         print('Room added');
         Navigator.of(context).pop();
       });
     } else {
-      Provider.of<RoomsProvider>(context, listen: false)
+      context
+          .read<RoomsRepository>()
           .updateRoom(
-        Room(
-          nameContorller.text,
-          id: roomId,
-        ),
-      )
+            Room(
+              name: nameContorller.text,
+              id: roomId,
+            ),
+          )
           .then((value) {
         print('Room updated');
         Navigator.of(context).pop();
@@ -59,8 +62,7 @@ class _AddEditRoomScreenState extends State<AddEditRoomScreen> {
       _needInit = false;
       final roomId = ModalRoute.of(context)!.settings.arguments;
       if (roomId != null) {
-        final room = Provider.of<RoomsProvider>(context, listen: false)
-            .getRoomById(roomId as int);
+        final room = context.read<RoomsRepository>().getRoomById(roomId as int);
         nameContorller.text = room.name;
       }
     }

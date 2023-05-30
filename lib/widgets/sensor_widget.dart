@@ -3,16 +3,15 @@ import 'package:flutter_smarthome/models/sensors/thermometer.dart';
 import '../models/sensors/hygrometer.dart';
 import '../models/sensors/motion.dart';
 import '../models/sensors/sensor.dart';
-import 'package:provider/provider.dart';
 
 import '../models/sensors/twilight.dart';
 
 class SensorWidget extends StatelessWidget {
-  const SensorWidget({super.key});
+  final Sensor sensor;
+  const SensorWidget({required this.sensor, super.key});
 
   @override
   Widget build(BuildContext context) {
-    final Sensor sensor = Provider.of<Sensor>(context);
     Icon sensorIcon = const Icon(Icons.error);
 
     Widget sensorTrailing = const Icon(Icons.error);

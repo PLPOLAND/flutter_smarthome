@@ -1,9 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_smarthome/models/sensors/button.dart';
 import 'package:flutter_smarthome/models/sensors/hygrometer.dart';
 import 'package:flutter_smarthome/models/sensors/sensor.dart';
+import 'package:flutter_smarthome/repositories/device_repository.dart';
+import 'package:flutter_smarthome/repositories/rooms_repository.dart';
 import 'package:flutter_smarthome/widgets/add_edit_sensor_screen/button_local_functions.dart';
 import 'package:provider/provider.dart';
 
@@ -11,8 +12,7 @@ import '../../models/room.dart';
 import '../../models/sensors/motion.dart';
 import '../../models/sensors/thermometer.dart';
 import '../../models/sensors/twilight.dart';
-import '../../providers/room_provider.dart';
-import '../../providers/sensors_provider.dart';
+import '../../repositories/sensors_repository.dart';
 
 class AddEditSensorScreen extends StatefulWidget {
   static const routeName = '/sensors/add-edit-sensor';
@@ -56,12 +56,23 @@ class _AddEditSensorScreenState extends State<AddEditSensorScreen> {
         roomId = args['roomId'] as int?;
       }
       if (sensorId != null) {
-        final sensor = Provider.of<SensorsProvider>(context, listen: false)
-            .getSensorById(sensorId);
+        final sensor =
+            context.read<SensorsRepository>().getSensorById(sensorId);
         nameController.text = sensor.name;
-        slaveAddressController.text = sensor.slaveId.toString();
+        slaveAddressController.text = sensor.state.slaveId.toString();
         if (!(sensor is Thermometer || sensor is Hygrometer)) {
-          slavePinController.text = sensor.onSlavePin.toString();
+          // Motion, Twilight, Button
+          if (sensor is Button) {
+            localFunctions = sensor.localFunctions;
+            slavePinController.text = sensor.onSlavePin.toString();
+          }
+          if (sensor is Twilight) {
+            dayValue = sensor.dayValue;
+            slavePinController.text = sensor.onSlavePin.toString();
+          }
+          if (sensor is Motion) {
+            slavePinController.text = sensor.onSlavePin.toString();
+          }
         }
         selectedRoomId = sensor.roomId;
         print(sensor.type);
@@ -127,8 +138,7 @@ class _AddEditSensorScreenState extends State<AddEditSensorScreen> {
           break;
       }
       if (sensor != null) {
-        await Provider.of<SensorsProvider>(context, listen: false)
-            .addSensor(sensor);
+        await context.read<SensorsRepository>().addSensor(sensor);
         setState(() {
           showSaveIndicator = false;
         });
@@ -138,8 +148,8 @@ class _AddEditSensorScreenState extends State<AddEditSensorScreen> {
       }
     } else {
       // update device
-      Sensor oldDevice = Provider.of<SensorsProvider>(context, listen: false)
-          .getSensorById(sensorId);
+      Sensor oldDevice =
+          context.read<SensorsRepository>().getSensorById(sensorId);
       Sensor? newSensor;
       print('Updating sensor');
 
@@ -147,7 +157,7 @@ class _AddEditSensorScreenState extends State<AddEditSensorScreen> {
         case SensorType.button:
           newSensor = Button(
             id: oldDevice.id,
-            onSlaveId: oldDevice.onSlaveId,
+            onSlaveId: oldDevice.onSlaveID,
             name: nameController.text,
             roomId: selectedRoomId,
             slaveId: int.parse(slaveAddressController.text),
@@ -158,7 +168,7 @@ class _AddEditSensorScreenState extends State<AddEditSensorScreen> {
         case SensorType.motion:
           newSensor = Motion(
             id: oldDevice.id,
-            onSlaveId: oldDevice.onSlaveId,
+            onSlaveId: oldDevice.onSlaveID,
             name: nameController.text,
             roomId: selectedRoomId,
             slaveId: int.parse(slaveAddressController.text),
@@ -168,7 +178,7 @@ class _AddEditSensorScreenState extends State<AddEditSensorScreen> {
         case SensorType.twilight:
           newSensor = Twilight(
               id: oldDevice.id,
-              onSlaveId: oldDevice.onSlaveId,
+              onSlaveId: oldDevice.onSlaveID,
               name: nameController.text,
               roomId: selectedRoomId,
               slaveId: int.parse(slaveAddressController.text),
@@ -178,7 +188,7 @@ class _AddEditSensorScreenState extends State<AddEditSensorScreen> {
         case SensorType.thermometer:
           newSensor = Thermometer(
             id: oldDevice.id,
-            onSlaveId: oldDevice.onSlaveId,
+            onSlaveId: oldDevice.onSlaveID,
             adress: oldDevice.adress!,
             name: nameController.text,
             roomId: selectedRoomId,
@@ -188,7 +198,7 @@ class _AddEditSensorScreenState extends State<AddEditSensorScreen> {
         case SensorType.hygrometer:
           newSensor = Hygrometer(
             id: oldDevice.id,
-            onSlaveId: oldDevice.onSlaveId,
+            onSlaveId: oldDevice.onSlaveID,
             adress: oldDevice.adress!,
             name: nameController.text,
             roomId: selectedRoomId,
@@ -199,8 +209,7 @@ class _AddEditSensorScreenState extends State<AddEditSensorScreen> {
           break;
       }
       if (newSensor != null) {
-        await Provider.of<SensorsProvider>(context, listen: false)
-            .updateDevice(newSensor);
+        await context.read<SensorsRepository>().updateSensor(newSensor);
         setState(() {
           showSaveIndicator = false;
         });
@@ -275,7 +284,7 @@ class _AddEditSensorScreenState extends State<AddEditSensorScreen> {
       sensorId = args['sensorId'] as int?;
       roomId = args['roomId'] as int?;
     }
-    final List<Room> rooms = Provider.of<RoomsProvider>(context).rooms;
+    final List<Room> rooms = context.read<RoomsRepository>().rooms;
     final bool isEditing = sensorId != null;
 
     return Scaffold(
