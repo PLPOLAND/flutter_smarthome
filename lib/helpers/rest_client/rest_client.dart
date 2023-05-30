@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_smarthome/models/auth/user_data.dart';
-import 'package:http/http.dart' as http;
 import 'rest_response.dart';
 
 class RESTClient {
@@ -80,13 +79,13 @@ class RESTClient {
             // receiveTimeout: Duration(milliseconds: 100),
           ));
       if (response.statusCode == 200) {
-        print(response.data);
+        log(response.data);
         if (response.data == 'hello') {
           return true;
         }
       }
     } on Exception catch (_) {
-      print('Error $ip');
+      log('Error $ip');
       return false;
     }
     return false;

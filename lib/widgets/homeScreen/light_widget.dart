@@ -81,7 +81,6 @@ class _LightWidgetState extends State<LightWidget> {
                             : DeviceState.off);
                       }
                     }
-                    print("end");
                   },
                   semanticFormatterCallback: (value) {
                     if (value == 0) {

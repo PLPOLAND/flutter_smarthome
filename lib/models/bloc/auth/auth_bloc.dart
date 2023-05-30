@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_smarthome/helpers/rest_client/rest_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:equatable/equatable.dart';
@@ -14,7 +13,7 @@ part 'auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(const AuthState.initial()) {
     on<AppStarted>((event, emit) async {
-      print('AppStarted event');
+      log('AppStarted event');
       emit(state.copyWith(status: AuthStatus.loading));
       var sharedPrefs = await SharedPreferences.getInstance();
       // get user data from shared preferences
@@ -62,7 +61,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     // });
 
     on<LogOut>((event, emit) async {
-      print('LogOut event');
+      log('LogOut event');
       var sharedPrefs = await SharedPreferences.getInstance();
       sharedPrefs.remove('userData');
       emit(state.copyWith(
@@ -71,7 +70,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
 
     on<LogIn>((event, emit) async {
-      print('LogIn event');
+      log('LogIn event');
       emit(state.copyWith(status: AuthStatus.loading));
       try {
         String token = await RESTClient().logIn(
@@ -105,7 +104,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
     on<LogInDemo>(
       (event, emit) {
-        print('LogInDemo event');
+        log('LogInDemo event');
         UserData userData =
             UserData("demo", "demo", "demo@demo.pl", "demoToken", null);
         emit(state.copyWith(status: AuthStatus.demo, userData: userData));

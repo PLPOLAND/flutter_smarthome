@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:flutter/foundation.dart';
 import 'device.dart';
 
 class Blind extends Device {
@@ -32,17 +31,17 @@ class Blind extends Device {
     } else {
       super.setState(DeviceState.up);
     }
-    return Future.delayed(Duration(
+    return Future.delayed(const Duration(
         seconds:
             1)); // TODO: change this line after implementing the http request
   }
 
   @override
-  void setState(DeviceState state) {
-    if (state == DeviceState.up ||
-        state == DeviceState.down ||
-        state == DeviceState.middle) {
-      super.setState(state);
+  void setState(DeviceState newState) {
+    if (state.deviceState == DeviceState.up ||
+        state.deviceState == DeviceState.down ||
+        state.deviceState == DeviceState.middle) {
+      super.setState(newState);
     } else {
       throw Exception("Invalid state");
     }

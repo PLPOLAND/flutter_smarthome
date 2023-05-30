@@ -38,7 +38,7 @@ class ThemesMenager with ChangeNotifier {
     if (light != null && dark != null) {
       if (!colorShemes.containsKey("dynamic_light") ||
           !colorShemes.containsKey("dynamic_dark")) {
-        print("adding dynamic themes");
+        // print("adding dynamic themes");
         colorShemes.addAll({
           'dynamic_light': light,
           'dynamic_dark': dark,
@@ -47,16 +47,16 @@ class ThemesMenager with ChangeNotifier {
         setThemeMode(ThemeMode.system);
       }
     } else {
-      print("dynamic themes are null");
+      // print("dynamic themes are null");
     }
   }
 
   void setTheme(String theme, {bool notify = true}) async {
-    print("trying to set the theme to $theme");
+    // print("trying to set the theme to $theme");
     if (ThemesMenager.colorShemes.containsKey("${theme}_light")) {
       _theme = theme;
 
-      print("setting theme to $theme");
+      // print("setting theme to $theme");
       if (notify) {
         notifyListeners();
       }

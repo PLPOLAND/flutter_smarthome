@@ -4,12 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_smarthome/repositories/device_repository.dart';
 
-import '../../../repositories/dummy_data/dummy_data.dart';
-import '../../devices/blind.dart';
 import '../../devices/device.dart';
-import '../../devices/fan.dart';
-import '../../devices/light.dart';
-import '../../devices/outlet.dart';
 
 part 'devices_event.dart';
 part 'devices_state.dart';

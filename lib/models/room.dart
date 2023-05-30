@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 
 class Room extends Cubit<RoomCubitState> {
   Room({required int id, required String name, bool isFavorite = false})

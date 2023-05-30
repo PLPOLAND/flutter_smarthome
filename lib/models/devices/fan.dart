@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'device.dart';
 
 class Fan extends Device {
@@ -18,7 +20,7 @@ class Fan extends Device {
     } else if (state.deviceState == DeviceState.off) {
       super.setState(DeviceState.on);
     }
-    print("Fan: $name, state: $state");
+    log("Fan: $name, state: $state");
     return Future.delayed(const Duration(
         seconds:
             1)); // TODO: change this line after implementing the http request

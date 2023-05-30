@@ -26,32 +26,32 @@ extension DevicesStatusExtension on DevicesStatus {
 class DevicesState extends Equatable {
   final DevicesStatus status;
   final List<Device> devices;
-  bool stopUpdating;
+  final bool stopUpdating;
 
-  DevicesState._({
+  const DevicesState._({
     this.status = DevicesStatus.initial,
     this.devices = const [],
     this.stopUpdating = false,
   });
 
-  DevicesState.initial() : this._();
+  const DevicesState.initial() : this._();
 
-  DevicesState.demo({
+  const DevicesState.demo({
     required List<Device> devices,
   }) : this._(devices: devices, status: DevicesStatus.demo);
 
-  DevicesState.loading() : this._(status: DevicesStatus.loading);
+  const DevicesState.loading() : this._(status: DevicesStatus.loading);
 
-  DevicesState.loaded({
+  const DevicesState.loaded({
     required List<Device> devices,
   }) : this._(
           status: DevicesStatus.loaded,
           devices: devices,
         );
 
-  DevicesState.error() : this._(status: DevicesStatus.error);
+  const DevicesState.error() : this._(status: DevicesStatus.error);
 
-  DevicesState.updating() : this._(status: DevicesStatus.updating);
+  const DevicesState.updating() : this._(status: DevicesStatus.updating);
 
   @override
   List<Object> get props => [status, devices, stopUpdating];

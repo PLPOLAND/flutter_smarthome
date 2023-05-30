@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_smarthome/screens/room_detail_page.dart';
-import 'package:provider/provider.dart';
 
 import '../models/room.dart';
 

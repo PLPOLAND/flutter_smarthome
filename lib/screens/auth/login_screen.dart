@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter_smarthome/models/bloc/lan_scanner/lan_scanner_bloc.dart';
@@ -82,7 +80,6 @@ class _LoginScreenState extends State<LoginScreen> {
           current.status == ScannnerStatus.done ||
           current.status == ScannnerStatus.found,
       builder: (context, state) {
-        print("building serverFormWidget, state: $state");
         if (state.servers.isEmpty) {
           return Row(
             children: [

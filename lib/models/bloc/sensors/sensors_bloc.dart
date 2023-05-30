@@ -18,7 +18,7 @@ class SensorsBloc extends Bloc<SensorsEvent, SensorsState> {
 
   final SensorsRepository _sensorsRepository;
 
-  SensorsBloc(this._sensorsRepository) : super(SensorsState.initial()) {
+  SensorsBloc(this._sensorsRepository) : super(const SensorsState.initial()) {
     on<LoadSensors>((event, emit) async {
       emit(state.copyWith(status: SensorsStatus.loading, stopUpdating: false));
       await _sensorsRepository.loadSensors();

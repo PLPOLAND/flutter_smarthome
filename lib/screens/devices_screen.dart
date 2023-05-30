@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_smarthome/models/bloc/devices/devices_bloc.dart';
 import 'package:flutter_smarthome/models/devices/device.dart';
-import 'package:flutter_smarthome/repositories/device_repository.dart';
 import 'package:flutter_smarthome/widgets/devicesListItemWidget.dart';
 import 'package:flutter_smarthome/widgets/main_drawer.dart';
-import 'package:provider/provider.dart';
 
 class DevicesScreen extends StatelessWidget {
   static const routeName = '/devices';

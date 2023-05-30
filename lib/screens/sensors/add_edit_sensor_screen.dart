@@ -1,9 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_smarthome/models/sensors/button.dart';
 import 'package:flutter_smarthome/models/sensors/hygrometer.dart';
 import 'package:flutter_smarthome/models/sensors/sensor.dart';
-import 'package:flutter_smarthome/repositories/device_repository.dart';
 import 'package:flutter_smarthome/repositories/rooms_repository.dart';
 import 'package:flutter_smarthome/widgets/add_edit_sensor_screen/button_local_functions.dart';
 import 'package:provider/provider.dart';
@@ -75,7 +76,7 @@ class _AddEditSensorScreenState extends State<AddEditSensorScreen> {
           }
         }
         selectedRoomId = sensor.roomId;
-        print(sensor.type);
+        log(sensor.type.toString());
         selectedSensorType = sensor.type;
       } else if (roomId != null) {
         selectedRoomId = roomId;
@@ -93,7 +94,7 @@ class _AddEditSensorScreenState extends State<AddEditSensorScreen> {
       }
     }
     if (!isValid) {
-      print('Form is not valid');
+      log('Form is not valid');
       return; //If form is not valid, return
     }
     setState(() {
@@ -104,7 +105,7 @@ class _AddEditSensorScreenState extends State<AddEditSensorScreen> {
     if (sensorId == null) {
       // if adding new sensor
       // add new device
-      print('Adding new sensor');
+      log('Adding new sensor');
       Sensor? sensor;
 
       switch (selectedSensorType) {
@@ -151,7 +152,7 @@ class _AddEditSensorScreenState extends State<AddEditSensorScreen> {
       Sensor oldDevice =
           context.read<SensorsRepository>().getSensorById(sensorId);
       Sensor? newSensor;
-      print('Updating sensor');
+      log('Updating sensor');
 
       switch (selectedSensorType) {
         case SensorType.button:

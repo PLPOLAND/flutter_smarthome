@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_smarthome/models/devices/device.dart';
 import 'package:flutter_smarthome/models/devices/light.dart';
-import 'package:flutter_smarthome/models/devices/outlet.dart';
 import 'package:flutter_smarthome/repositories/device_repository.dart';
 import 'package:flutter_smarthome/repositories/rooms_repository.dart';
 import 'package:provider/provider.dart';

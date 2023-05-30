@@ -1,9 +1,6 @@
+import 'dart:developer';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_smarthome/models/sensors/hygrometer.dart';
-import 'package:flutter_smarthome/models/sensors/motion.dart';
 import 'package:flutter_smarthome/models/sensors/thermometer.dart';
-import 'package:flutter_smarthome/models/sensors/twilight.dart';
 
 import '../repositories/dummy_data/dummy_data.dart';
 import '../models/sensors/button.dart';

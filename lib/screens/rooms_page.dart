@@ -4,7 +4,6 @@ import 'package:flutter_smarthome/models/bloc/rooms/rooms_bloc.dart';
 import 'package:flutter_smarthome/repositories/rooms_repository.dart';
 import 'package:flutter_smarthome/widgets/main_drawer.dart';
 import '../models/room.dart';
-import 'package:provider/provider.dart';
 
 import '../widgets/room_widget.dart';
 

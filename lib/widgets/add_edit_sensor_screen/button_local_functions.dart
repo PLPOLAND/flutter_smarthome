@@ -9,9 +9,9 @@ import '../../repositories/sensors_repository.dart';
 class ButtonLocalClickFunctionsWidget extends StatefulWidget {
   final int? sensorID;
   final int roomID;
-  Null Function(List<ButtonLocalClickFunction>) saveFunctions;
-  Null Function() anyChange;
-  ButtonLocalClickFunctionsWidget(
+  final Null Function(List<ButtonLocalClickFunction>) saveFunctions;
+  final Null Function() anyChange;
+  const ButtonLocalClickFunctionsWidget(
       {super.key,
       required this.sensorID,
       required this.roomID,

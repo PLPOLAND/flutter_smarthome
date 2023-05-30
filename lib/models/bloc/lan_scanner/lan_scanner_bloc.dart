@@ -53,7 +53,7 @@ class LanScannerBloc extends Bloc<LanScannerEvent, LanScannerState> {
   @override
   void onChange(Change<LanScannerState> change) {
     super.onChange(change);
-    print(change);
+    log("LanScanner: ${change.toString()}");
   }
 
   /// close method is called when bloc is closed and cancels server scanner subscription

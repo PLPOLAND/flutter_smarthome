@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_smarthome/repositories/rooms_repository.dart';
 import 'package:provider/provider.dart';
@@ -20,7 +22,7 @@ class _AddEditRoomScreenState extends State<AddEditRoomScreen> {
   final nameContorller = TextEditingController();
 
   void _saveForm(BuildContext context) {
-    print('Save form');
+    log('Save form');
 
     if (!_form.currentState!.validate()) {
       return;
@@ -36,7 +38,7 @@ class _AddEditRoomScreenState extends State<AddEditRoomScreen> {
             ),
           )
           .then((value) {
-        print('Room added');
+        log('Room added');
         Navigator.of(context).pop();
       });
     } else {
@@ -49,7 +51,7 @@ class _AddEditRoomScreenState extends State<AddEditRoomScreen> {
             ),
           )
           .then((value) {
-        print('Room updated');
+        log('Room updated');
         Navigator.of(context).pop();
       });
     }

@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:flutter/foundation.dart';
 import 'device.dart';
 
 class Outlet extends Device {
@@ -28,9 +27,10 @@ class Outlet extends Device {
   }
 
   @override
-  void setState(DeviceState state) {
-    if (state == DeviceState.on || state == DeviceState.off) {
-      super.setState(state);
+  void setState(DeviceState newState) {
+    if (state.deviceState == DeviceState.on ||
+        state.deviceState == DeviceState.off) {
+      super.setState(newState);
     } else {
       throw Exception("Invalid state"); //TODO: change to custom exception
     }
@@ -38,7 +38,7 @@ class Outlet extends Device {
 
   @override
   String toString() {
-    String s = "Outlet: $name, state: $state";
+    String s = "Outlet: $name, state: ${state.deviceState}";
     return s + super.toString();
   }
 

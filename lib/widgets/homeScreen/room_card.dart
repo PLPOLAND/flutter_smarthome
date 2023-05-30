@@ -5,7 +5,6 @@ import 'package:flutter_smarthome/models/sensors/sensor.dart';
 import 'package:flutter_smarthome/widgets/homeScreen/blind_widget.dart';
 import 'package:flutter_smarthome/widgets/homeScreen/light_widget_container.dart';
 import 'package:flutter_smarthome/widgets/homeScreen/outlet_widget.dart';
-import 'package:provider/provider.dart';
 
 import '../../models/devices/blind.dart';
 import '../../models/devices/fan.dart';

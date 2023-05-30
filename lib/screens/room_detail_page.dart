@@ -4,7 +4,6 @@ import 'package:flutter_smarthome/repositories/device_repository.dart';
 import 'package:flutter_smarthome/repositories/rooms_repository.dart';
 import 'package:flutter_smarthome/repositories/sensors_repository.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:provider/provider.dart';
 
 import '../models/devices/blind.dart';
 import '../models/devices/device.dart';
@@ -53,7 +52,9 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
             },
           ),
           IconButton(
-            icon: room.isFavorite ? const Icon(Icons.star) : const Icon(Icons.star_outline),
+            icon: room.isFavorite
+                ? const Icon(Icons.star)
+                : const Icon(Icons.star_outline),
             onPressed: () {
               setState(() {
                 room.toggleFavorite();

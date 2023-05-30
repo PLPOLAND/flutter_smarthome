@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 class UserData {
   final String nickName;
   final String showName;
@@ -16,7 +18,7 @@ class UserData {
         avatarFile = null;
 
   static UserData fromJson(Map body) {
-    print(body);
+    log(body.toString());
     return UserData(
       body['nick'] as String, body['imie'] as String,
       body['email'] as String, body['token'] as String, null,

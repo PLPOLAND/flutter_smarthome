@@ -15,7 +15,7 @@ class RoomsBloc extends Bloc<RoomsEvent, RoomsState> {
 
   final RoomsRepository _roomsRepository;
 
-  RoomsBloc(this._roomsRepository) : super(RoomsState.initial()) {
+  RoomsBloc(this._roomsRepository) : super(const RoomsState.initial()) {
     on<LoadRooms>((event, emit) async {
       emit(state.copyWith(status: RoomsStatus.loading, stopUpdating: false));
       await _roomsRepository.loadRooms();

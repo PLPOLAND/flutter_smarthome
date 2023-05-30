@@ -2,20 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_smarthome/models/bloc/auth/auth_bloc.dart';
 import 'package:flutter_smarthome/models/room.dart';
-import 'package:flutter_smarthome/repositories/device_repository.dart';
 import 'package:flutter_smarthome/widgets/homeScreen/room_card.dart';
 import 'package:flutter_smarthome/widgets/main_drawer.dart';
-import 'package:provider/provider.dart';
 
-import '../models/devices/blind.dart';
-import '../models/devices/device.dart';
-import '../models/devices/fan.dart';
-import '../models/devices/light.dart';
-import '../models/devices/outlet.dart';
-import '../models/sensors/sensor.dart';
 import '../repositories/rooms_repository.dart';
-import '../widgets/device_widget.dart';
-import '../widgets/sensor_widget.dart';
 
 class HomepageScreen extends StatelessWidget {
   static const routeName = '/homepage';

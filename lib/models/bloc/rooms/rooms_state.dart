@@ -26,32 +26,32 @@ extension RoomsStatusExtension on RoomsStatus {
 class RoomsState extends Equatable {
   final RoomsStatus status;
   final List<Room> rooms;
-  bool stopUpdating;
+  final bool stopUpdating;
 
-  RoomsState._({
+  const RoomsState._({
     this.status = RoomsStatus.initial,
     this.rooms = const [],
     this.stopUpdating = false,
   });
 
-  RoomsState.initial() : this._();
+  const RoomsState.initial() : this._();
 
-  RoomsState.demo({
+  const RoomsState.demo({
     required List<Room> rooms,
   }) : this._(rooms: rooms, status: RoomsStatus.demo);
 
-  RoomsState.loading() : this._(status: RoomsStatus.loading);
+  const RoomsState.loading() : this._(status: RoomsStatus.loading);
 
-  RoomsState.loaded({
+  const RoomsState.loaded({
     required List<Room> rooms,
   }) : this._(
           status: RoomsStatus.loaded,
           rooms: rooms,
         );
 
-  RoomsState.error() : this._(status: RoomsStatus.error);
+  const RoomsState.error() : this._(status: RoomsStatus.error);
 
-  RoomsState.updating() : this._(status: RoomsStatus.updating);
+  const RoomsState.updating() : this._(status: RoomsStatus.updating);
 
   @override
   List<Object> get props => [status, rooms, stopUpdating];

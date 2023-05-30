@@ -100,7 +100,8 @@ class MyApp extends StatelessWidget {
                   SettingsScreen.routeName: (context) => SettingsScreen(),
                   DevicesScreen.routeName: (context) => const DevicesScreen(),
                   Sensors.routeName: (context) => const Sensors(),
-                  AddEditRoomScreen.routeName: (context) => AddEditRoomScreen(),
+                  AddEditRoomScreen.routeName: (context) =>
+                      const AddEditRoomScreen(),
                   AddEditDeviceScreen.routeName: (context) =>
                       const AddEditDeviceScreen(),
                   AddEditSensorScreen.routeName: (context) =>
