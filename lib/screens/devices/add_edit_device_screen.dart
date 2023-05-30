@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_smarthome/models/devices/device.dart';
 import 'package:flutter_smarthome/models/devices/light.dart';
-import 'package:flutter_smarthome/models/devices/outlet.dart';
 import 'package:flutter_smarthome/providers/devices_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -47,7 +46,7 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
       }
       if (deviceId != null) {
         final device = Provider.of<DevicesProvider>(context, listen: false)
-            .getDeviceById(deviceId as int);
+            .getDeviceById(deviceId);
         nameController.text = device.name;
         slaveAddressController.text = device.slaveID.toString();
         slavePinController.text = device.onSlavePin.toString();

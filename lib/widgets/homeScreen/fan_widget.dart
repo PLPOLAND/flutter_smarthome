@@ -30,10 +30,10 @@ class _FanWidgetState extends State<FanWidget> {
                 children: [
                   Text(widget.fan.name),
                   const SizedBox(width: 20),
-                  Container(
+                  SizedBox(
                     width: 100,
                     child: IconButton(
-                      icon: Icon(Icons.power_settings_new),
+                      icon: const Icon(Icons.power_settings_new),
                       onPressed: () {
                         setState(() {
                           widget.fan.changeState();

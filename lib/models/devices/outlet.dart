@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'device.dart';
 
 class Outlet extends Device {

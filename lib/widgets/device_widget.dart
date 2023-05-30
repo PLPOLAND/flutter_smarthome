@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/devices/device.dart';
-import '../providers/devices_provider.dart';
 
 class DeviceWidget extends StatefulWidget {
   const DeviceWidget({super.key});
@@ -94,7 +93,7 @@ class _DeviceWidgetState extends State<DeviceWidget> {
     }
 
     return AnimatedContainer(
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
       clipBehavior: Clip.hardEdge,
       decoration: boxDecoration,
       margin: const EdgeInsets.fromLTRB(5, 10, 5, 0),
