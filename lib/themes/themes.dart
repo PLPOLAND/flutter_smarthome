@@ -465,116 +465,119 @@ class ThemesMenager with ChangeNotifier {
     bool isAutoBrightness = themeProviderListen.themeMode == ThemeMode.system;
 
     final dropdownState = GlobalKey<FormFieldState>();
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Expanded(
-          child: DropdownButtonFormField(
-            key: dropdownState,
-            decoration: const InputDecoration(
-              labelText: "Theme Color:",
-              border: OutlineInputBorder(),
-            ),
-            items: [
-              DropdownMenuItem(
-                //here add more themes options
-                value: "pink",
-                child: Text('Pink',
-                    style:
-                        TextStyle(color: colorShemes["pink_light"]!.primary)),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Expanded(
+            child: DropdownButtonFormField(
+              key: dropdownState,
+              decoration: const InputDecoration(
+                labelText: "Theme Color:",
+                border: OutlineInputBorder(),
               ),
-              DropdownMenuItem(
-                value: "blue",
-                child: Text('Blue',
-                    style:
-                        TextStyle(color: colorShemes["blue_light"]!.primary)),
-              ),
-              DropdownMenuItem(
-                value: "green",
-                child: Text('Green',
-                    style:
-                        TextStyle(color: colorShemes["green_light"]!.primary)),
-              ),
-              DropdownMenuItem(
-                value: "yellow",
-                child: Text('Yellow',
-                    style:
-                        TextStyle(color: colorShemes["yellow_light"]!.primary)),
-              ),
-              DropdownMenuItem(
-                value: "purple",
-                child: Text('Purple',
-                    style:
-                        TextStyle(color: colorShemes["purple_light"]!.primary)),
-              ),
-              const DropdownMenuItem(
-                value: "dynamic",
-                child: Text('Dynamic'),
-              ),
-            ],
-            value: themeProviderListen.theme,
-            elevation: 1,
-            onChanged: (value) {
-              if (value == 'dynamic') {
-                themeProvider.setTheme(value.toString());
-                if (themeProvider.theme != 'dynamic') {
-                  dropdownState.currentState!.didChange(themeProvider.theme);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                          "Theme color can't be changed to dynamic, because system doesn't support it."),
-                      showCloseIcon: true,
-                    ),
-                  );
+              items: [
+                DropdownMenuItem(
+                  //here add more themes options
+                  value: "pink",
+                  child: Text('Pink',
+                      style:
+                          TextStyle(color: colorShemes["pink_light"]!.primary)),
+                ),
+                DropdownMenuItem(
+                  value: "blue",
+                  child: Text('Blue',
+                      style:
+                          TextStyle(color: colorShemes["blue_light"]!.primary)),
+                ),
+                DropdownMenuItem(
+                  value: "green",
+                  child: Text('Green',
+                      style: TextStyle(
+                          color: colorShemes["green_light"]!.primary)),
+                ),
+                DropdownMenuItem(
+                  value: "yellow",
+                  child: Text('Yellow',
+                      style: TextStyle(
+                          color: colorShemes["yellow_light"]!.primary)),
+                ),
+                DropdownMenuItem(
+                  value: "purple",
+                  child: Text('Purple',
+                      style: TextStyle(
+                          color: colorShemes["purple_light"]!.primary)),
+                ),
+                const DropdownMenuItem(
+                  value: "dynamic",
+                  child: Text('Dynamic'),
+                ),
+              ],
+              value: themeProviderListen.theme,
+              elevation: 1,
+              onChanged: (value) {
+                if (value == 'dynamic') {
+                  themeProvider.setTheme(value.toString());
+                  if (themeProvider.theme != 'dynamic') {
+                    dropdownState.currentState!.didChange(themeProvider.theme);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                            "Theme color can't be changed to dynamic, because system doesn't support it."),
+                        showCloseIcon: true,
+                      ),
+                    );
+                  }
+                } else {
+                  themeProvider.setTheme(value.toString());
                 }
-              } else {
-                themeProvider.setTheme(value.toString());
-              }
-            },
-          ),
-        ),
-        Expanded(
-          flex: 1,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: ElevatedButton.icon(
-              onPressed: () {
-                switch (themeProvider.themeMode) {
-                  case ThemeMode.dark:
-                    themeProvider.setThemeMode(ThemeMode.light);
-                    break;
-                  case ThemeMode.light:
-                    themeProvider.setThemeMode(ThemeMode.system);
-                    break;
-                  case ThemeMode.system:
-                    themeProvider.setThemeMode(ThemeMode.dark);
-                    break;
-                  default:
-                }
-                // themeProvider
-                //     .setThemeMode(themeProvider.themeMode == ThemeMode.dark
-                //         ? themeProvider.themeMode == ThemeMode.light
-                //             ? ThemeMode.system
-                //             : ThemeMode.light
-                //         : ThemeMode.dark);
               },
-              icon: Icon(
-                themeProvider.themeMode == ThemeMode.light
-                    ? Icons.brightness_3
-                    : themeProvider.themeMode == ThemeMode.system
-                        ? Icons.brightness_auto
-                        : Icons.sunny,
-              ),
-              label: themeProvider.themeMode == ThemeMode.light
-                  ? const Text("Dark Mode")
-                  : themeProvider.themeMode == ThemeMode.system
-                      ? const Text("Auto Mode")
-                      : const Text("Light Mode"),
             ),
           ),
-        ),
-      ],
+          Expanded(
+            flex: 1,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  switch (themeProvider.themeMode) {
+                    case ThemeMode.dark:
+                      themeProvider.setThemeMode(ThemeMode.light);
+                      break;
+                    case ThemeMode.light:
+                      themeProvider.setThemeMode(ThemeMode.system);
+                      break;
+                    case ThemeMode.system:
+                      themeProvider.setThemeMode(ThemeMode.dark);
+                      break;
+                    default:
+                  }
+                  // themeProvider
+                  //     .setThemeMode(themeProvider.themeMode == ThemeMode.dark
+                  //         ? themeProvider.themeMode == ThemeMode.light
+                  //             ? ThemeMode.system
+                  //             : ThemeMode.light
+                  //         : ThemeMode.dark);
+                },
+                icon: Icon(
+                  themeProvider.themeMode == ThemeMode.light
+                      ? Icons.brightness_3
+                      : themeProvider.themeMode == ThemeMode.system
+                          ? Icons.brightness_auto
+                          : Icons.sunny,
+                ),
+                label: themeProvider.themeMode == ThemeMode.light
+                    ? const Text("Dark Mode")
+                    : themeProvider.themeMode == ThemeMode.system
+                        ? const Text("Auto Mode")
+                        : const Text("Light Mode"),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
