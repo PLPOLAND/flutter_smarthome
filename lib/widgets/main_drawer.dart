@@ -49,6 +49,12 @@ class MainDrawer extends StatelessWidget {
                 onTap: () =>
                     Navigator.of(context).pushReplacementNamed('/settings'),
               ),
+              ListTile(
+                leading: const Icon(Icons.settings),
+                title: const Text('Test Screen'),
+                onTap: () =>
+                    Navigator.of(context).pushReplacementNamed('/test-screen'),
+              ),
             ],
           ),
           ListTile(

@@ -20,6 +20,7 @@ class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
 
   DevicesBloc(this._devicesRepository) : super(DevicesState.initial()) {
     on<LoadDevices>((event, emit) async {
+      log('Loading devices');
       emit(state.copyWith(status: DevicesStatus.loading, stopUpdating: false));
       await _devicesRepository.loadDevices();
       add(UpdateDevices());

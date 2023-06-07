@@ -47,6 +47,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               userData: const UserData.nullData()));
           return;
         }
+        RESTClient().setUserData(userData); //set userData in RESTClient
         //user is authenticated
         emit(state.copyWith(
             status: AuthStatus.authenticated, userData: userData));
@@ -64,6 +65,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       log('LogOut event');
       var sharedPrefs = await SharedPreferences.getInstance();
       sharedPrefs.remove('userData');
+      RESTClient().setUserData(null);
+
       emit(state.copyWith(
           status: AuthStatus.unauthenticated,
           userData: const UserData.nullData()));
@@ -78,9 +81,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             password: event.password); //get token from server by logging in
         UserData userData = await RESTClient()
             .getUserData(token: token); //get user data from server
-        log(
-          userData.toString(),
-        );
+
+        log(userData.toString());
+
+        RESTClient().setUserData(userData); //set userData in RESTClient
+
         var sharedPrefs = await SharedPreferences.getInstance();
         sharedPrefs.setString(
           "userData",

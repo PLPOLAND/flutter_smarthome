@@ -34,6 +34,15 @@ class Room extends Cubit<RoomCubitState> {
     super.onChange(change);
     log('RoomCubit: $change');
   }
+
+  static Room fromJson(Map<String, dynamic> room) {
+    log('fromJson: $room');
+    return Room(
+      id: room['id'] as int,
+      name: room['name'] as String,
+      isFavorite: room['isFavorite'] as bool? ?? false,
+    );
+  }
 }
 
 class RoomCubitState extends Equatable {

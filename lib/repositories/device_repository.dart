@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:dio/dio.dart';
+import 'package:flutter_smarthome/helpers/rest_client/rest_client.dart';
 import 'package:flutter_smarthome/repositories/dummy_data/dummy_data.dart';
 
 import '../models/devices/blind.dart';
@@ -11,6 +13,7 @@ import '../models/devices/outlet.dart';
 class DevicesRepository {
   final List<Device> _devices = [];
 
+  RESTClient client = RESTClient();
   List<Device> get devices => [..._devices];
   List<Device> getDevicesByRoomId(int roomId) {
     return _devices.where((element) => element.roomId == roomId).toList();
@@ -42,7 +45,7 @@ class DevicesRepository {
 
   Future<void> loadDevices() async {
     _devices.clear();
-    //TODO load from server
+    _devices.addAll(await client.getDevices());
   }
 
   Future<void> addDevice(Device device) async {

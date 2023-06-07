@@ -1,12 +1,20 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_smarthome/models/auth/user_data.dart';
+import '../../models/devices/blind.dart';
+import '../../models/devices/device.dart';
+import '../../models/devices/fan.dart';
+import '../../models/devices/light.dart';
+import '../../models/devices/outlet.dart';
+import '../../models/room.dart';
 import 'rest_response.dart';
 
 class RESTClient {
-  String ip;
-  Dio dio;
+  String _ip;
+  Dio _dio;
+  UserData? _userData;
 
   static final RESTClient _singleton = RESTClient._internal();
 
@@ -15,23 +23,36 @@ class RESTClient {
   }
 
   RESTClient._internal()
-      : dio = Dio(),
-        ip = '';
+      : _dio = Dio(),
+        _ip = '';
 
   /// The function sets the value of a variable called "ip" to a given string.
   void setIP(String ip) {
-    this.ip = ip;
+    _ip = ip;
   }
 
   /// The function returns the value of a variable called "ip".
   String getIP() {
-    return ip;
+    return _ip;
   }
 
   bool isIPSet() {
-    return ip.isNotEmpty;
+    return _ip.isNotEmpty;
   }
 
+  UserData? getLocalUserData() {
+    return _userData;
+  }
+
+  bool isUserDataSet() {
+    return _userData != null;
+  }
+
+  void setUserData(UserData? userData) {
+    _userData = userData;
+  }
+
+  /// Scans the local network for a server
   Stream<String> scanForServer() async* {
     Dio dio = Dio(
       BaseOptions(
@@ -70,7 +91,7 @@ class RESTClient {
   Future<bool> checkServer(String ip) async {
     try {
       // print('Trying 192.168.1.$i');
-      var response = await dio.get('http://$ip:8080/api/homeData',
+      var response = await _dio.get('http://$ip:8080/api/homeData',
           options: Options(
             headers: {
               'Content-Type': 'application/json',
@@ -99,8 +120,8 @@ class RESTClient {
       throw Exception('IP not set');
       // TODO: handle exception. make custom exception
     }
-    var response = await dio.post(
-      'http://$ip:8080/api/login',
+    var response = await _dio.post(
+      'http://$_ip:8080/api/login',
       data: {
         'nick': nick,
         'pass': password,
@@ -126,20 +147,88 @@ class RESTClient {
       throw Exception('IP not set');
       // TODO: handle exception, make custom exception
     }
-    var response = await dio.post(
-      'http://$ip:8080/api/getUserData',
+    var response = await _dio.post(
+      'http://$_ip:8080/api/getUserData',
       data: {
         'token': token,
       },
       options: Options(contentType: Headers.formUrlEncodedContentType),
     );
-    RestResponse res = RestResponse(
+    RestResponse<String> res = RestResponse(
       statusCode: response.statusCode ?? 0,
       responseBody: response.data,
     );
     log(res.toString());
     if (res.isOk) {
-      return UserData.fromJson(res.body);
+      return UserData.fromJson(jsonDecode(res.body!));
+    } else if (res.isApiError) {
+      throw Exception(res.error);
+    } else {
+      throw Exception('Unknown error, status code: ${res.statusCode}');
+    }
+  }
+
+  Future<List<Device>> getDevices() async {
+    if (!isIPSet()) {
+      throw Exception('IP not set');
+    }
+    var response = await _dio.get(
+      'http://$_ip:8080/api/getDevices?token=${_userData?.token}',
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
+    RestResponse res = RestResponse(
+      statusCode: response.statusCode ?? 0,
+      responseBody: response.data ?? {},
+    );
+    log(res.toString());
+    if (res.isOk) {
+      List<Device> devices = [];
+      for (var device in res.body) {
+        switch (device['typ']) {
+          case 'LIGHT':
+            devices.add(Light.fromJson(device));
+            break;
+          case 'BLIND':
+            devices.add(Blind.fromJson(device));
+            break;
+          case 'FAN':
+            devices.add(Fan.fromJson(device));
+            break;
+          case 'OUTLET':
+            devices.add(Outlet.fromJson(device));
+            break;
+          default:
+            log("Error: Unknown device type");
+        }
+      }
+      return devices;
+    } else if (res.isApiError) {
+      throw Exception(res.error);
+    } else {
+      throw Exception('Unknown error, status code: ${res.statusCode}');
+    }
+  }
+
+  Future<List<Room>> getRooms() async {
+    if (!isIPSet()) {
+      throw Exception('IP not set');
+    }
+    var response = await _dio.get(
+      'http://$_ip:8080/api/getRooms?token=${_userData?.token}',
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
+    RestResponse res = RestResponse(
+      statusCode: response.statusCode ?? 0,
+      responseBody: response.data ?? {},
+    );
+    log(res.toString());
+    if (res.isOk) {
+      List<Room> rooms = [];
+      for (var room in res.body) {
+        rooms.add(Room.fromJson(room));
+      }
+      log(rooms.toString());
+      return rooms;
     } else if (res.isApiError) {
       throw Exception(res.error);
     } else {

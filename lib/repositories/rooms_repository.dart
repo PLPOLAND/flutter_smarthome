@@ -1,3 +1,4 @@
+import "../helpers/rest_client/rest_client.dart";
 import "../models/room.dart";
 
 class RoomsRepository {
@@ -5,8 +6,11 @@ class RoomsRepository {
 
   List<Room> get rooms => [..._rooms];
 
+  final RESTClient client = RESTClient();
+
   Future<void> loadRooms() async {
     _rooms.clear();
+    _rooms.addAll(await client.getRooms());
     //TODO load from server
   }
 

@@ -58,7 +58,7 @@ class DevicesState extends Equatable {
 
   @override
   String toString() =>
-      'DevicesState { status: $status, devices: $devices, stopUpdating: $stopUpdating }';
+      'DevicesState { status: $status, devices: ${devices.length}, stopUpdating: $stopUpdating }';
 
   DevicesState copyWith({
     DevicesStatus? status,
