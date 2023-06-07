@@ -1,3 +1,7 @@
+import "dart:developer";
+
+import "package:shared_preferences/shared_preferences.dart";
+
 import "../helpers/rest_client/rest_client.dart";
 import "../models/room.dart";
 
@@ -11,7 +15,8 @@ class RoomsRepository {
   Future<void> loadRooms() async {
     _rooms.clear();
     _rooms.addAll(await client.getRooms());
-    //TODO load from server
+
+    await loadFavoriteFromPrefs();
   }
 
   Future<void> loadDemoData() async {
@@ -32,8 +37,7 @@ class RoomsRepository {
       Room(name: "Taras", id: 12),
       Room(name: "Wiatrołap", id: 13),
     ]);
-
-    Future.delayed(const Duration(seconds: 1));
+    await loadFavoriteFromPrefs();
   }
 
   Room getRoomById(int id) => _rooms.firstWhere((room) => room.id == id);
@@ -62,5 +66,19 @@ class RoomsRepository {
 
   Future<void> updateListOfRooms() async {
     //TODO load from server
+  }
+
+  Future<void> loadFavoriteFromPrefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var favouriteRooms = prefs.get("favouriteRooms") as String?;
+    if (favouriteRooms != null) {
+      var favouriteRoomsList = favouriteRooms.split(",");
+      log(favouriteRoomsList.toString());
+      for (var room in _rooms) {
+        if (favouriteRoomsList.contains(room.id.toString())) {
+          room.setFavorite(true);
+        }
+      }
+    }
   }
 }
