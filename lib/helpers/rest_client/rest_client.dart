@@ -235,4 +235,39 @@ class RESTClient {
       throw Exception('Unknown error, status code: ${res.statusCode}');
     }
   }
+
+  //TODO exception handling for all methods
+  Future<void> changeDeviceState({
+    required int deviceId,
+    required DeviceState state,
+  }) async {
+    if (!isIPSet()) {
+      throw Exception('IP not set');
+    }
+    try {
+      var response = await _dio.post(
+        'http://$_ip:8080/api/changeDeviceState?token=${_userData?.token}',
+        data: {
+          'deviceId': deviceId,
+          'state': state,
+        },
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
+      RestResponse res = RestResponse(
+        statusCode: response.statusCode ?? 0,
+        responseBody: response.data ?? {},
+      );
+      log(res.toString());
+      if (res.isOk) {
+        return;
+      } else if (res.isApiError) {
+        throw Exception(res.error);
+      } else {
+        throw Exception('Unknown error, status code: ${res.statusCode}');
+      }
+    } on DioError catch (e) {
+      log(e.toString());
+      throw Exception('Unknown error, status code: ${e.response?.statusCode}');
+    }
+  }
 }

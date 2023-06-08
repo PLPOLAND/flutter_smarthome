@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_smarthome/helpers/rest_client/rest_client.dart';
 
 abstract class Device extends Cubit<DeviceCubitState> {
   Device(int id, int roomId, int slaveId, int onSlaveId, String name,
@@ -13,6 +14,7 @@ abstract class Device extends Cubit<DeviceCubitState> {
   Device.state(DeviceCubitState state) : super(state);
 
   void setState(DeviceState newState) {
+    RESTClient().changeDeviceState(deviceId: id, state: newState);
     emit(state.copyWith(state: newState));
   }
 
