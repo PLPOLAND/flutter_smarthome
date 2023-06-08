@@ -128,13 +128,13 @@ class RESTClient {
       },
       options: Options(contentType: Headers.formUrlEncodedContentType),
     );
-    RestResponse res = RestResponse(
+    RestResponse<Map> res = RestResponse(
       statusCode: response.statusCode ?? 0,
       responseBody: response.data,
     );
     log(res.toString());
     if (res.isOk) {
-      return res.body['token'] as String;
+      return res.body!['token'];
     } else if (res.isApiError) {
       throw Exception(res.error); //TODO make custom exception
     } else {

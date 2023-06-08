@@ -15,10 +15,10 @@ class RestResponse<T> {
 
   @override
   String toString() {
-    String tmp = '{';
-    body.toString();
-    tmp += '}';
+    // String tmp = '{';
+    // body.toString();
+    // tmp += '}';
 
-    return 'Response { statusCode: $statusCode, body: $tmp, error: $error }';
+    return 'Response { statusCode: $statusCode, body: $body, error: $error }';
   }
 }
