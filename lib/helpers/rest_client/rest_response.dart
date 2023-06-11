@@ -5,7 +5,8 @@ class RestResponse<T> {
   final T? body;
   final String? error;
 
-  RestResponse({required this.statusCode, required Map responseBody})
+  RestResponse(
+      {required this.statusCode, required Map<String, dynamic> responseBody})
       : body = responseBody['obj'] is Null ? null : responseBody['obj'] as T,
         error = responseBody['error'] as String?;
 

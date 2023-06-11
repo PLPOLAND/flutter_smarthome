@@ -13,8 +13,14 @@ abstract class Device extends Cubit<DeviceCubitState> {
 
   Device.state(DeviceCubitState state) : super(state);
 
+  /// The function changes the state of the device. It sends a request to the server.
   void setState(DeviceState newState) {
     RESTClient().changeDeviceState(deviceId: id, state: newState);
+    emit(state.copyWith(state: newState));
+  }
+
+  /// The function changes the state of the device. It does not send a request to the server.
+  void updateState(DeviceState newState) {
     emit(state.copyWith(state: newState));
   }
 
@@ -178,6 +184,27 @@ enum DeviceState {
         return "middle";
       default:
         return "none";
+    }
+  }
+
+  static DeviceState fromString(String state) {
+    state = state.toLowerCase();
+    switch (state) {
+      case "none":
+        return DeviceState.none;
+      case "on":
+        return DeviceState.on;
+      case "off":
+        return DeviceState.off;
+      case "up":
+        return DeviceState.up;
+      case "down":
+        return DeviceState.down;
+      case "middle":
+      case "notknown":
+        return DeviceState.middle;
+      default:
+        return DeviceState.none;
     }
   }
 }
