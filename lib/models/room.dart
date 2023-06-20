@@ -26,7 +26,6 @@ class Room extends Cubit<RoomCubitState> {
   void toggleFavorite() async {
     log('toggleFavorite');
     setFavorite(!isFavorite);
-    emit(state.copyWith(isFavorite: !isFavorite));
   }
 
   void setName(String newName) {
