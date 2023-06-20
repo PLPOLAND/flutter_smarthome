@@ -68,7 +68,9 @@ class ThemesMenager with ChangeNotifier {
   void setThemeMode(ThemeMode themeMode) async {
     // print("setting theme mode to $themeMode");
     _themeMode = themeMode;
-    notifyListeners();
+    Future.delayed(const Duration(milliseconds: 100), () {
+      notifyListeners();
+    });
     var prefs = await SharedPreferences.getInstance();
     prefs.setString(
         "themeMode",

@@ -214,7 +214,10 @@ class RESTClient {
       throw Exception('IP not set');
     }
     var response = await _dio.get(
-      'http://$_ip:8080/api/getRooms?token=${_userData?.token}',
+      'http://$_ip:8080/api/getRooms',
+      queryParameters: {
+        'token': _userData?.token,
+      },
       options: Options(contentType: Headers.formUrlEncodedContentType),
     );
     RestResponse res = RestResponse(
@@ -233,6 +236,157 @@ class RESTClient {
       throw Exception(res.error);
     } else {
       throw Exception('Unknown error, status code: ${res.statusCode}');
+    }
+  }
+
+  Future<String> getFavoriteRooms() async {
+    if (!isIPSet()) {
+      throw Exception('IP not set');
+    }
+    var response = await _dio.get(
+      'http://$_ip:8080/api/getFavoriteRooms',
+      queryParameters: {
+        'token': _userData?.token,
+      },
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
+    RestResponse res = RestResponse(
+      statusCode: response.statusCode ?? 0,
+      responseBody: response.data ?? {},
+    );
+    log(res.toString());
+    if (res.isOk) {
+      return res.body;
+    } else if (res.isApiError) {
+      throw Exception(res.error);
+    } else {
+      throw Exception('Unknown error, status code: ${res.statusCode}');
+    }
+  }
+
+  Future<String> addFavoriteRoom(int roomID) async {
+    if (!isIPSet()) {
+      throw Exception('IP not set');
+    }
+    var response = await _dio.post(
+      'http://$_ip:8080/api/addFavoriteRoom',
+      data: {
+        'token': _userData?.token,
+        'roomId': roomID,
+      },
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
+    RestResponse res = RestResponse(
+      statusCode: response.statusCode ?? 0,
+      responseBody: response.data ?? {},
+    );
+    log(res.toString());
+    if (res.isOk) {
+      return res.body;
+    } else if (res.isApiError) {
+      throw Exception(res.error);
+    } else {
+      throw Exception('Unknown error, status code: ${res.statusCode}');
+    }
+  }
+
+  Future<String> removeFavoriteRoom(int roomID) async {
+    if (!isIPSet()) {
+      throw Exception('IP not set');
+    }
+    var response = await _dio.post(
+      'http://$_ip:8080/api/removeFavoriteRoom',
+      data: {
+        'token': _userData?.token,
+        'roomId': roomID,
+      },
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
+    RestResponse res = RestResponse(
+      statusCode: response.statusCode ?? 0,
+      responseBody: response.data ?? {},
+    );
+    log(res.toString());
+    if (res.isOk) {
+      return res.body;
+    } else if (res.isApiError) {
+      throw Exception(res.error);
+    } else {
+      throw Exception('Unknown error, status code: ${res.statusCode}');
+    }
+  }
+
+  //TODO exception handling for all methods
+  Future<void> changeDeviceState({
+    required int deviceId,
+    required DeviceState state,
+  }) async {
+    if (!isIPSet()) {
+      throw Exception('IP not set');
+    }
+    try {
+      var response = await _dio.post(
+        'http://$_ip:8080/api/changeDeviceState',
+        data: {
+          'token': _userData?.token,
+          'deviceId': deviceId,
+          'state': state,
+        },
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
+      RestResponse res = RestResponse(
+        statusCode: response.statusCode ?? 0,
+        responseBody: response.data ?? {},
+      );
+      log(res.toString());
+      if (res.isOk) {
+        return;
+      } else if (res.isApiError) {
+        throw Exception(res.error);
+      } else {
+        throw Exception('Unknown error, status code: ${res.statusCode}');
+      }
+    } on DioError catch (e) {
+      log(e.toString());
+      throw Exception('Unknown error, status code: ${e.response?.statusCode}');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getDevicesState() async {
+    if (!isIPSet()) {
+      throw Exception('IP not set');
+    }
+    try {
+      var response = await _dio.get(
+        'http://$_ip:8080/api/getDevicesState',
+        queryParameters: {
+          'token': _userData?.token,
+        },
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
+      // if (response.data['error'] != null) {
+      //   List<dynamic> resp = response.data['obj'];
+      //   List<String> devicesState = [];
+
+      // }
+      RestResponse<dynamic> res = RestResponse(
+        statusCode: response.statusCode ?? 0,
+        responseBody: response.data ?? {},
+      );
+      log(res.toString());
+      if (res.isOk) {
+        List<dynamic> resp = res.body;
+        List<Map<String, dynamic>> devicesStates =
+            resp.map((e) => e as Map<String, dynamic>).toList();
+        return devicesStates;
+      } else if (res.isApiError) {
+        throw Exception(res.error);
+      } else {
+        throw Exception('Unknown error, status code: ${res.statusCode}');
+      }
+    } on DioError catch (e) {
+      log(e.toString());
+      throw Exception('Unknown error, status code: ${e.response?.statusCode}');
     }
   }
 }

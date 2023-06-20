@@ -19,7 +19,11 @@ class RoomsBloc extends Bloc<RoomsEvent, RoomsState> {
     on<LoadRooms>((event, emit) async {
       emit(state.copyWith(status: RoomsStatus.loading, stopUpdating: false));
       await _roomsRepository.loadRooms();
-      add(UpdateRooms());
+      Future.delayed(_roomListUpdateInterval).then((value) {
+        if (!state.stopUpdating) {
+          add(UpdateRooms());
+        }
+      });
       emit(state.copyWith(
         status: RoomsStatus.loaded,
         rooms: _roomsRepository.rooms,
@@ -45,7 +49,8 @@ class RoomsBloc extends Bloc<RoomsEvent, RoomsState> {
           add(UpdateRooms());
         }
       });
-      emit(state.copyWith(status: RoomsStatus.loaded));
+      emit(state.copyWith(
+          status: RoomsStatus.loaded, rooms: _roomsRepository.rooms));
     });
     on<StopUpdatingRoomsList>((event, emit) async {
       log('Stop updating rooms');

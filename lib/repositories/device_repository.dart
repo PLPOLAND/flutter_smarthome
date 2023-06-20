@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter_smarthome/helpers/rest_client/rest_client.dart';
 import 'package:flutter_smarthome/repositories/dummy_data/dummy_data.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/devices/blind.dart';
 import '../models/devices/device.dart';
@@ -76,11 +77,13 @@ class DevicesRepository {
             1)); //TODO change this line after implementing the http request
   }
 
-  Future<void> updateStateOfDevices() {
-    //TODO update state of devices
-    return Future.delayed(const Duration(
-        seconds:
-            1)); //TODO change this line after implementing the http request
+  Future<void> updateStateOfDevices() async {
+    var newStates = await client.getDevicesState();
+    for (var device in _devices) {
+      var newStateMap =
+          newStates.where((element) => element['id'] == device.id).first;
+      device.updateState(DeviceState.fromString(newStateMap['state']));
+    }
   }
 
   Future<void> updateListOfDevices() {
