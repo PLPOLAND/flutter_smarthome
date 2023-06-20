@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_smarthome/helpers/rest_client/rest_client.dart';
 
 abstract class Device extends Cubit<DeviceCubitState> {
   Device(int id, int roomId, int slaveId, int onSlaveId, String name,
@@ -12,7 +13,14 @@ abstract class Device extends Cubit<DeviceCubitState> {
 
   Device.state(DeviceCubitState state) : super(state);
 
+  /// The function changes the state of the device. It sends a request to the server.
   void setState(DeviceState newState) {
+    RESTClient().changeDeviceState(deviceId: id, state: newState);
+    emit(state.copyWith(state: newState));
+  }
+
+  /// The function changes the state of the device. It does not send a request to the server.
+  void updateState(DeviceState newState) {
     emit(state.copyWith(state: newState));
   }
 
@@ -176,6 +184,27 @@ enum DeviceState {
         return "middle";
       default:
         return "none";
+    }
+  }
+
+  static DeviceState fromString(String state) {
+    state = state.toLowerCase();
+    switch (state) {
+      case "none":
+        return DeviceState.none;
+      case "on":
+        return DeviceState.on;
+      case "off":
+        return DeviceState.off;
+      case "up":
+        return DeviceState.up;
+      case "down":
+        return DeviceState.down;
+      case "middle":
+      case "notknown":
+        return DeviceState.middle;
+      default:
+        return DeviceState.none;
     }
   }
 }

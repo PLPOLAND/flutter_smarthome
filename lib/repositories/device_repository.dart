@@ -77,11 +77,13 @@ class DevicesRepository {
             1)); //TODO change this line after implementing the http request
   }
 
-  Future<void> updateStateOfDevices() {
-    //TODO update state of devices
-    return Future.delayed(const Duration(
-        seconds:
-            1)); //TODO change this line after implementing the http request
+  Future<void> updateStateOfDevices() async {
+    var newStates = await client.getDevicesState();
+    for (var device in _devices) {
+      var newStateMap =
+          newStates.where((element) => element['id'] == device.id).first;
+      device.updateState(DeviceState.fromString(newStateMap['state']));
+    }
   }
 
   Future<void> updateListOfDevices() {

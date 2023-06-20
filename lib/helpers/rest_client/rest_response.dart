@@ -5,7 +5,8 @@ class RestResponse<T> {
   final T? body;
   final String? error;
 
-  RestResponse({required this.statusCode, required Map responseBody})
+  RestResponse(
+      {required this.statusCode, required Map<String, dynamic> responseBody})
       : body = responseBody['obj'] is Null ? null : responseBody['obj'] as T,
         error = responseBody['error'] as String?;
 
@@ -15,10 +16,10 @@ class RestResponse<T> {
 
   @override
   String toString() {
-    String tmp = '{';
-    body.toString();
-    tmp += '}';
+    // String tmp = '{';
+    // body.toString();
+    // tmp += '}';
 
-    return 'Response { statusCode: $statusCode, body: $tmp, error: $error }';
+    return 'Response { statusCode: $statusCode, body: $body, error: $error }';
   }
 }
