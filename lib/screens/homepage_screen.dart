@@ -15,8 +15,7 @@ class HomepageScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final rooms = context.read<RoomsRepository>().rooms;
-    var favRooms = rooms.where((element) => element.isFavorite).toList();
+    var favRooms = <Room>[];
     return Scaffold(
       appBar: AppBar(
         title:
@@ -24,7 +23,11 @@ class HomepageScreen extends StatelessWidget {
       ),
       body: BlocBuilder<RoomsBloc, RoomsState>(
         builder: (context, state) {
-          //TODO not showing rooms after readding them from favorite list!
+          if (state.status == RoomsStatus.loading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
           favRooms =
               state.rooms.where((element) => element.isFavorite).toList();
           return favRooms.isEmpty
@@ -52,10 +55,7 @@ class HomepageScreen extends StatelessWidget {
                         // return ChangeNotifierProvider.value(
                         //     value: room, child: const RoomCard());
                       },
-                      itemCount: rooms
-                          .where((element) => element.isFavorite)
-                          .toList()
-                          .length,
+                      itemCount: favRooms.length,
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                     ),

@@ -239,6 +239,83 @@ class RESTClient {
     }
   }
 
+  Future<String> getFavoriteRooms() async {
+    if (!isIPSet()) {
+      throw Exception('IP not set');
+    }
+    var response = await _dio.get(
+      'http://$_ip:8080/api/getFavoriteRooms',
+      queryParameters: {
+        'token': _userData?.token,
+      },
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
+    RestResponse res = RestResponse(
+      statusCode: response.statusCode ?? 0,
+      responseBody: response.data ?? {},
+    );
+    log(res.toString());
+    if (res.isOk) {
+      return res.body;
+    } else if (res.isApiError) {
+      throw Exception(res.error);
+    } else {
+      throw Exception('Unknown error, status code: ${res.statusCode}');
+    }
+  }
+
+  Future<String> addFavoriteRoom(int roomID) async {
+    if (!isIPSet()) {
+      throw Exception('IP not set');
+    }
+    var response = await _dio.post(
+      'http://$_ip:8080/api/addFavoriteRoom',
+      data: {
+        'token': _userData?.token,
+        'roomId': roomID,
+      },
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
+    RestResponse res = RestResponse(
+      statusCode: response.statusCode ?? 0,
+      responseBody: response.data ?? {},
+    );
+    log(res.toString());
+    if (res.isOk) {
+      return res.body;
+    } else if (res.isApiError) {
+      throw Exception(res.error);
+    } else {
+      throw Exception('Unknown error, status code: ${res.statusCode}');
+    }
+  }
+
+  Future<String> removeFavoriteRoom(int roomID) async {
+    if (!isIPSet()) {
+      throw Exception('IP not set');
+    }
+    var response = await _dio.post(
+      'http://$_ip:8080/api/removeFavoriteRoom',
+      data: {
+        'token': _userData?.token,
+        'roomId': roomID,
+      },
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
+    RestResponse res = RestResponse(
+      statusCode: response.statusCode ?? 0,
+      responseBody: response.data ?? {},
+    );
+    log(res.toString());
+    if (res.isOk) {
+      return res.body;
+    } else if (res.isApiError) {
+      throw Exception(res.error);
+    } else {
+      throw Exception('Unknown error, status code: ${res.statusCode}');
+    }
+  }
+
   //TODO exception handling for all methods
   Future<void> changeDeviceState({
     required int deviceId,

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_smarthome/helpers/rest_client/rest_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Room extends Cubit<RoomCubitState> {
@@ -13,38 +14,19 @@ class Room extends Cubit<RoomCubitState> {
   bool get isFavorite => state._isFavorite;
 
   void setFavorite(bool isFavorite) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var favouriteRooms = prefs.get("favouriteRooms") as String?;
-    if (favouriteRooms != null) {
-      var favouriteRoomsList = favouriteRooms.split(",");
-      if (isFavorite) {
-        favouriteRoomsList.add(id.toString());
-      } else {
-        favouriteRoomsList.remove(id.toString());
-      }
-      prefs.setString("favouriteRooms", favouriteRoomsList.join(","));
+    if (isFavorite) {
+      RESTClient().addFavoriteRoom(id);
     } else {
-      prefs.setString("favouriteRooms", id.toString());
+      RESTClient().removeFavoriteRoom(id);
     }
+    //TODO exception handling
     emit(state.copyWith(isFavorite: isFavorite));
   }
 
   void toggleFavorite() async {
     log('toggleFavorite');
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var favouriteRooms = prefs.get("favouriteRooms") as String?;
-    if (favouriteRooms != null) {
-      var favouriteRoomsList = favouriteRooms.split(",");
-      if (state.isFavorite) {
-        favouriteRoomsList.remove(id.toString());
-      } else {
-        favouriteRoomsList.add(id.toString());
-      }
-      prefs.setString("favouriteRooms", favouriteRoomsList.join(","));
-    } else {
-      prefs.setString("favouriteRooms", id.toString());
-    }
-    emit(state.copyWith(isFavorite: !state.isFavorite));
+    setFavorite(!isFavorite);
+    emit(state.copyWith(isFavorite: !isFavorite));
   }
 
   void setName(String newName) {

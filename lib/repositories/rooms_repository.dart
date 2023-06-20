@@ -16,7 +16,7 @@ class RoomsRepository {
     _rooms.clear();
     _rooms.addAll(await client.getRooms());
 
-    await loadFavoriteFromPrefs();
+    await loadFavorite();
   }
 
   Future<void> loadDemoData() async {
@@ -37,7 +37,8 @@ class RoomsRepository {
       Room(name: "Taras", id: 12),
       Room(name: "Wiatrołap", id: 13),
     ]);
-    await loadFavoriteFromPrefs();
+    _rooms[2].setFavorite(true);
+    // await loadFavoriteFromPrefs();
   }
 
   Room getRoomById(int id) => _rooms.firstWhere((room) => room.id == id);
@@ -68,16 +69,13 @@ class RoomsRepository {
     //TODO load from server
   }
 
-  Future<void> loadFavoriteFromPrefs() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var favouriteRooms = prefs.get("favouriteRooms") as String?;
-    if (favouriteRooms != null) {
-      var favouriteRoomsList = favouriteRooms.split(",");
-      log(favouriteRoomsList.toString());
-      for (var room in _rooms) {
-        if (favouriteRoomsList.contains(room.id.toString())) {
-          room.setFavorite(true);
-        }
+  Future<void> loadFavorite() async {
+    String favouriteRooms = await client.getFavoriteRooms();
+    var favouriteRoomsList = favouriteRooms.split(",");
+    log(favouriteRoomsList.toString());
+    for (var room in _rooms) {
+      if (favouriteRoomsList.contains(room.id.toString())) {
+        room.setFavorite(true);
       }
     }
   }
