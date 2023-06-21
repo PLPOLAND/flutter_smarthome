@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_smarthome/helpers/rest_client/rest_client.dart';
 import 'package:flutter_smarthome/repositories/device_repository.dart';
 
 class TestScreen extends StatelessWidget {
@@ -19,9 +20,9 @@ class TestScreen extends StatelessWidget {
             children: [
               ElevatedButton(
                   onPressed: () {
-                    context.read<DevicesRepository>().loadDevices();
+                    RESTClient().restartAllSlaves();
                   },
-                  child: const Text('Test'))
+                  child: const Text('RestartAllSlaves'))
             ],
           ),
         ),

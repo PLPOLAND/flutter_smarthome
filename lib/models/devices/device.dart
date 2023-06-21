@@ -165,7 +165,8 @@ enum DeviceState {
   off,
   up, //for blinds
   down, //for blinds
-  middle; //for blinds
+  middle, //for blinds
+  run; //for blinds when they are moving
 
   @override
   String toString() {
@@ -201,8 +202,10 @@ enum DeviceState {
       case "down":
         return DeviceState.down;
       case "middle":
-      case "notknown":
+      case "notknow":
         return DeviceState.middle;
+      case "run":
+        return DeviceState.run;
       default:
         return DeviceState.none;
     }
