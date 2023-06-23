@@ -35,6 +35,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    ThemesMenager tmp = ThemesMenager()..add(InitThemes());
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider(
@@ -68,50 +69,75 @@ class MyApp extends StatelessWidget {
           BlocProvider<RoomsBloc>(
             create: (context) => RoomsBloc(context.read<RoomsRepository>()),
           ),
+          BlocProvider<ThemesMenager>(
+            create: (context) {
+              return tmp;
+            },
+          ),
         ],
-        child: MultiProvider(
-          providers: [
-            ChangeNotifierProvider(create: (context) => ThemesMenager()),
-          ],
-          builder: (context, child) {
-            return BlocListener<AuthBloc, AuthState>(
-                listener: (context, state) {
-              if (state.status.isUnauthenticated) {
-                context.read<DevicesBloc>().add(StopUpdatingDevicesList());
-                context.read<SensorsBloc>().add(StopUpdatingSensors());
-                context.read<RoomsBloc>().add(StopUpdatingRoomsList());
-              }
-            }, child: DynamicColorBuilder(builder: (lightDynamic, darkDynamic) {
-              Provider.of<ThemesMenager>(context, listen: false)
-                  .addDynamic(lightDynamic, darkDynamic);
-              return MaterialApp(
-                title: 'Smarthome',
-                theme: ThemeData(
-                  useMaterial3: true,
-                  colorScheme: Provider.of<ThemesMenager>(context)
-                      .getColorScheme(systemAutoBrightness: true),
-                ),
-                home: const WelcomeScreen(),
-                routes: {
-                  LoginScreen.routeName: (context) => const LoginScreen(),
-                  HomepageScreen.routeName: (context) => const HomepageScreen(),
-                  RoomDetailScreen.routeName: (context) =>
-                      const RoomDetailScreen(),
-                  RoomsPage.routeName: (context) => const RoomsPage(),
-                  SettingsScreen.routeName: (context) => SettingsScreen(),
-                  DevicesScreen.routeName: (context) => const DevicesScreen(),
-                  Sensors.routeName: (context) => const Sensors(),
-                  AddEditRoomScreen.routeName: (context) =>
-                      const AddEditRoomScreen(),
-                  AddEditDeviceScreen.routeName: (context) =>
-                      const AddEditDeviceScreen(),
-                  AddEditSensorScreen.routeName: (context) =>
-                      const AddEditSensorScreen(),
-                  TestScreen.routeName: (context) => const TestScreen(),
-                },
-              );
-            }));
+        child: BlocListener<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state.status.isUnauthenticated) {
+              context.read<DevicesBloc>().add(StopUpdatingDevicesList());
+              context.read<SensorsBloc>().add(StopUpdatingSensors());
+              context.read<RoomsBloc>().add(StopUpdatingRoomsList());
+            }
           },
+          child: DynamicColorBuilder(
+            builder: (lightDynamic, darkDynamic) {
+              if (lightDynamic != null && darkDynamic != null) {
+                tmp.add(AddTheme(
+                  "dynamic",
+                  {
+                    "light": lightDynamic,
+                    "dark": darkDynamic,
+                  },
+                ));
+                // context.read<ThemesMenager>().add(
+                //       AddTheme(
+                //         "dynamin",
+                //         {
+                //           "light": lightDynamic,
+                //           "dark": darkDynamic,
+                //         },
+                //       ),
+                //     );
+              }
+              return BlocBuilder<ThemesMenager, ThemesMenagerState>(
+                buildWhen: (previous, current) {
+                  return current.status.isNewSheme ||
+                      current.status.isInitial ||
+                      current.status.isNewThemeMode;
+                },
+                builder: (context, state) => MaterialApp(
+                  title: 'Smarthome',
+                  theme: ThemeData(
+                    useMaterial3: true,
+                    colorScheme: state.currentTheme,
+                  ),
+                  home: const WelcomeScreen(),
+                  routes: {
+                    LoginScreen.routeName: (context) => const LoginScreen(),
+                    HomepageScreen.routeName: (context) =>
+                        const HomepageScreen(),
+                    RoomDetailScreen.routeName: (context) =>
+                        const RoomDetailScreen(),
+                    RoomsPage.routeName: (context) => const RoomsPage(),
+                    SettingsScreen.routeName: (context) => SettingsScreen(),
+                    DevicesScreen.routeName: (context) => const DevicesScreen(),
+                    Sensors.routeName: (context) => const Sensors(),
+                    AddEditRoomScreen.routeName: (context) =>
+                        const AddEditRoomScreen(),
+                    AddEditDeviceScreen.routeName: (context) =>
+                        const AddEditDeviceScreen(),
+                    AddEditSensorScreen.routeName: (context) =>
+                        const AddEditSensorScreen(),
+                    TestScreen.routeName: (context) => const TestScreen(),
+                  },
+                ),
+              );
+            },
+          ),
         ),
       ),
     );

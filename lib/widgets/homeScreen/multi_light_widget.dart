@@ -1,3 +1,4 @@
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_smarthome/models/devices/device.dart';
@@ -32,47 +33,52 @@ class _MultiLightWidgetState extends State<MultiLightWidget> {
           bloc: widget.lights[i],
           builder: (context, state) {
             return Expanded(
-              child: Container(
-                height: 40,
-                decoration: BoxDecoration(
-                  color: widget.lights[i].state.deviceState == DeviceState.on
-                      ? Theme.of(context).colorScheme.secondaryContainer
-                      : Color.alphaBlend(
-                          Provider.of<ThemesMenager>(context).themeMode ==
-                                  ThemeMode.light
-                              ? Colors.grey.withAlpha(0xA3)
-                              : Colors.black.withAlpha(0xA3),
-                          Theme.of(context).colorScheme.secondaryContainer),
-                  borderRadius: calculatedBorederRadius,
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    customBorder: RoundedRectangleBorder(
-                      borderRadius: calculatedBorederRadius,
+              child: BlocBuilder<ThemesMenager, ThemesMenagerState>(
+                builder: (context, state) => AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: widget.lights[i].state.deviceState == DeviceState.on
+                        ? Colors.yellow[200]!.harmonizeWith(
+                            Theme.of(context).colorScheme.primary)
+                        : Color.alphaBlend(
+                            state.currentThemeMode == ThemeMode.light ||
+                                    state.currentThemeMode == ThemeMode.system
+                                ? Colors.grey.withAlpha(0x00)
+                                : Colors.black.withAlpha(0x33),
+                            Colors.grey[200]!.harmonizeWith(
+                                Theme.of(context).colorScheme.primary)),
+                    borderRadius: calculatedBorederRadius,
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      customBorder: RoundedRectangleBorder(
+                        borderRadius: calculatedBorederRadius,
+                      ),
+                      onTap: () {
+                        setState(() {
+                          widget.lights[i].changeState();
+                        });
+                        if (widget.onClick != null) {
+                          widget.onClick!();
+                        }
+                      },
+                      child: i != widget.lights.length - 1
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Container(
+                                  height: double.infinity,
+                                  width: 1,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onPrimaryContainer,
+                                ),
+                              ],
+                            )
+                          : null,
                     ),
-                    onTap: () {
-                      setState(() {
-                        widget.lights[i].changeState();
-                      });
-                      if (widget.onClick != null) {
-                        widget.onClick!();
-                      }
-                    },
-                    child: i != widget.lights.length - 1
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Container(
-                                height: double.infinity,
-                                width: 1,
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onPrimaryContainer,
-                              ),
-                            ],
-                          )
-                        : null,
                   ),
                 ),
               ),
@@ -96,38 +102,42 @@ class _MultiLightWidgetState extends State<MultiLightWidget> {
           const SizedBox(
             width: 10,
           ),
-          IconButton(
-            icon: const Icon(Icons.power_settings_new),
-            onPressed: () {
-              setState(() {
-                var anyDeviceOff = widget.lights.any(
-                    (element) => element.state.deviceState == DeviceState.off);
-                for (var element in widget.lights) {
-                  if (anyDeviceOff) {
-                    element.setState(DeviceState.on);
-                  } else {
-                    element.setState(DeviceState.off);
+          BlocBuilder<ThemesMenager, ThemesMenagerState>(
+            builder: (context, state) => IconButton(
+              icon: const Icon(Icons.power_settings_new),
+              onPressed: () {
+                setState(() {
+                  var anyDeviceOff = widget.lights.any((element) =>
+                      element.state.deviceState == DeviceState.off);
+                  for (var element in widget.lights) {
+                    if (anyDeviceOff) {
+                      element.setState(DeviceState.on);
+                    } else {
+                      element.setState(DeviceState.off);
+                    }
                   }
+                });
+                if (widget.onClick != null) {
+                  widget.onClick!();
                 }
-              });
-              if (widget.onClick != null) {
-                widget.onClick!();
-              }
-            },
-            style: ButtonStyle(
-              backgroundColor: MaterialStatePropertyAll<Color>(
-                !widget.lights.any((element) =>
-                        element.state.deviceState == DeviceState.off)
-                    ? Theme.of(context).colorScheme.secondaryContainer
-                    : Color.alphaBlend(
-                        Provider.of<ThemesMenager>(context).themeMode ==
-                                ThemeMode.light
-                            ? Colors.grey.withAlpha(0xA3)
-                            : Colors.black.withAlpha(0xA3),
-                        Theme.of(context).colorScheme.secondaryContainer),
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll<Color>(
+                  !widget.lights.any((element) =>
+                          element.state.deviceState == DeviceState.off)
+                      ? Colors.yellow[200]!
+                          .harmonizeWith(Theme.of(context).colorScheme.primary)
+                      : Color.alphaBlend(
+                          state.currentThemeMode == ThemeMode.light ||
+                                  state.currentThemeMode == ThemeMode.system
+                              ? Colors.grey.withAlpha(0x00)
+                              : Colors.black.withAlpha(0x33),
+                          Colors.grey[200]!.harmonizeWith(
+                              Theme.of(context).colorScheme.primary)),
+                ),
+                foregroundColor: MaterialStatePropertyAll<Color>(
+                    Theme.of(context).colorScheme.onSecondaryContainer),
               ),
-              foregroundColor: MaterialStatePropertyAll<Color>(
-                  Theme.of(context).colorScheme.onSecondaryContainer),
             ),
           ),
         ],

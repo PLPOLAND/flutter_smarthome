@@ -1,3 +1,4 @@
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_smarthome/models/devices/device.dart';
@@ -65,37 +66,38 @@ class _LightWidgetContainerState extends State<LightWidgetContainer> {
                         ? BlocBuilder<Light, DeviceCubitState>(
                             bloc: widget.lights.first,
                             builder: (context, state) {
-                              return IconButton(
-                                icon: const Icon(Icons.power_settings_new),
-                                onPressed: () {
-                                  setState(() {
-                                    widget.lights.first.changeState();
-                                  });
-                                },
-                                style: ButtonStyle(
-                                  backgroundColor:
-                                      MaterialStatePropertyAll<Color>(
-                                    widget.lights.first.state.deviceState ==
-                                            DeviceState.on
-                                        ? Theme.of(context)
-                                            .colorScheme
-                                            .secondaryContainer
-                                        : Color.alphaBlend(
-                                            Provider.of<ThemesMenager>(context,
-                                                            listen: false)
-                                                        .themeMode ==
-                                                    ThemeMode.light
-                                                ? Colors.grey.withAlpha(0xA3)
-                                                : Colors.black.withAlpha(0xA3),
+                              return BlocBuilder<ThemesMenager,
+                                  ThemesMenagerState>(
+                                builder: (context, state) => IconButton(
+                                  icon: const Icon(Icons.power_settings_new),
+                                  onPressed: () {
+                                    setState(() {
+                                      widget.lights.first.changeState();
+                                    });
+                                  },
+                                  style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStatePropertyAll<Color>(
+                                      widget.lights.first.state.deviceState ==
+                                              DeviceState.on
+                                          ? Colors.yellow[200]!.harmonizeWith(
+                                              Theme.of(context)
+                                                  .colorScheme
+                                                  .primary)
+                                          : Color.alphaBlend(
+                                              state.currentThemeMode ==
+                                                      ThemeMode.light
+                                                  ? Colors.grey.withAlpha(0xA3)
+                                                  : Colors.black
+                                                      .withAlpha(0xA3),
+                                              Colors.grey[100]!),
+                                    ),
+                                    foregroundColor:
+                                        MaterialStatePropertyAll<Color>(
                                             Theme.of(context)
                                                 .colorScheme
-                                                .secondaryContainer),
+                                                .onSecondaryContainer),
                                   ),
-                                  foregroundColor:
-                                      MaterialStatePropertyAll<Color>(
-                                          Theme.of(context)
-                                              .colorScheme
-                                              .onSecondaryContainer),
                                 ),
                               );
                             },

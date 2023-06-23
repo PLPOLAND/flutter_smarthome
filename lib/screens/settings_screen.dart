@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_smarthome/themes/themes.dart';
 import 'package:flutter_smarthome/widgets/main_drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -53,7 +54,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
             const SettingsTitle("User Settings"),
-            ThemesMenager.getSettingsRow(context),
+            context.read<ThemesMenager>().getSettingsRow(context),
             //TODO add other settings etc.
             const SettingsTitle("About"),
             InkWell(
@@ -62,7 +63,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     context: context,
                     applicationName: "SmartHome",
                     applicationVersion: "0.0.1",
-                    applicationLegalese: "© 2021, Marek Pałdyna",
+                    applicationLegalese: "© 2023, Marek Pałdyna",
                     applicationIcon: const Icon(Icons.home));
               },
               child: const ListTile(
