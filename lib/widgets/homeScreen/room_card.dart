@@ -90,31 +90,25 @@ class RoomCard extends StatelessWidget {
           const SizedBox(height: 10),
           ...devices
               .where((device) => device.state.type == DeviceType.blind)
-              .map(
-                (e) => BlocBuilder(
-                    builder: (context, state) {
-                      return Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          BlindWidget(
-                            blind: e as Blind,
-                          ),
-                          const SizedBox(height: 10),
-                        ],
-                      );
-                    },
-                    bloc: e),
-              ),
+              .map((e) => Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      BlindWidget(
+                        blind: e as Blind,
+                      ),
+                      const SizedBox(height: 10),
+                    ],
+                  )),
           ...devices
               .where((device) => device.type == DeviceType.outlet)
-              .map((e) => BlocBuilder(
-                      bloc: e,
+              .map((e) => BlocBuilder<Outlet, DeviceCubitState>(
+                      bloc: e as Outlet,
                       builder: (context, state) {
                         return Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             OutletWidget(
-                              outlet: e as Outlet,
+                              outlet: e,
                             ),
                             const SizedBox(height: 10),
                           ],
@@ -134,19 +128,19 @@ class RoomCard extends StatelessWidget {
                   // ),
                   ),
           ...devices.where((device) => device.type == DeviceType.fan).map(
-                (e) => BlocBuilder(
+                (e) => BlocBuilder<Fan, DeviceCubitState>(
                   builder: (context, state) {
                     return Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         FanWidget(
-                          fan: e as Fan,
+                          fan: e,
                         ),
                         const SizedBox(height: 10),
                       ],
                     );
                   },
-                  bloc: e,
+                  bloc: e as Fan,
                 ),
                 // ChangeNotifierProvider.value(
                 //   value: e,

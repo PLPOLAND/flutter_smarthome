@@ -28,22 +28,25 @@ class Blind extends Device {
     log("Blind: $name, state: $state");
     if (state.deviceState == DeviceState.up) {
       super.setState(DeviceState.down);
-    } else {
+    } else if (state.deviceState == DeviceState.down) {
       super.setState(DeviceState.up);
+    } else if (state.deviceState == DeviceState.run) {
+      super.setState(DeviceState.middle);
     }
-    return Future.delayed(const Duration(
-        seconds:
-            1)); // TODO: change this line after implementing the http request
   }
 
   @override
   void setState(DeviceState newState) {
-    if (state.deviceState == DeviceState.up ||
-        state.deviceState == DeviceState.down ||
-        state.deviceState == DeviceState.middle) {
+    if (newState == DeviceState.up ||
+        newState == DeviceState.down ||
+        newState == DeviceState.middle) {
+      var oldState = state.deviceState;
       super.setState(newState);
+      if (newState != DeviceState.middle && oldState == DeviceState.middle) {
+        super.setStateLocaly(DeviceState.run);
+      }
     } else {
-      throw Exception("Invalid state");
+      throw Exception("Invalid state ($newState) for Blind");
     }
   }
 

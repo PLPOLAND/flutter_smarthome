@@ -19,6 +19,10 @@ abstract class Device extends Cubit<DeviceCubitState> {
     emit(state.copyWith(state: newState));
   }
 
+  void setStateLocaly(DeviceState newState) {
+    emit(state.copyWith(state: newState));
+  }
+
   /// The function changes the state of the device. It does not send a request to the server.
   void updateState(DeviceState newState) {
     emit(state.copyWith(state: newState));
@@ -183,6 +187,8 @@ enum DeviceState {
         return "down";
       case DeviceState.middle:
         return "middle";
+      case DeviceState.run:
+        return "run";
       default:
         return "none";
     }
