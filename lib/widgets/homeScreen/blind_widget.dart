@@ -56,10 +56,10 @@ class BlindWidget extends StatelessWidget {
                             backgroundColor:
                                 MaterialStateProperty.resolveWith((states) {
                               if (states.contains(MaterialState.selected)) {
-                                return Colors.green;
-                                // return Theme.of(context)
-                                //     .colorScheme
-                                //     .secondaryContainer;
+                                // return Colors.green;
+                                return Theme.of(context)
+                                    .colorScheme
+                                    .secondaryContainer;
                               }
                               return Theme.of(context)
                                   .colorScheme
