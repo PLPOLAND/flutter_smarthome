@@ -191,10 +191,10 @@ class RESTClient {
           case 'BLIND':
             devices.add(Blind.fromJson(device));
             break;
-          case 'FAN':
+          case 'WENTYLATOR':
             devices.add(Fan.fromJson(device));
             break;
-          case 'OUTLET':
+          case 'GNIAZDKO':
             devices.add(Outlet.fromJson(device));
             break;
           default:

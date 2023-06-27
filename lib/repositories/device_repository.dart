@@ -32,10 +32,10 @@ class DevicesRepository {
         case 'BLIND':
           _devices.add(Blind.fromJson(device));
           break;
-        case 'FAN':
+        case 'WENTYLATOR':
           _devices.add(Fan.fromJson(device));
           break;
-        case 'OUTLET':
+        case 'GNIAZDKO':
           _devices.add(Outlet.fromJson(device));
           break;
         default:

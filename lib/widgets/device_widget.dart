@@ -67,16 +67,27 @@ class _DeviceWidgetState extends State<DeviceWidget> {
                   Color.alphaBlend(Colors.white.withAlpha(0x33),
                       Theme.of(context).colorScheme.primary),
                 ]))
-            : BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                gradient: LinearGradient(colors: [
-                  Theme.of(context).brightness == Brightness.light
-                      ? Colors.grey.shade600
-                      : Colors.grey.shade500,
-                  Theme.of(context).brightness == Brightness.light
-                      ? Colors.grey.shade500
-                      : Colors.grey.shade400,
-                ]));
+            : widget.device.state.deviceState == DeviceState.run
+                ? BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    gradient: LinearGradient(colors: [
+                      Color.alphaBlend(Colors.grey.withAlpha(0xAA),
+                          Theme.of(context).colorScheme.primary),
+                      Color.alphaBlend(
+                          Colors.grey.withAlpha(0x33),
+                          Color.alphaBlend(Colors.white.withAlpha(0xAA),
+                              Theme.of(context).colorScheme.primary)),
+                    ]))
+                : BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    gradient: LinearGradient(colors: [
+                      Theme.of(context).brightness == Brightness.light
+                          ? Colors.grey.shade600
+                          : Colors.grey.shade500,
+                      Theme.of(context).brightness == Brightness.light
+                          ? Colors.grey.shade500
+                          : Colors.grey.shade400,
+                    ]));
 
     Icon deviceTrailingIcon = const Icon(Icons.power_settings_new);
     if (widget.device.state.deviceState == DeviceState.on) {
@@ -85,13 +96,18 @@ class _DeviceWidgetState extends State<DeviceWidget> {
     } else if (widget.device.state.deviceState == DeviceState.off) {
       deviceTrailingIcon = Icon(Icons.power_settings_new_outlined,
           color: Theme.of(context).colorScheme.onPrimary);
-    } else if (widget.device.state.deviceState == DeviceState.up ||
-        widget.device.state.deviceState == DeviceState.middle) {
-      deviceTrailingIcon = Icon(Icons.arrow_downward,
-          color: Theme.of(context).colorScheme.onPrimary);
-    } else if (widget.device.state.deviceState == DeviceState.down) {
+    } else if (widget.device.state.deviceState == DeviceState.up) {
       deviceTrailingIcon = Icon(Icons.arrow_upward,
           color: Theme.of(context).colorScheme.onPrimary);
+    } else if (widget.device.state.deviceState == DeviceState.middle) {
+      deviceTrailingIcon =
+          Icon(Icons.pause, color: Theme.of(context).colorScheme.onPrimary);
+    } else if (widget.device.state.deviceState == DeviceState.down) {
+      deviceTrailingIcon = Icon(Icons.arrow_downward,
+          color: Theme.of(context).colorScheme.onPrimary);
+    } else if (widget.device.state.deviceState == DeviceState.run) {
+      deviceTrailingIcon =
+          Icon(Icons.autorenew, color: Theme.of(context).colorScheme.onPrimary);
     }
 
     return AnimatedContainer(

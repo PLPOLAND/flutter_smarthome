@@ -28,7 +28,8 @@ class Blind extends Device {
     log("Blind: $name, state: $state");
     if (state.deviceState == DeviceState.up) {
       super.setState(DeviceState.down);
-    } else if (state.deviceState == DeviceState.down) {
+    } else if (state.deviceState == DeviceState.down ||
+        state.deviceState == DeviceState.middle) {
       super.setState(DeviceState.up);
     } else if (state.deviceState == DeviceState.run) {
       super.setState(DeviceState.middle);
