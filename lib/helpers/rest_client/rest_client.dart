@@ -3,12 +3,17 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_smarthome/models/auth/user_data.dart';
+import 'package:flutter_smarthome/models/sensors/hygrometer.dart';
+import 'package:flutter_smarthome/models/sensors/thermometer.dart';
+import 'package:flutter_smarthome/screens/sensors_screen.dart';
 import '../../models/devices/blind.dart';
 import '../../models/devices/device.dart';
 import '../../models/devices/fan.dart';
 import '../../models/devices/light.dart';
 import '../../models/devices/outlet.dart';
 import '../../models/room.dart';
+import '../../models/sensors/button.dart';
+import '../../models/sensors/sensor.dart';
 import 'rest_response.dart';
 
 class RESTClient {
@@ -209,6 +214,51 @@ class RESTClient {
     }
   }
 
+  Future<List<Sensor>> getSensors() async {
+    if (!isIPSet()) {
+      throw Exception('IP not set');
+    }
+    var response = await _dio.get(
+      'http://$_ip:8080/api/getSensors',
+      queryParameters: {
+        'token': _userData?.token,
+      },
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
+    RestResponse res = RestResponse(
+      statusCode: response.statusCode ?? 0,
+      responseBody: response.data ?? {},
+    );
+    log(res.toString());
+    if (res.isOk) {
+      List<Sensor> sensors = [];
+      for (var sensor in res.body) {
+        switch (sensor['typ']) {
+          case 'THERMOMETR':
+            sensors.add(Thermometer.fromJson(sensor));
+            break;
+          case 'THERMOMETR_HYGROMETR':
+            sensors.add(Hygrometer.fromJson(sensor));
+            break;
+          case 'TWILIGHT':
+            break;
+          case 'MOTION':
+            break;
+          case 'BUTTON':
+            sensors.add(Button.fromJson(sensor));
+            break;
+          default:
+            log("Error: Unknown device type");
+        }
+      }
+      return sensors;
+    } else if (res.isApiError) {
+      throw Exception(res.error);
+    } else {
+      throw Exception('Unknown error, status code: ${res.statusCode}');
+    }
+  }
+
   Future<List<Room>> getRooms() async {
     if (!isIPSet()) {
       throw Exception('IP not set');
@@ -379,6 +429,39 @@ class RESTClient {
         List<Map<String, dynamic>> devicesStates =
             resp.map((e) => e as Map<String, dynamic>).toList();
         return devicesStates;
+      } else if (res.isApiError) {
+        throw Exception(res.error);
+      } else {
+        throw Exception('Unknown error, status code: ${res.statusCode}');
+      }
+    } on DioError catch (e) {
+      log(e.toString());
+      throw Exception('Unknown error, status code: ${e.response?.statusCode}');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getSensorsState() async {
+    if (!isIPSet()) {
+      throw Exception('IP not set');
+    }
+    try {
+      var response = await _dio.get(
+        'http://$_ip:8080/api/getSensorsState',
+        queryParameters: {
+          'token': _userData?.token,
+        },
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
+      RestResponse<dynamic> res = RestResponse(
+        statusCode: response.statusCode ?? 0,
+        responseBody: response.data ?? {},
+      );
+      log(res.toString());
+      if (res.isOk) {
+        List<dynamic> resp = res.body;
+        List<Map<String, dynamic>> sensorsStates =
+            resp.map((e) => e as Map<String, dynamic>).toList();
+        return sensorsStates;
       } else if (res.isApiError) {
         throw Exception(res.error);
       } else {
