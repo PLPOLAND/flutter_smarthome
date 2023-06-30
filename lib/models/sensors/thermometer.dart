@@ -42,13 +42,13 @@ class Thermometer extends Sensor {
     return (state as ThermometerCubitState).temperature.toStringAsFixed(1);
   }
 
-  static Sensor fromJson(Map<String, Object> sensor) {
+  static Sensor fromJson(Map<String, dynamic> sensor) {
     return Thermometer(
       id: sensor['id'] as int,
       roomId: sensor['room'] as int,
       slaveId: sensor['slaveAdress'] as int,
       onSlaveId: sensor['onSlaveID'] as int,
-      name: sensor['name'] as String,
+      name: (sensor['name'] ?? sensor['nazwa']) as String,
       adress: (sensor['addres'] as List).cast<int>(),
       temperature: sensor['temperatura'] as double,
     );

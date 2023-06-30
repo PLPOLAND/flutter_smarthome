@@ -198,6 +198,7 @@ enum DeviceState {
     state = state.toLowerCase();
     switch (state) {
       case "none":
+      case "stop": //for blinds in localButtonFunction
         return DeviceState.none;
       case "on":
         return DeviceState.on;
