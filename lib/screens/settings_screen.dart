@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_smarthome/helpers/rest_client/rest_client.dart';
 import 'package:flutter_smarthome/themes/themes.dart';
 import 'package:flutter_smarthome/widgets/main_drawer.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../widgets/settingsWidgets/settings_title.dart';
@@ -15,8 +17,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   Future<String> getServerIP() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('serverIP') ?? "";
+    return RESTClient().getIP() ?? "";
   }
 
   @override
@@ -45,24 +46,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   }
                 },
               ),
-              trailing: IconButton(
-                icon: const Icon(Icons.edit),
-                onPressed: () {
-                  showIPEditingDialog(context, widget._IPController);
-                },
-              ),
+              // trailing: IconButton(
+              //   icon: const Icon(Icons.edit),
+              //   onPressed: () {
+              //     // showIPEditingDialog(context, widget._IPController);
+              //   },
+              // ),
             ),
             const SettingsTitle("User Settings"),
             ThemesMenager.getSettingsRow(context),
             //TODO add other settings etc.
             const SettingsTitle("About"),
             InkWell(
-              onTap: () {
+              onTap: () async {
+                PackageInfo packageInfo = await PackageInfo.fromPlatform();
                 showAboutDialog(
                     context: context,
                     applicationName: "SmartHome",
-                    applicationVersion: "0.0.1",
-                    applicationLegalese: "© 2021, Marek Pałdyna",
+                    applicationVersion:
+                        "version: ${packageInfo.version}+${packageInfo.buildNumber}",
+                    applicationLegalese: "© 2023, Marek Pałdyna aka PLPOLAND",
                     applicationIcon: const Icon(Icons.home));
               },
               child: const ListTile(
