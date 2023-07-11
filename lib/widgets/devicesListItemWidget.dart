@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_smarthome/models/bloc/devices/devices_bloc.dart';
 import 'package:flutter_smarthome/models/room.dart';
 import 'package:flutter_smarthome/repositories/rooms_repository.dart';
 import 'package:provider/provider.dart';
@@ -27,10 +28,8 @@ class DevicesListItemWidget extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () {
-                    context
-                        .read<DevicesRepository>()
-                        .removeDevice(device)
-                        .then((_) => Navigator.of(context).pop());
+                    context.read<DevicesBloc>().add(RemoveDevice(device.id));
+                    Navigator.of(context).pop();
                   },
                   child: const Text('Yes'),
                 ),

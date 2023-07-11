@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_smarthome/helpers/rest_client/rest_client.dart';
 
 abstract class Device extends Cubit<DeviceCubitState> {
   Device(int id, int roomId, int slaveId, int onSlaveId, String name,
@@ -12,7 +13,20 @@ abstract class Device extends Cubit<DeviceCubitState> {
 
   Device.state(DeviceCubitState state) : super(state);
 
+  /// The function changes the state of the device. It sends a request to the server.
   void setState(DeviceState newState) {
+    if (deviceState != newState) {
+      RESTClient().changeDeviceState(deviceId: id, state: newState);
+      emit(state.copyWith(state: newState));
+    }
+  }
+
+  void setStateLocaly(DeviceState newState) {
+    emit(state.copyWith(state: newState));
+  }
+
+  /// The function changes the state of the device. It does not send a request to the server.
+  void updateState(DeviceState newState) {
     emit(state.copyWith(state: newState));
   }
 
@@ -75,6 +89,20 @@ abstract class Device extends Cubit<DeviceCubitState> {
   void onChange(Change<DeviceCubitState> change) {
     super.onChange(change);
     log(change.toString());
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (other is Device) {
+      return id == other.id &&
+          roomId == other.roomId &&
+          slaveID == other.slaveID &&
+          onSlaveID == other.onSlaveID &&
+          name == other.name &&
+          type == other.type &&
+          onSlavePin == other.onSlavePin;
+    }
+    return false;
   }
 }
 
@@ -147,7 +175,25 @@ enum DeviceType {
   light,
   outlet,
   blind,
-  fan,
+  fan;
+
+  @override
+  String toString() {
+    switch (this) {
+      case DeviceType.none:
+        return "none";
+      case DeviceType.light:
+        return "light";
+      case DeviceType.outlet:
+        return "outlet";
+      case DeviceType.blind:
+        return "blind";
+      case DeviceType.fan:
+        return "fan";
+      default:
+        return "none";
+    }
+  }
 }
 
 // States of devices
@@ -157,7 +203,8 @@ enum DeviceState {
   off,
   up, //for blinds
   down, //for blinds
-  middle; //for blinds
+  middle, //for blinds
+  run; //for blinds when they are moving
 
   @override
   String toString() {
@@ -174,8 +221,34 @@ enum DeviceState {
         return "down";
       case DeviceState.middle:
         return "middle";
+      case DeviceState.run:
+        return "run";
       default:
         return "none";
+    }
+  }
+
+  static DeviceState fromString(String state) {
+    state = state.toLowerCase();
+    switch (state) {
+      case "none":
+      case "stop": //for blinds in localButtonFunction
+        return DeviceState.none;
+      case "on":
+        return DeviceState.on;
+      case "off":
+        return DeviceState.off;
+      case "up":
+        return DeviceState.up;
+      case "down":
+        return DeviceState.down;
+      case "middle":
+      case "notknow":
+        return DeviceState.middle;
+      case "run":
+        return DeviceState.run;
+      default:
+        return DeviceState.none;
     }
   }
 }

@@ -1,13 +1,13 @@
 import 'dart:convert';
 
-class RestResponse {
+class RestResponse<T> {
   final int statusCode;
-  final Map body;
+  final T? body;
   final String? error;
 
-  RestResponse({required this.statusCode, required Map responseBody})
-      : body =
-            responseBody['obj'] == "" ? {} : json.decode(responseBody['obj']),
+  RestResponse(
+      {required this.statusCode, required Map<String, dynamic> responseBody})
+      : body = responseBody['obj'] is Null ? null : responseBody['obj'] as T,
         error = responseBody['error'] as String?;
 
   bool get isOk => statusCode == 200 && (error == null || error == '');
@@ -16,12 +16,10 @@ class RestResponse {
 
   @override
   String toString() {
-    String tmp = '{';
-    for (var el in body.entries) {
-      tmp += '${el.key}: ${el.value}';
-    }
-    tmp += '}';
+    // String tmp = '{';
+    // body.toString();
+    // tmp += '}';
 
-    return 'Response { statusCode: $statusCode, body: $tmp, error: $error }';
+    return 'Response { statusCode: $statusCode, body: $body, error: $error }';
   }
 }

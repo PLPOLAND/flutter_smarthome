@@ -41,7 +41,7 @@ class Fan extends Device {
     return s + super.toString();
   }
 
-  static Device fromJson(Map<String, Object> device) {
+  static Device fromJson(Map<String, dynamic> device) {
     return Fan(
       id: device['id'] as int,
       roomId: device['room'] as int,

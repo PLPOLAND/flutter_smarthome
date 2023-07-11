@@ -20,6 +20,7 @@ class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
 
   DevicesBloc(this._devicesRepository) : super(DevicesState.initial()) {
     on<LoadDevices>((event, emit) async {
+      log('Loading devices');
       emit(state.copyWith(status: DevicesStatus.loading, stopUpdating: false));
       await _devicesRepository.loadDevices();
       add(UpdateDevices());
@@ -64,6 +65,37 @@ class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
     on<StopUpdatingDevicesList>((event, emit) async {
       log('Stop updating devices');
       emit(state.copyWith(stopUpdating: true));
+    });
+    on<Error>((event, emit) async {
+      log('Error: ${event.message}');
+      var tmpState = state;
+      emit(state.copyWith(status: DevicesStatus.error));
+      //TODO add message to state and show it in UI
+      emit(tmpState);
+    });
+
+    on<AddDevice>((event, emit) async {
+      log('Adding device');
+      emit(state.copyWith(status: DevicesStatus.adding));
+      await _devicesRepository.addDevice(event.device);
+      emit(state.copyWith(
+          status: DevicesStatus.loaded, devices: _devicesRepository.devices));
+    });
+
+    on<RemoveDevice>((event, emit) async {
+      log('Removing device');
+      emit(state.copyWith(status: DevicesStatus.removing));
+      await _devicesRepository.removeDeviceById(event.id);
+      emit(state.copyWith(
+          status: DevicesStatus.loaded, devices: _devicesRepository.devices));
+    });
+
+    on<UpdateDevice>((event, emit) async {
+      log('Updating device');
+      emit(state.copyWith(status: DevicesStatus.updatingDevice));
+      await _devicesRepository.updateDevice(event.device);
+      emit(state.copyWith(
+          status: DevicesStatus.loaded, devices: _devicesRepository.devices));
     });
   }
 

@@ -31,7 +31,16 @@ class DevicesScreen extends StatelessWidget {
       ),
       drawer: const MainDrawer(),
       body: BlocConsumer<DevicesBloc, DevicesState>(
-        listener: ((context, state) {}),
+        listener: ((context, state) {
+          if (state.status == DevicesStatus.error) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("Error"),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        }),
         builder: (context, state) {
           return ListView.builder(
             itemBuilder: (context, index) {
