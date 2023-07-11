@@ -75,7 +75,7 @@ class RoomsRepository {
     log(favouriteRoomsList.toString());
     for (var room in _rooms) {
       if (favouriteRoomsList.contains(room.id.toString())) {
-        room.setFavorite(true);
+        room.setFavorite(true, setOnlyLocal: true);
       }
     }
   }
