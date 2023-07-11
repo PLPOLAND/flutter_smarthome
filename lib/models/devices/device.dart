@@ -15,8 +15,10 @@ abstract class Device extends Cubit<DeviceCubitState> {
 
   /// The function changes the state of the device. It sends a request to the server.
   void setState(DeviceState newState) {
-    RESTClient().changeDeviceState(deviceId: id, state: newState);
-    emit(state.copyWith(state: newState));
+    if (deviceState != newState) {
+      RESTClient().changeDeviceState(deviceId: id, state: newState);
+      emit(state.copyWith(state: newState));
+    }
   }
 
   void setStateLocaly(DeviceState newState) {
@@ -87,6 +89,20 @@ abstract class Device extends Cubit<DeviceCubitState> {
   void onChange(Change<DeviceCubitState> change) {
     super.onChange(change);
     log(change.toString());
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (other is Device) {
+      return id == other.id &&
+          roomId == other.roomId &&
+          slaveID == other.slaveID &&
+          onSlaveID == other.onSlaveID &&
+          name == other.name &&
+          type == other.type &&
+          onSlavePin == other.onSlavePin;
+    }
+    return false;
   }
 }
 
@@ -159,7 +175,25 @@ enum DeviceType {
   light,
   outlet,
   blind,
-  fan,
+  fan;
+
+  @override
+  String toString() {
+    switch (this) {
+      case DeviceType.none:
+        return "none";
+      case DeviceType.light:
+        return "light";
+      case DeviceType.outlet:
+        return "outlet";
+      case DeviceType.blind:
+        return "blind";
+      case DeviceType.fan:
+        return "fan";
+      default:
+        return "none";
+    }
+  }
 }
 
 // States of devices

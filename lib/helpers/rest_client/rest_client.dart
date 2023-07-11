@@ -105,13 +105,13 @@ class RESTClient {
             // receiveTimeout: Duration(milliseconds: 100),
           ));
       if (response.statusCode == 200) {
-        log(response.data);
+        // log(response.data);
         if (response.data == 'hello') {
           return true;
         }
       }
     } on Exception catch (_) {
-      log('Error $ip');
+      // log('Error $ip');
       return false;
     }
     return false;
@@ -137,7 +137,7 @@ class RESTClient {
       statusCode: response.statusCode ?? 0,
       responseBody: response.data,
     );
-    log(res.toString());
+    // log(res.toString());
     if (res.isOk) {
       return res.body!['token'];
     } else if (res.isApiError) {
@@ -163,7 +163,7 @@ class RESTClient {
       statusCode: response.statusCode ?? 0,
       responseBody: response.data,
     );
-    log(res.toString());
+    // log(res.toString());
     if (res.isOk) {
       return UserData.fromJson(jsonDecode(res.body!));
     } else if (res.isApiError) {
@@ -185,7 +185,7 @@ class RESTClient {
       statusCode: response.statusCode ?? 0,
       responseBody: response.data ?? {},
     );
-    log(res.toString());
+    // log(res.toString());
     if (res.isOk) {
       List<Device> devices = [];
       for (var device in res.body) {
@@ -229,7 +229,7 @@ class RESTClient {
       statusCode: response.statusCode ?? 0,
       responseBody: response.data ?? {},
     );
-    log(res.toString());
+    // log(res.toString());
     if (res.isOk) {
       List<Sensor> sensors = [];
       for (var sensor in res.body) {
@@ -274,13 +274,13 @@ class RESTClient {
       statusCode: response.statusCode ?? 0,
       responseBody: response.data ?? {},
     );
-    log(res.toString());
+    // log(res.toString());
     if (res.isOk) {
       List<Room> rooms = [];
       for (var room in res.body) {
         rooms.add(Room.fromJson(room));
       }
-      log(rooms.toString());
+      // log(rooms.toString());
       return rooms;
     } else if (res.isApiError) {
       throw Exception(res.error);
@@ -304,7 +304,7 @@ class RESTClient {
       statusCode: response.statusCode ?? 0,
       responseBody: response.data ?? {},
     );
-    log(res.toString());
+    // log(res.toString());
     if (res.isOk) {
       return res.body;
     } else if (res.isApiError) {
@@ -330,7 +330,7 @@ class RESTClient {
       statusCode: response.statusCode ?? 0,
       responseBody: response.data ?? {},
     );
-    log(res.toString());
+    // log(res.toString());
     if (res.isOk) {
       return res.body;
     } else if (res.isApiError) {
@@ -356,7 +356,7 @@ class RESTClient {
       statusCode: response.statusCode ?? 0,
       responseBody: response.data ?? {},
     );
-    log(res.toString());
+    // log(res.toString());
     if (res.isOk) {
       return res.body;
     } else if (res.isApiError) {
@@ -388,7 +388,7 @@ class RESTClient {
         statusCode: response.statusCode ?? 0,
         responseBody: response.data ?? {},
       );
-      log(res.toString());
+      // log(res.toString());
       if (res.isOk) {
         return;
       } else if (res.isApiError) {
@@ -423,12 +423,219 @@ class RESTClient {
         statusCode: response.statusCode ?? 0,
         responseBody: response.data ?? {},
       );
-      log(res.toString());
+      // log(res.toString());
       if (res.isOk) {
         List<dynamic> resp = res.body;
         List<Map<String, dynamic>> devicesStates =
             resp.map((e) => e as Map<String, dynamic>).toList();
         return devicesStates;
+      } else if (res.isApiError) {
+        throw Exception(res.error);
+      } else {
+        throw Exception('Unknown error, status code: ${res.statusCode}');
+      }
+    } on DioError catch (e) {
+      log(e.toString());
+      throw Exception('Unknown error, status code: ${e.response?.statusCode}');
+    }
+  }
+
+  /// The function adds a new device to the database. It sends a request to the server.
+  Future<Device> addDevice(
+      {required int roomID,
+      required DeviceType deviceType,
+      required int slaveID,
+      required String name,
+      required int pin,
+      int? pinDown}) async {
+    if (!isIPSet()) {
+      throw Exception('IP not set');
+    }
+    try {
+      var response = await _dio.post(
+        'http://$_ip:8080/api/addDevice',
+        data: deviceType != DeviceType.blind
+            ? {
+                'token': _userData?.token,
+                'roomID': roomID,
+                'type': deviceType.toString(),
+                'slaveID': slaveID,
+                'name': name,
+                'pin': pin,
+              }
+            : {
+                'token': _userData?.token,
+                'roomID': roomID,
+                'type': deviceType.toString(),
+                'slaveID': slaveID,
+                'name': name,
+                'pin': pin,
+                'pin2': pinDown,
+              },
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
+
+      RestResponse res = RestResponse(
+        statusCode: response.statusCode ?? 0,
+        responseBody: response.data ?? {},
+      );
+
+      log(res.toString());
+
+      if (res.isOk) {
+        switch (deviceType) {
+          case DeviceType.light:
+            return Light.fromJson(res.body);
+          case DeviceType.blind:
+            return Blind.fromJson(res.body);
+          case DeviceType.fan:
+            return Fan.fromJson(res.body);
+          case DeviceType.outlet:
+            return Outlet.fromJson(res.body);
+          default:
+            throw Exception('Unknown device type');
+        }
+      } else if (res.isApiError) {
+        throw Exception(res.error);
+      } else {
+        throw Exception('Unknown error, status code: ${res.statusCode}');
+      }
+    } on DioError catch (e) {
+      log(e.toString());
+      throw Exception('Unknown error, status code: ${e.response?.statusCode}');
+    }
+  }
+
+  /// The function deletes a device from the database. It sends a request to the server.
+  /// Returns [true] if device was deleted
+  /// Returns [false] if device was not deleted
+  /// Throws [Exception] if error occured
+
+  Future<bool> deleteDevice({required int deviceID}) async {
+    if (!isIPSet()) {
+      throw Exception('IP not set');
+    }
+    try {
+      var response = await _dio.post(
+        'http://$_ip:8080/api/removeDevice',
+        data: {
+          'token': _userData?.token,
+          'deviceId': deviceID,
+        },
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
+
+      RestResponse res = RestResponse(
+        statusCode: response.statusCode ?? 0,
+        responseBody: response.data ?? {},
+      );
+
+      log(res.toString());
+
+      if (res.isOk) {
+        return res.body as String == 'OK';
+      } else if (res.isApiError) {
+        return false;
+      } else {
+        throw Exception('Unknown error, status code: ${res.statusCode}');
+      }
+    } on DioError catch (e) {
+      log(e.toString());
+      throw Exception('Unknown error, status code: ${e.response?.statusCode}');
+    }
+  }
+
+  Future<void> updateDevice(
+      {required int deviceID,
+      String? name,
+      int? slaveId,
+      int? room,
+      int? pin,
+      int? pinDown}) async {
+    if (!isIPSet()) {
+      throw Exception('IP not set');
+    }
+    try {
+      Map<String, Object?> data = {
+        'token': _userData?.token,
+        'deviceId': deviceID,
+      };
+      if (name != null) {
+        data['name'] = name;
+      }
+      if (slaveId != null) {
+        data['slaveId'] = slaveId;
+      }
+      if (room != null) {
+        data['room'] = room;
+      }
+      if (pin != null) {
+        data['pin'] = pin;
+      }
+      if (pinDown != null) {
+        data['pin2'] = pinDown;
+      }
+
+      var response = await _dio.post(
+        'http://$_ip:8080/api/updateDevice',
+        data: data,
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
+
+      RestResponse res = RestResponse(
+        statusCode: response.statusCode ?? 0,
+        responseBody: response.data ?? {},
+      );
+
+      log(res.toString());
+
+      if (res.isOk) {
+        return;
+      } else if (res.isApiError) {
+        throw Exception(res.error);
+      } else {
+        throw Exception('Unknown error, status code: ${res.statusCode}');
+      }
+    } on DioError catch (e) {
+      log(e.toString());
+      throw Exception('Unknown error, status code: ${e.response?.statusCode}');
+    }
+  }
+
+  Future<Device> getDevice(int deviceID) async {
+    if (!isIPSet()) {
+      throw Exception('IP not set');
+    }
+    try {
+      var response = await _dio.get(
+        'http://$_ip:8080/api/getDevice',
+        queryParameters: {
+          'token': _userData?.token,
+          'deviceId': deviceID,
+        },
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
+
+      RestResponse res = RestResponse(
+        statusCode: response.statusCode ?? 0,
+        responseBody: response.data ?? {},
+      );
+
+      log(res.toString());
+
+      if (res.isOk) {
+        switch (res.body['typ']) {
+          case 'LIGHT':
+            return Light.fromJson(res.body);
+          case 'BLIND':
+            return Blind.fromJson(res.body);
+          case 'WENTYLATOR':
+            return Fan.fromJson(res.body);
+          case 'GNIAZDKO':
+            return Outlet.fromJson(res.body);
+          default:
+            throw Exception('Unknown device type');
+        }
       } else if (res.isApiError) {
         throw Exception(res.error);
       } else {
@@ -456,7 +663,7 @@ class RESTClient {
         statusCode: response.statusCode ?? 0,
         responseBody: response.data ?? {},
       );
-      log(res.toString());
+      // log(res.toString());
       if (res.isOk) {
         List<dynamic> resp = res.body;
         List<Map<String, dynamic>> sensorsStates =
