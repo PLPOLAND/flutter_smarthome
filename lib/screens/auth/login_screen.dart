@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../helpers/rest_client/rest_client.dart';
 import '../../models/bloc/auth/auth_bloc.dart';
-import '../homepage_screen.dart';
+import '../home/homepage_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String routeName = '/login';

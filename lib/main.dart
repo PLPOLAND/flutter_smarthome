@@ -16,7 +16,7 @@ import 'screens/auth/login_screen.dart';
 import 'screens/auth/welcome_screen.dart';
 import 'screens/devices/add_edit_device_screen.dart';
 import 'screens/devices_screen.dart';
-import 'screens/homepage_screen.dart';
+import 'screens/home/homepage_screen.dart';
 import 'screens/room_detail_page.dart';
 import 'screens/rooms/add_edit_room_screen.dart';
 import 'screens/rooms_page.dart';
@@ -94,7 +94,7 @@ class MyApp extends StatelessWidget {
                 home: const WelcomeScreen(),
                 routes: {
                   LoginScreen.routeName: (context) => const LoginScreen(),
-                  HomepageScreen.routeName: (context) => const HomepageScreen(),
+                  HomepageScreen.routeName: (context) => HomepageScreen(),
                   RoomDetailScreen.routeName: (context) =>
                       const RoomDetailScreen(),
                   RoomsPage.routeName: (context) => const RoomsPage(),

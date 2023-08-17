@@ -6,7 +6,7 @@ import 'package:flutter_smarthome/models/bloc/auth/auth_bloc.dart';
 import 'package:flutter_smarthome/models/bloc/devices/devices_bloc.dart';
 import 'package:flutter_smarthome/models/bloc/rooms/rooms_bloc.dart';
 import 'package:flutter_smarthome/screens/auth/login_screen.dart';
-import 'package:flutter_smarthome/screens/homepage_screen.dart';
+import 'package:flutter_smarthome/screens/home/homepage_screen.dart';
 
 import '../../models/bloc/sensors/sensors_bloc.dart' as sensors;
 
@@ -17,7 +17,7 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (context.read<AuthBloc>().state.status.isAuthenticated) {
-      return const HomepageScreen();
+      return HomepageScreen();
     } else {
       return BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) async {
@@ -105,7 +105,7 @@ class WelcomeScreen extends StatelessWidget {
               ),
             );
           } else if (state.status.isDemo) {
-            return const HomepageScreen();
+            return HomepageScreen();
           } else {
             return const Scaffold(
               body: Center(
