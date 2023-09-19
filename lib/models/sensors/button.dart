@@ -82,6 +82,14 @@ class ButtonLocalClickFunction {
           json['state'] != null ? DeviceState.fromString(json['state']) : null,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'device': deviceID,
+      'clicks': clicks,
+      'state': state?.toString(),
+    };
+  }
 }
 
 class ButtonCubitState extends SensorCubitState {

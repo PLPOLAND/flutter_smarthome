@@ -3,8 +3,11 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_smarthome/models/auth/user_data.dart';
+import 'package:flutter_smarthome/models/sensors/hygro_termometer.dart';
 import 'package:flutter_smarthome/models/sensors/hygrometer.dart';
+import 'package:flutter_smarthome/models/sensors/motion.dart';
 import 'package:flutter_smarthome/models/sensors/thermometer.dart';
+import 'package:flutter_smarthome/models/sensors/twilight.dart';
 import 'package:flutter_smarthome/screens/sensors_screen.dart';
 import '../../models/devices/blind.dart';
 import '../../models/devices/device.dart';
@@ -679,6 +682,113 @@ class RESTClient {
       throw Exception('Unknown error, status code: ${e.response?.statusCode}');
     }
   }
+
+  Future<Sensor> addSensor({required Sensor sensor}) async {
+    if (!isIPSet()) {
+      throw Exception('IP not set');
+    }
+    Map<String, Object?> dataToSend;
+    switch (sensor.type) {
+      case SensorType.button:
+        dataToSend = {
+          'token': _userData?.token,
+          'roomID': sensor.roomId,
+          'type': sensor.type.toString(),
+          'slaveID': sensor.slaveID,
+          'onSlaveID': (sensor as Button).onSlaveID,
+          'name': sensor.name,
+          'pin': sensor.onSlavePin,
+          'funkcjeKlikniec':
+              sensor.localFunctions.map((e) => e.toJson()).toList(),
+        };
+        break;
+      case SensorType.thermometer:
+      case SensorType.hygrometer:
+        dataToSend = {
+          'token': _userData?.token,
+          'roomID': sensor.roomId,
+          'slaveID': sensor.slaveID,
+          'name': sensor.name,
+          'type': sensor.type.toString(),
+          'adress': sensor.adress,
+        };
+        break;
+      case SensorType.hygroThermometer:
+        dataToSend = {
+          'token': _userData?.token,
+          'roomID': sensor.roomId,
+          'slaveID': sensor.slaveID,
+          'name': sensor.name,
+          'type': sensor.type.toString(),
+        };
+        break;
+      case SensorType.motion:
+        dataToSend = {
+          'token': _userData?.token,
+          'roomID': sensor.roomId,
+          'slaveID': sensor.slaveID,
+          'name': sensor.name,
+          'type': sensor.type.toString(),
+          'pin': (sensor as Twilight).onSlavePin,
+        };
+        break;
+      case SensorType.twilight:
+        dataToSend = {
+          'token': _userData?.token,
+          'roomID': sensor.roomId,
+          'slaveID': sensor.slaveID,
+          'name': sensor.name,
+          'type': sensor.type.toString(),
+          'pin': (sensor as Twilight).onSlavePin,
+        };
+        break;
+      default:
+        throw Exception('Unknown sensor type');
+    }
+    try {
+      var response = await _dio.post(
+        'http://$_ip:8080/api/addSensor',
+        data: dataToSend,
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
+
+      RestResponse res = RestResponse(
+        statusCode: response.statusCode ?? 0,
+        responseBody: response.data ?? {},
+      );
+
+      log(res.toString());
+
+      if (res.isOk) {
+        switch (sensor.type) {
+          case SensorType.button:
+            return Button.fromJson(res.body);
+          case SensorType.thermometer:
+            return Thermometer.fromJson(res.body);
+          case SensorType.hygrometer:
+            return Hygrometer.fromJson(res.body);
+          case SensorType.hygroThermometer:
+            return HygroThermometer.fromJson(res.body);
+          case SensorType.motion:
+            return Motion.fromJson(res.body);
+          case SensorType.twilight:
+            return Twilight.fromJson(res.body);
+          default:
+            throw Exception('Unknown device type');
+        }
+      } else if (res.isApiError) {
+        throw Exception(res.error);
+      } else {
+        throw Exception('Unknown error, status code: ${res.statusCode}');
+      }
+    } on DioError catch (e) {
+      log(e.toString());
+      throw Exception('Unknown error, status code: ${e.response?.statusCode}');
+    }
+  }
+  //TODO add sensor
+  //TODO delete sensor
+  //TODO update sensor
 
   Future<void> restartAllSlaves() async {
     if (!isIPSet()) {

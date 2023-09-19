@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_smarthome/models/sensors/button.dart';
+import 'package:flutter_smarthome/models/sensors/hygro_termometer.dart';
 import 'package:flutter_smarthome/models/sensors/hygrometer.dart';
 import 'package:flutter_smarthome/models/sensors/sensor.dart';
 import 'package:flutter_smarthome/repositories/rooms_repository.dart';
@@ -133,6 +134,13 @@ class _AddEditSensorScreenState extends State<AddEditSensorScreen> {
             slaveId: int.parse(slaveAddressController.text),
             onSlavePin: int.parse(slavePinController.text),
             dayValue: dayValue,
+          );
+          break;
+        case SensorType.hygroThermometer:
+          sensor = HygroThermometer(
+            roomId: selectedRoomId,
+            name: nameController.text,
+            slaveId: int.parse(slaveAddressController.text),
           );
           break;
         default:

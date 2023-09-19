@@ -68,8 +68,8 @@ class SensorsRepository {
   }
 
   Future<void> addSensor(Sensor device) async {
-    _sensors.add(device);
-    Future.delayed(const Duration(seconds: 1));
+    Sensor newSensor = await client.addSensor(sensor: device);
+    _sensors.add(newSensor);
   }
 
   Future<void> removeSensor(Sensor device) async {
