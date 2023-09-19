@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_smarthome/models/sensors/hygro_termometer.dart';
 import 'package:flutter_smarthome/models/sensors/hygrometer.dart';
 import 'package:flutter_smarthome/models/sensors/thermometer.dart';
 
@@ -11,19 +12,34 @@ class SensorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String value = "";
-    if (sensor.state.type != SensorType.thermometer &&
-        sensor.state.type != SensorType.hygrometer) {
-      value = "err sensor type";
-    } else if (sensor.state.type == SensorType.thermometer) {
+    String value2 = "";
+    if (sensor.state.type == SensorType.thermometer) {
       value = "${(sensor as Thermometer).temperatureToString()}°C";
     } else if (sensor.state.type == SensorType.hygrometer) {
       value = "${(sensor as Hygrometer).humidityToString()}%";
+    } else if (sensor.state.type == SensorType.hygroThermometer) {
+      value = "${(sensor as HygroThermometer).humidity}% ";
+      value2 = "${(sensor as HygroThermometer).temperatureToString()}°C";
+    } else {
+      value = "err sensor type";
     }
     return Row(
       children: [
-        Icon(Sensor.icon(sensor.type)),
-        const SizedBox(width: 10),
-        Text(value),
+        if (sensor.state.type == SensorType.hygroThermometer) ...{
+          // hygroThermometer has two values to display
+          Icon(Sensor.icon(SensorType.hygrometer)),
+          const SizedBox(width: 10),
+          Text(value),
+          Icon(Sensor.icon(SensorType.thermometer)),
+          const SizedBox(width: 10),
+          Text(value2),
+        },
+        if (sensor.state.type != SensorType.hygroThermometer) ...{
+          // other sensors have one value to display
+          Icon(Sensor.icon(sensor.type)),
+          const SizedBox(width: 10),
+          Text(value),
+        }
       ],
     );
   }

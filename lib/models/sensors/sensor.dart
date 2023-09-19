@@ -52,6 +52,8 @@ abstract class Sensor extends Cubit<SensorCubitState> {
         return Icons.thermostat;
       case SensorType.hygrometer:
         return Icons.water_drop;
+      case SensorType.hygroThermometer:
+        return Icons.dew_point;
       case SensorType.twilight:
         return Icons.brightness_4;
       case SensorType.motion:
@@ -132,6 +134,7 @@ enum SensorType {
   none,
   thermometer,
   hygrometer,
+  hygroThermometer,
   twilight,
   motion,
   button,

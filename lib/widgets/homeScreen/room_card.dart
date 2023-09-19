@@ -61,7 +61,8 @@ class RoomCard extends StatelessWidget {
                     if (anyThermometer) ...{
                       ...sensors.map((e) {
                         if (e.type == SensorType.thermometer ||
-                            e.type == SensorType.hygrometer) {
+                            e.type == SensorType.hygrometer ||
+                            e.type == SensorType.hygroThermometer) {
                           return BlocBuilder<Sensor, SensorCubitState>(
                               builder: (context, state) {
                                 return SensorWidget(

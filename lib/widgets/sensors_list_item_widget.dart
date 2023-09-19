@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_smarthome/models/sensors/hygro_termometer.dart';
 import 'package:flutter_smarthome/repositories/rooms_repository.dart';
 import 'package:flutter_smarthome/screens/sensors/add_edit_sensor_screen.dart';
 import 'package:provider/provider.dart';
@@ -45,6 +46,17 @@ class SensorsListItemWidget extends StatelessWidget {
         sensorIcon = Icon(Icons.water_drop,
             color: Theme.of(context).colorScheme.onPrimary);
         sensorTrailing = Text("${(sensor as Hygrometer).humidityToString()} %",
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onPrimary,
+              fontSize: Theme.of(context).textTheme.titleMedium?.fontSize,
+            ));
+        break;
+      case SensorType.hygroThermometer:
+        sensorIcon = Icon(Icons.dew_point,
+            color: Theme.of(context).colorScheme.onPrimary);
+        sensorTrailing = Text(
+            //TODO implement
+            "${(sensor as HygroThermometer).temperatureToString()} °C \t ${(sensor as HygroThermometer).humidity} %",
             style: TextStyle(
               color: Theme.of(context).colorScheme.onPrimary,
               fontSize: Theme.of(context).textTheme.titleMedium?.fontSize,

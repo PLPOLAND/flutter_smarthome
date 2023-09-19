@@ -447,6 +447,22 @@ var dummy_sensors = [
     "slaveAdress": 8
   },
   {
+    "@type": "Higrometr",
+    "id": 2,
+    "room": 3,
+    "onSlaveID": -1,
+    "addres": [0, 0, 0, 0, 0, 0, 0, 0],
+    "nazwa": "test",
+    "typ": "THERMOMETR_HYGROMETR",
+    "temperatura": 25.5,
+    "maxTemperatura": 28,
+    "minTemperatura": 15,
+    "humidity": 50,
+    "maxHumidity": 100,
+    "minHumidity": 0,
+    "slaveAdress": 15
+  },
+  {
     "@type": "Termometr",
     "id": 101,
     "room": 2,

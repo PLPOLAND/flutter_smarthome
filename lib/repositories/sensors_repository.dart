@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter_smarthome/helpers/rest_client/rest_client.dart';
+import 'package:flutter_smarthome/models/sensors/hygro_termometer.dart';
 import 'package:flutter_smarthome/models/sensors/thermometer.dart';
 import 'package:flutter_smarthome/models/sensors/hygrometer.dart';
 
@@ -25,8 +26,8 @@ class SensorsRepository {
         case 'THERMOMETR':
           _sensors.add(Thermometer.fromJson(sensor));
           break;
-        case 'HYGROMETER':
-          throw Exception("Not implemented yet");
+        case 'THERMOMETR_HYGROMETR':
+          _sensors.add(HygroThermometer.fromJson(sensor));
           //TODO implement
           // _sensors.add(Hygrometer.fromJson(sensor));
           break;
