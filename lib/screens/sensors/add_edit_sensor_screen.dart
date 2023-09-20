@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_smarthome/models/bloc/sensors/sensors_bloc.dart';
 import 'package:flutter_smarthome/models/sensors/button.dart';
 import 'package:flutter_smarthome/models/sensors/hygro_termometer.dart';
 import 'package:flutter_smarthome/models/sensors/hygrometer.dart';
@@ -147,13 +149,26 @@ class _AddEditSensorScreenState extends State<AddEditSensorScreen> {
           break;
       }
       if (sensor != null) {
-        await context.read<SensorsRepository>().addSensor(sensor);
-        setState(() {
-          showSaveIndicator = false;
-        });
-        if (context.mounted) {
-          Navigator.of(context).pop();
-        }
+        // try {
+        // await context.read<SensorsRepository>().addSensor(sensor);
+        context.read<SensorsBloc>().add(AddSensor(sensor));
+
+        // if (context.mounted) {
+        //   Navigator.of(context).pop();
+        // }
+        // } on Exception catch (e) {
+        //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        //     content: Text(e.toString(),
+        //         style: TextStyle(
+        //             color: Theme.of(context)
+        //                 .colorScheme
+        //                 .onError)), //TODO better error messages
+        //     backgroundColor: Theme.of(context).colorScheme.errorContainer,
+        //   ));
+        //   setState(() {
+        //     showSaveIndicator = false;
+        //   });
+        // }
       }
     } else {
       // update device
@@ -318,224 +333,261 @@ class _AddEditSensorScreenState extends State<AddEditSensorScreen> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Form(
-            key: formKey,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // Text('Name:', style: _textStyle),
-                  TextFormField(
-                    controller: nameController,
-                    decoration: const InputDecoration(labelText: 'Name'),
-                    textInputAction: TextInputAction.next,
-                    onChanged: (_) => anyChange = true,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please enter a name';
-                      }
-                      if (value.length < 3) {
-                        return 'Name must be at least 3 characters long';
-                      }
-                      return null;
-                    },
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Text('Device Type:', style: _textStyle),
-                  ),
-                  SegmentedButton<SensorType>(
-                      segments: [
-                        if (isEditing) ...{
+        child: BlocListener<SensorsBloc, SensorsState>(
+          listenWhen: (previous, current) =>
+              (previous.status == SensorsStatus.adding ||
+                  previous.status == SensorsStatus.loaded) &&
+              (current.status == SensorsStatus.error ||
+                  current.status == SensorsStatus.loaded),
+          listener: (context, state) {
+            if (state.status == SensorsStatus.error) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(state.errorMsg,
+                    style: TextStyle(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onError)), //TODO better error messages
+                backgroundColor: Theme.of(context).colorScheme.errorContainer,
+              ));
+
+              setState(() {
+                showSaveIndicator = false;
+              });
+            } else if (state.status == SensorsStatus.loaded) {
+              if (state.sensors.any((element) =>
+                  element.name == nameController.text &&
+                  element.roomId == selectedRoomId)) {
+                Navigator.of(context).pop();
+              }
+            }
+          },
+          child: Form(
+              key: formKey,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Text('Name:', style: _textStyle),
+                    TextFormField(
+                      controller: nameController,
+                      decoration: const InputDecoration(labelText: 'Name'),
+                      textInputAction: TextInputAction.next,
+                      onChanged: (_) => anyChange = true,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please enter a name';
+                        }
+                        if (value.length < 3) {
+                          return 'Name must be at least 3 characters long';
+                        }
+                        return null;
+                      },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: Text('Device Type:', style: _textStyle),
+                    ),
+                    SegmentedButton<SensorType>(
+                        segments: [
+                          if (isEditing) ...{
+                            ButtonSegment<SensorType>(
+                              value: SensorType.thermometer,
+                              icon: Icon(Sensor.icon(SensorType.thermometer)),
+                              // label: const Text('Thermometer'),
+                            ),
+                            ButtonSegment<SensorType>(
+                              value: SensorType.hygrometer,
+                              icon: Icon(Sensor.icon(SensorType.hygrometer)),
+                              // label: const Text('Hygrometer'),
+                            )
+                          },
                           ButtonSegment<SensorType>(
-                            value: SensorType.thermometer,
-                            icon: Icon(Sensor.icon(SensorType.thermometer)),
-                            // label: const Text('Thermometer'),
+                            value: SensorType.motion,
+                            icon: Icon(Sensor.icon(SensorType.motion)),
+                            // label: const Text('Motion'),
                           ),
                           ButtonSegment<SensorType>(
-                            value: SensorType.hygrometer,
-                            icon: Icon(Sensor.icon(SensorType.hygrometer)),
-                            // label: const Text('Hygrometer'),
-                          )
+                            value: SensorType.twilight,
+                            icon: Icon(Sensor.icon(SensorType.twilight)),
+                            // label: const Text('Twilight'),
+                          ),
+                          ButtonSegment<SensorType>(
+                            value: SensorType.button,
+                            icon: Icon(Sensor.icon(SensorType.button)),
+                            // label: const Text('Button'),
+                          ),
+                        ],
+                        selected: <SensorType>{
+                          selectedSensorType
                         },
-                        ButtonSegment<SensorType>(
-                          value: SensorType.motion,
-                          icon: Icon(Sensor.icon(SensorType.motion)),
-                          // label: const Text('Motion'),
-                        ),
-                        ButtonSegment<SensorType>(
-                          value: SensorType.twilight,
-                          icon: Icon(Sensor.icon(SensorType.twilight)),
-                          // label: const Text('Twilight'),
-                        ),
-                        ButtonSegment<SensorType>(
-                          value: SensorType.button,
-                          icon: Icon(Sensor.icon(SensorType.button)),
-                          // label: const Text('Button'),
-                        ),
-                      ],
-                      selected: <SensorType>{
-                        selectedSensorType
-                      },
-                      onSelectionChanged: (Set<SensorType> selected) {
+                        onSelectionChanged: (Set<SensorType> selected) {
+                          anyChange = true;
+                          setState(() {
+                            selectedSensorType = selected.first;
+                          });
+                        }),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: Text("Room:", style: _textStyle),
+                    ),
+                    DropdownButtonFormField(
+                      items: rooms
+                          .map((room) => DropdownMenuItem(
+                                value: room.id,
+                                child: Text(room.name,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.normal)),
+                              ))
+                          .toList(),
+                      onChanged: (value) {
                         anyChange = true;
                         setState(() {
-                          selectedSensorType = selected.first;
+                          selectedRoomId = value as int;
                         });
-                      }),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: Text("Room:", style: _textStyle),
-                  ),
-                  DropdownButtonFormField(
-                    items: rooms
-                        .map((room) => DropdownMenuItem(
-                              value: room.id,
-                              child: Text(room.name,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.normal)),
-                            ))
-                        .toList(),
-                    onChanged: (value) {
-                      anyChange = true;
-                      setState(() {
-                        selectedRoomId = value as int;
-                      });
-                    },
-                    value: selectedRoomId,
-                  ),
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(vertical: 10),
-                  //   child: Text('Slave adress', style: _textStyle),
-                  // ),
+                      },
+                      value: selectedRoomId,
+                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(vertical: 10),
+                    //   child: Text('Slave adress', style: _textStyle),
+                    // ),
 
-                  TextFormField(
-                    enabled: selectedSensorType != SensorType.hygrometer &&
-                        selectedSensorType != SensorType.thermometer,
-                    controller: slaveAddressController,
-                    decoration:
-                        const InputDecoration(labelText: 'Slave Adress'),
-                    textInputAction: TextInputAction.next,
-                    maxLines: 1,
-                    keyboardType: TextInputType.number,
-                    onChanged: (_) => anyChange = true,
-                    validator: (value) {
-                      if (selectedSensorType == SensorType.hygrometer ||
-                          selectedSensorType == SensorType.thermometer) {
-                        return null;
-                      }
-                      if (value!.isEmpty) {
-                        return 'Please enter a number';
-                      }
-                      if (int.parse(value) > 255) {
-                        return 'Please enter a smaller number';
-                      }
-                      if (int.parse(value) < 8) {
-                        return 'Please enter a number bigger than 8';
-                      }
-                      return null;
-                    },
-                  ),
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(vertical: 10),
-                  //   child: Text('Slave Pin Number', style: _textStyle),
-                  // ),
-                  if (selectedSensorType != SensorType.hygrometer &&
-                      selectedSensorType != SensorType.thermometer)
                     TextFormField(
-                      controller: slavePinController,
+                      enabled: selectedSensorType != SensorType.hygrometer &&
+                          selectedSensorType != SensorType.thermometer,
+                      controller: slaveAddressController,
                       decoration:
-                          const InputDecoration(labelText: 'Slave Pin Number'),
-                      textInputAction: TextInputAction.done,
+                          const InputDecoration(labelText: 'Slave Adress'),
+                      textInputAction: TextInputAction.next,
                       maxLines: 1,
                       keyboardType: TextInputType.number,
                       onChanged: (_) => anyChange = true,
                       validator: (value) {
-                        if (value!.isEmpty) {
+                        try {
+                          if (selectedSensorType == SensorType.hygrometer ||
+                              selectedSensorType == SensorType.thermometer) {
+                            return null;
+                          }
+                          if (value!.isEmpty) {
+                            return 'Please enter a number';
+                          }
+                          if (int.parse(value) > 255) {
+                            return 'Please enter a smaller number';
+                          }
+                          if (int.parse(value) < 8) {
+                            return 'Please enter a number bigger than 8';
+                          }
+                        } catch (e) {
                           return 'Please enter a number';
-                        }
-                        if (int.parse(value) > 255) {
-                          return 'Please enter a smaller number';
-                        }
-                        if (int.parse(value) < 0) {
-                          return 'Please enter a number bigger than 0';
                         }
                         return null;
                       },
                     ),
-                  if (selectedSensorType == SensorType.twilight) ...{
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(vertical: 10),
+                    //   child: Text('Slave Pin Number', style: _textStyle),
+                    // ),
+                    if (selectedSensorType != SensorType.hygrometer &&
+                        selectedSensorType != SensorType.thermometer)
+                      TextFormField(
+                        controller: slavePinController,
+                        decoration: const InputDecoration(
+                            labelText: 'Slave Pin Number'),
+                        textInputAction: TextInputAction.done,
+                        maxLines: 1,
+                        keyboardType: TextInputType.number,
+                        onChanged: (_) => anyChange = true,
+                        validator: (value) {
+                          try {
+                            if (value!.isEmpty) {
+                              return 'Please enter a number';
+                            }
+                            if (int.parse(value) > 255) {
+                              return 'Please enter a smaller number';
+                            }
+                            if (int.parse(value) < 0) {
+                              return 'Please enter a number bigger than 0';
+                            }
+                          } catch (e) {
+                            return 'Please enter a number';
+                          }
+                          return null;
+                        },
+                      ),
+                    if (selectedSensorType == SensorType.twilight) ...{
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(
+                            'Day value: ${dayValue.toStringAsFixed(2)}',
+                          ),
+                          Slider(
+                              max: 1,
+                              min: 0,
+                              divisions: 20,
+                              label: dayValue.toString(),
+                              value: dayValue,
+                              onChanged: (value) {
+                                anyChange = true;
+                                setState(() {
+                                  dayValue = value;
+                                });
+                              }),
+                        ],
+                      ),
+                    },
+                    if (selectedSensorType == SensorType.button)
+                      const SizedBox(height: 10),
+                    if (selectedSensorType == SensorType.button)
+                      ButtonLocalClickFunctionsWidget(
+                          sensorID: sensorId,
+                          roomID: selectedRoomId,
+                          anyChange: () {
+                            anyChange = true;
+                          },
+                          saveFunctions:
+                              (List<ButtonLocalClickFunction> functions) {
+                            localFunctions = functions;
+                          }),
                     const SizedBox(height: 10),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text(
-                          'Day value: ${dayValue.toStringAsFixed(2)}',
+                        TextButton.icon(
+                          onPressed: () {
+                            if (anyChange) {
+                              showLoosingDataDialog(isEditing);
+                            } else {
+                              Navigator.of(context).pop();
+                            }
+                          },
+                          icon: const Icon(Icons.cancel),
+                          label: const Text('Cancel'),
                         ),
-                        Slider(
-                            max: 1,
-                            min: 0,
-                            divisions: 20,
-                            label: dayValue.toString(),
-                            value: dayValue,
-                            onChanged: (value) {
-                              anyChange = true;
-                              setState(() {
-                                dayValue = value;
-                              });
-                            }),
+                        FilledButton.icon(
+                          onPressed: showSaveIndicator
+                              ? null
+                              : () {
+                                  save(sensorId);
+                                },
+                          icon: showSaveIndicator
+                              ? const SizedBox(
+                                  height: 16,
+                                  width: 16,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 1.5,
+                                  ))
+                              : const Icon(Icons.save),
+                          label: const Text('Save'),
+                        ),
                       ],
                     ),
-                  },
-                  if (selectedSensorType == SensorType.button)
-                    const SizedBox(height: 10),
-                  if (selectedSensorType == SensorType.button)
-                    ButtonLocalClickFunctionsWidget(
-                        sensorID: sensorId,
-                        roomID: selectedRoomId,
-                        anyChange: () {
-                          anyChange = true;
-                        },
-                        saveFunctions:
-                            (List<ButtonLocalClickFunction> functions) {
-                          localFunctions = functions;
-                        }),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      TextButton.icon(
-                        onPressed: () {
-                          if (anyChange) {
-                            showLoosingDataDialog(isEditing);
-                          } else {
-                            Navigator.of(context).pop();
-                          }
-                        },
-                        icon: const Icon(Icons.cancel),
-                        label: const Text('Cancel'),
-                      ),
-                      FilledButton.icon(
-                        onPressed: showSaveIndicator
-                            ? null
-                            : () {
-                                save(sensorId);
-                              },
-                        icon: showSaveIndicator
-                            ? const SizedBox(
-                                height: 16,
-                                width: 16,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 1.5,
-                                ))
-                            : const Icon(Icons.save),
-                        label: const Text('Save'),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            )),
+                  ],
+                ),
+              )),
+        ),
       ),
     );
   }

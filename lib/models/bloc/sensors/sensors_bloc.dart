@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_smarthome/models/sensors/sensor.dart';
 
 import '../../../repositories/sensors_repository.dart';
@@ -66,6 +67,28 @@ class SensorsBloc extends Bloc<SensorsEvent, SensorsState> {
     on<StopUpdatingSensors>((event, emit) async {
       log('Stop updating sensors');
       emit(state.copyWith(stopUpdating: true));
+    });
+    on<AddSensor>((event, emit) async {
+      log('Adding sensor');
+      emit(state.copyWith(status: SensorsStatus.adding));
+      try {
+        await _sensorsRepository.addSensor(event.sensor);
+      } on Exception catch (e) {
+        log('Error adding sensor: $e');
+        add(ErrorEvent.exception(e));
+        return;
+      }
+      emit(state.copyWith(
+        status: SensorsStatus.loaded,
+        sensors: _sensorsRepository.sensors,
+      ));
+    });
+    on<ErrorEvent>((event, emit) async {
+      log('Error: ${event.message}');
+      var tmpstate = state;
+      emit(
+          state.copyWith(status: SensorsStatus.error, errorMsg: event.message));
+      emit(tmpstate);
     });
   }
 

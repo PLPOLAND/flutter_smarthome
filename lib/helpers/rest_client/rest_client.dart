@@ -693,13 +693,13 @@ class RESTClient {
         dataToSend = {
           'token': _userData?.token,
           'roomID': sensor.roomId,
-          'type': sensor.type.toString(),
+          'type': sensor.type,
           'slaveID': sensor.slaveID,
           'onSlaveID': (sensor as Button).onSlaveID,
           'name': sensor.name,
           'pin': sensor.onSlavePin,
           'funkcjeKlikniec':
-              sensor.localFunctions.map((e) => e.toJson()).toList(),
+              jsonEncode(sensor.localFunctions.map((e) => e.toJson()).toList()),
         };
         break;
       case SensorType.thermometer:
@@ -729,7 +729,7 @@ class RESTClient {
           'slaveID': sensor.slaveID,
           'name': sensor.name,
           'type': sensor.type.toString(),
-          'pin': (sensor as Twilight).onSlavePin,
+          'pin': (sensor as Motion).onSlavePin,
         };
         break;
       case SensorType.twilight:

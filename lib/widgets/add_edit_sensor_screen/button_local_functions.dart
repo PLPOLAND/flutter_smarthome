@@ -6,11 +6,13 @@ import 'package:provider/provider.dart';
 import '../../models/devices/device.dart';
 import '../../repositories/sensors_repository.dart';
 
+//TODO: prevent choosing up/down/stop for non-blind devices
 class ButtonLocalClickFunctionsWidget extends StatefulWidget {
   final int? sensorID;
   final int roomID;
-  final Null Function(List<ButtonLocalClickFunction>) saveFunctions;
-  final Null Function() anyChange;
+  final Null Function(List<ButtonLocalClickFunction>)
+      saveFunctions; // function to call when need to save functions
+  final Null Function() anyChange; // function to call when any change is made
   const ButtonLocalClickFunctionsWidget(
       {super.key,
       required this.sensorID,
@@ -98,6 +100,10 @@ class _ButtonLocalClickFunctionsWidgetState
                 ),
                 items: const [
                   DropdownMenuItem(
+                    value: DeviceState.none,
+                    child: Text("None"),
+                  ),
+                  DropdownMenuItem(
                     value: DeviceState.up,
                     child: Text("Up"),
                   ),
@@ -119,7 +125,7 @@ class _ButtonLocalClickFunctionsWidgetState
                 value: function.state != DeviceState.up ||
                         function.state != DeviceState.down ||
                         function.state != DeviceState.middle
-                    ? DeviceState.up
+                    ? DeviceState.none
                     : function.state,
               ),
             )),

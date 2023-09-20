@@ -137,5 +137,27 @@ enum SensorType {
   hygroThermometer,
   twilight,
   motion,
-  button,
+  button;
+
+  @override
+  String toString() {
+    switch (this) {
+      case SensorType.none:
+        return "none";
+      case SensorType.thermometer:
+        return "thermometer";
+      case SensorType.hygrometer:
+        return "hygrometer";
+      case SensorType.hygroThermometer:
+        return "hygroThermometer";
+      case SensorType.twilight:
+        return "twilight";
+      case SensorType.motion:
+        return "motion";
+      case SensorType.button:
+        return "button";
+      default:
+        return "none";
+    }
+  }
 }
