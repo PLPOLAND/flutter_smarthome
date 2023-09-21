@@ -41,6 +41,14 @@ class _ButtonLocalClickFunctionsWidgetState
         .devices
         .where((element) => element.roomId == roomID)
         .toList();
+
+    List<DeviceState> avaiableStates = [
+      DeviceState.none,
+      DeviceState.up,
+      DeviceState.down,
+      DeviceState.middle
+    ];
+
     if (hasFunction) {
       if (devices
           .where((element) => element.id == function!.deviceID)
@@ -49,9 +57,28 @@ class _ButtonLocalClickFunctionsWidgetState
         function.state = null;
         function.clicks = 0;
       }
+      if (function.deviceID != -1) {
+        if (devices
+                .firstWhere((element) => element.id == function!.deviceID)
+                .type ==
+            DeviceType.blind) {
+          avaiableStates = [
+            DeviceState.up,
+            DeviceState.down,
+            DeviceState.middle
+          ];
+          function.state = DeviceState.up;
+        } else {
+          avaiableStates = [
+            DeviceState.none,
+          ];
+          function.state = DeviceState.none;
+        }
+      }
     }
     var textEditingController = TextEditingController(
         text: hasFunction ? function.clicks.toString() : "0");
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
@@ -98,35 +125,21 @@ class _ButtonLocalClickFunctionsWidgetState
                 decoration: const InputDecoration(
                   labelText: "State:",
                 ),
-                items: const [
-                  DropdownMenuItem(
-                    value: DeviceState.none,
-                    child: Text("None"),
-                  ),
-                  DropdownMenuItem(
-                    value: DeviceState.up,
-                    child: Text("Up"),
-                  ),
-                  DropdownMenuItem(
-                    value: DeviceState.down,
-                    child: Text("Down"),
-                  ),
-                  DropdownMenuItem(
-                    value: DeviceState.middle,
-                    child: Text("Stop"),
-                  ),
-                ],
+                items: avaiableStates
+                    .map((state) => DropdownMenuItem(
+                          value: state,
+                          child: Text(state.toString().split('.').last,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.normal)),
+                        ))
+                    .toList(),
                 onChanged: (value) {
                   widget.anyChange();
 
                   widget.saveFunctions(functions);
                   function!.state = value as DeviceState;
                 },
-                value: function.state != DeviceState.up ||
-                        function.state != DeviceState.down ||
-                        function.state != DeviceState.middle
-                    ? DeviceState.none
-                    : function.state,
+                value: function.state,
               ),
             )),
         Expanded(

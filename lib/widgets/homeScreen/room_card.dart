@@ -30,8 +30,12 @@ class RoomCard extends StatelessWidget {
         .where((device) => device.roomId == room.id)
         .toList();
 
-    final bool anyThermometer =
-        sensors.any((sensor) => sensor.type == SensorType.thermometer);
+    final bool anyThermometer = sensors.any((sensor) =>
+        sensor.type == SensorType.thermometer ||
+        sensor.type == SensorType.hygrometer ||
+        sensor.type == SensorType.hygroThermometer ||
+        sensor.type == SensorType.twilight ||
+        sensor.type == SensorType.hygrometer);
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),

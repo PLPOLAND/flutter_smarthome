@@ -241,7 +241,7 @@ class RESTClient {
             sensors.add(Thermometer.fromJson(sensor));
             break;
           case 'THERMOMETR_HYGROMETR':
-            sensors.add(Hygrometer.fromJson(sensor));
+            sensors.add(HygroThermometer.fromJson(sensor));
             break;
           case 'TWILIGHT':
             break;

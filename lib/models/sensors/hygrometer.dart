@@ -57,7 +57,7 @@ class Hygrometer extends Sensor {
   /// Returns humidity as a string with 0 decimal places (e.g. 0.5 -> 50)
   /// @return humidity as a string with 0 decimal places
   String humidityToString() {
-    return (humidity * 100).toStringAsFixed(0);
+    return humidity.toStringAsFixed(0);
   }
 }
 
@@ -74,7 +74,7 @@ class HygrometerCubitState extends SensorCubitState {
       int humidity = 0})
       : super(id, roomId, slaveId, onSlaveId, name, SensorType.hygrometer,
             adress) {
-    if (humidity < 0 || humidity > 1) {
+    if (humidity < 0 || humidity > 100) {
       throw Exception(
           "Invalid higro: {$humidity}"); //TODO make custom exception
     }

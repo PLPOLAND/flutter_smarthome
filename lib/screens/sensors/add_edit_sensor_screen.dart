@@ -229,6 +229,15 @@ class _AddEditSensorScreenState extends State<AddEditSensorScreen> {
             slaveId: int.parse(slaveAddressController.text),
           );
           break;
+        case SensorType.hygroThermometer:
+          newSensor = HygroThermometer(
+            id: oldDevice.id,
+            onSlaveId: oldDevice.onSlaveID,
+            name: nameController.text,
+            roomId: selectedRoomId,
+            slaveId: int.parse(slaveAddressController.text),
+          );
+          break;
         default:
           break;
       }
@@ -403,6 +412,12 @@ class _AddEditSensorScreenState extends State<AddEditSensorScreen> {
                             )
                           },
                           ButtonSegment<SensorType>(
+                            value: SensorType.hygroThermometer,
+                            icon:
+                                Icon(Sensor.icon(SensorType.hygroThermometer)),
+                            // label: const Text('Hygro-Thermometer'),
+                          ),
+                          ButtonSegment<SensorType>(
                             value: SensorType.motion,
                             icon: Icon(Sensor.icon(SensorType.motion)),
                             // label: const Text('Motion'),
@@ -423,6 +438,7 @@ class _AddEditSensorScreenState extends State<AddEditSensorScreen> {
                         },
                         onSelectionChanged: (Set<SensorType> selected) {
                           anyChange = true;
+                          localFunctions = [];
                           setState(() {
                             selectedSensorType = selected.first;
                           });
@@ -489,7 +505,8 @@ class _AddEditSensorScreenState extends State<AddEditSensorScreen> {
                     //   child: Text('Slave Pin Number', style: _textStyle),
                     // ),
                     if (selectedSensorType != SensorType.hygrometer &&
-                        selectedSensorType != SensorType.thermometer)
+                        selectedSensorType != SensorType.thermometer &&
+                        selectedSensorType != SensorType.hygroThermometer)
                       TextFormField(
                         controller: slavePinController,
                         decoration: const InputDecoration(
