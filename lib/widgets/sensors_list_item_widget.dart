@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_smarthome/models/bloc/sensors/sensors_bloc.dart';
 import 'package:flutter_smarthome/models/sensors/hygro_termometer.dart';
 import 'package:flutter_smarthome/repositories/rooms_repository.dart';
 import 'package:flutter_smarthome/screens/sensors/add_edit_sensor_screen.dart';
@@ -119,6 +120,13 @@ class SensorsListItemWidget extends StatelessWidget {
             arguments: {'sensorId': sensor.id},
           ),
           icon: const Icon(Icons.edit),
+          color: Theme.of(context).colorScheme.onPrimary,
+        ),
+        IconButton(
+          onPressed: () {
+            context.read<SensorsBloc>().add(RemoveSensor(sensor));
+          },
+          icon: const Icon(Icons.delete),
           color: Theme.of(context).colorScheme.onPrimary,
         ),
       ],

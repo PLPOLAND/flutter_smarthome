@@ -83,6 +83,34 @@ class SensorsBloc extends Bloc<SensorsEvent, SensorsState> {
         sensors: _sensorsRepository.sensors,
       ));
     });
+    on<UpdateSensor>((event, emit) async {
+      log('Updating sensor');
+      emit(state.copyWith(status: SensorsStatus.updatingSensor));
+      try {
+        await _sensorsRepository.updateSensor(event.sensor);
+      } on Exception catch (e) {
+        log('Error updating sensor: $e');
+        add(ErrorEvent.exception(e));
+      }
+      emit(state.copyWith(
+        status: SensorsStatus.loaded,
+        sensors: _sensorsRepository.sensors,
+      ));
+    });
+    on<RemoveSensor>((event, emit) async {
+      log('Removing sensor');
+      emit(state.copyWith(status: SensorsStatus.removing));
+      try {
+        await _sensorsRepository.removeSensor(event.sensor);
+      } on Exception catch (e) {
+        log('Error removing sensor: $e');
+        add(ErrorEvent.exception(e));
+      }
+      emit(state.copyWith(
+        status: SensorsStatus.loaded,
+        sensors: _sensorsRepository.sensors,
+      ));
+    });
     on<ErrorEvent>((event, emit) async {
       log('Error: ${event.message}');
       var tmpstate = state;

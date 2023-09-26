@@ -242,13 +242,14 @@ class _AddEditSensorScreenState extends State<AddEditSensorScreen> {
           break;
       }
       if (newSensor != null) {
-        await context.read<SensorsRepository>().updateSensor(newSensor);
-        setState(() {
-          showSaveIndicator = false;
-        });
-        if (context.mounted) {
-          Navigator.of(context).pop();
-        }
+        // await context.read<SensorsRepository>().updateSensor(newSensor);
+        // setState(() {
+        //   showSaveIndicator = false;
+        // });
+        // if (context.mounted) {
+        //   Navigator.of(context).pop();
+        // }
+        context.read<SensorsBloc>().add(UpdateSensor(newSensor));
       }
     }
   }
@@ -345,10 +346,12 @@ class _AddEditSensorScreenState extends State<AddEditSensorScreen> {
         child: BlocListener<SensorsBloc, SensorsState>(
           listenWhen: (previous, current) =>
               (previous.status == SensorsStatus.adding ||
-                  previous.status == SensorsStatus.loaded) &&
+                  previous.status == SensorsStatus.loaded ||
+                  previous.status == SensorsStatus.updatingSensor) &&
               (current.status == SensorsStatus.error ||
                   current.status == SensorsStatus.loaded),
           listener: (context, state) {
+            //shows snackbar on error & close screen on success
             if (state.status == SensorsStatus.error) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text(state.errorMsg,
@@ -405,11 +408,6 @@ class _AddEditSensorScreenState extends State<AddEditSensorScreen> {
                               icon: Icon(Sensor.icon(SensorType.thermometer)),
                               // label: const Text('Thermometer'),
                             ),
-                            ButtonSegment<SensorType>(
-                              value: SensorType.hygrometer,
-                              icon: Icon(Sensor.icon(SensorType.hygrometer)),
-                              // label: const Text('Hygrometer'),
-                            )
                           },
                           ButtonSegment<SensorType>(
                             value: SensorType.hygroThermometer,

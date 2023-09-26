@@ -786,9 +786,102 @@ class RESTClient {
       throw Exception('Unknown error, status code: ${e.response?.statusCode}');
     }
   }
-  //TODO add sensor
+
   //TODO delete sensor
+  Future<bool> removeSensor({required int sensorID}) async {
+    if (!isIPSet()) {
+      throw Exception('IP not set');
+    }
+    try {
+      var response = await _dio.post(
+        'http://$_ip:8080/api/removeSensor',
+        data: {
+          'token': _userData?.token,
+          'id': sensorID,
+        },
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
+
+      RestResponse res = RestResponse(
+        statusCode: response.statusCode ?? 0,
+        responseBody: response.data ?? {},
+      );
+
+      log(res.toString());
+
+      if (res.isOk) {
+        return res.body as bool;
+      } else if (res.isApiError) {
+        return false;
+      } else {
+        throw Exception('Unknown error, status code: ${res.statusCode}');
+      }
+    } on DioError catch (e) {
+      log(e.toString());
+      throw Exception('Unknown error, status code: ${e.response?.statusCode}');
+    }
+  }
+
   //TODO update sensor
+  Future<void> updateSensor({
+    required int sensorID,
+    String? name,
+    int? slaveId,
+    int? roomId,
+    int? pin,
+    List<ButtonLocalClickFunction>? localFunctions,
+  }) async {
+    if (!isIPSet()) {
+      throw Exception('IP not set');
+    }
+
+    try {
+      Map<String, Object?> data = {
+        'token': _userData?.token,
+        'id': sensorID,
+      };
+      if (name != null) {
+        data['name'] = name;
+      }
+      if (slaveId != null) {
+        data['slaveId'] = slaveId;
+      }
+      if (roomId != null) {
+        data['room'] = roomId;
+      }
+      if (pin != null) {
+        data['pin'] = pin;
+      }
+      if (localFunctions != null) {
+        data['funkcjeKlikniec'] =
+            jsonEncode(localFunctions.map((e) => e.toJson()).toList());
+      }
+
+      var response = await _dio.post(
+        'http://$_ip:8080/api/updateSensor',
+        data: data,
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
+
+      RestResponse res = RestResponse(
+        statusCode: response.statusCode ?? 0,
+        responseBody: response.data ?? {},
+      );
+
+      log(res.toString());
+
+      if (res.isOk) {
+        return;
+      } else if (res.isApiError) {
+        throw Exception(res.error);
+      } else {
+        throw Exception('Unknown error, status code: ${res.statusCode}');
+      }
+    } on DioError catch (e) {
+      log(e.toString());
+      throw Exception('Unknown error, status code: ${e.response?.statusCode}');
+    }
+  }
 
   Future<void> restartAllSlaves() async {
     if (!isIPSet()) {
