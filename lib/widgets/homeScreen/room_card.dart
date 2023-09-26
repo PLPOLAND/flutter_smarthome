@@ -30,8 +30,12 @@ class RoomCard extends StatelessWidget {
         .where((device) => device.roomId == room.id)
         .toList();
 
-    final bool anyThermometer =
-        sensors.any((sensor) => sensor.type == SensorType.thermometer);
+    final bool anyThermometer = sensors.any((sensor) =>
+        sensor.type == SensorType.thermometer ||
+        sensor.type == SensorType.hygrometer ||
+        sensor.type == SensorType.hygroThermometer ||
+        sensor.type == SensorType.twilight ||
+        sensor.type == SensorType.hygrometer);
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
@@ -61,7 +65,8 @@ class RoomCard extends StatelessWidget {
                     if (anyThermometer) ...{
                       ...sensors.map((e) {
                         if (e.type == SensorType.thermometer ||
-                            e.type == SensorType.hygrometer) {
+                            e.type == SensorType.hygrometer ||
+                            e.type == SensorType.hygroThermometer) {
                           return BlocBuilder<Sensor, SensorCubitState>(
                               builder: (context, state) {
                                 return SensorWidget(

@@ -55,7 +55,7 @@ class Button extends Sensor {
       slaveId: json['slaveAdress'],
       onSlaveId: json['onSlaveID'],
       onSlavePin: json['pin'],
-      name: json['name'],
+      name: json['name'] ?? json['nazwa'],
       localFunctions: json['funkcjeKlikniec']
           .map<ButtonLocalClickFunction>(
               (e) => ButtonLocalClickFunction.fromJson(e))
@@ -78,12 +78,17 @@ class ButtonLocalClickFunction {
     return ButtonLocalClickFunction(
       deviceID: json['device']['id'],
       clicks: json['clicks'],
-      state: json['state'] != null
-          ? DeviceState.values.firstWhere((element) =>
-              element.toString().toLowerCase() ==
-              json['state'].toString().toLowerCase())
-          : null,
+      state:
+          json['state'] != null ? DeviceState.fromString(json['state']) : null,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'device': deviceID,
+      'clicks': clicks,
+      'state': state?.toString(),
+    };
   }
 }
 

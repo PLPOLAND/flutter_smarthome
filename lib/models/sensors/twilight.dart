@@ -62,6 +62,10 @@ class Twilight extends Sensor {
   String valueToString() {
     return (value * 100).toStringAsFixed(0);
   }
+
+  static fromJson(Map<String, dynamic> sensor) {
+    throw UnimplementedError();
+  }
 }
 
 class TwilightCubitState extends SensorCubitState {

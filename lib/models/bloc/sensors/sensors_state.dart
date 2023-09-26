@@ -7,6 +7,9 @@ enum SensorsStatus {
   updating,
   loaded,
   error,
+  adding,
+  removing,
+  updatingSensor,
 }
 
 extension SensorsStatusExtension on SensorsStatus {
@@ -21,17 +24,25 @@ extension SensorsStatusExtension on SensorsStatus {
   bool get isLoaded => this == SensorsStatus.loaded;
 
   bool get isError => this == SensorsStatus.error;
+
+  bool get isAdding => this == SensorsStatus.adding;
+
+  bool get isRemoving => this == SensorsStatus.removing;
+
+  bool get isUpdatingSensor => this == SensorsStatus.updatingSensor;
 }
 
 class SensorsState extends Equatable {
   final SensorsStatus status;
   final List<Sensor> sensors;
   final bool stopUpdating;
+  final String errorMsg;
 
   const SensorsState._({
     this.status = SensorsStatus.initial,
     this.sensors = const [],
     this.stopUpdating = false,
+    this.errorMsg = '',
   });
 
   const SensorsState.initial() : this._();
@@ -58,17 +69,19 @@ class SensorsState extends Equatable {
 
   @override
   String toString() =>
-      'SensorsState { status: $status, devices: $sensors, stopUpdating: $stopUpdating }';
+      'SensorsState { status: $status, sensors: ${sensors.length}, stopUpdating: $stopUpdating, errorMsg: $errorMsg }';
 
   SensorsState copyWith({
     SensorsStatus? status,
     List<Sensor>? sensors,
     bool? stopUpdating,
+    String? errorMsg,
   }) {
     return SensorsState._(
       status: status ?? this.status,
       sensors: sensors ?? this.sensors,
       stopUpdating: stopUpdating ?? this.stopUpdating,
+      errorMsg: errorMsg ?? this.errorMsg,
     );
   }
 }

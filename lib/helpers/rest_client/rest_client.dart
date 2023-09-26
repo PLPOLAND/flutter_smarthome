@@ -3,12 +3,20 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_smarthome/models/auth/user_data.dart';
+import 'package:flutter_smarthome/models/sensors/hygro_termometer.dart';
+import 'package:flutter_smarthome/models/sensors/hygrometer.dart';
+import 'package:flutter_smarthome/models/sensors/motion.dart';
+import 'package:flutter_smarthome/models/sensors/thermometer.dart';
+import 'package:flutter_smarthome/models/sensors/twilight.dart';
+import 'package:flutter_smarthome/screens/sensors_screen.dart';
 import '../../models/devices/blind.dart';
 import '../../models/devices/device.dart';
 import '../../models/devices/fan.dart';
 import '../../models/devices/light.dart';
 import '../../models/devices/outlet.dart';
 import '../../models/room.dart';
+import '../../models/sensors/button.dart';
+import '../../models/sensors/sensor.dart';
 import 'rest_response.dart';
 
 class RESTClient {
@@ -100,13 +108,13 @@ class RESTClient {
             // receiveTimeout: Duration(milliseconds: 100),
           ));
       if (response.statusCode == 200) {
-        log(response.data);
+        // log(response.data);
         if (response.data == 'hello') {
           return true;
         }
       }
     } on Exception catch (_) {
-      log('Error $ip');
+      // log('Error $ip');
       return false;
     }
     return false;
@@ -132,7 +140,7 @@ class RESTClient {
       statusCode: response.statusCode ?? 0,
       responseBody: response.data,
     );
-    log(res.toString());
+    // log(res.toString());
     if (res.isOk) {
       return res.body!['token'];
     } else if (res.isApiError) {
@@ -158,7 +166,7 @@ class RESTClient {
       statusCode: response.statusCode ?? 0,
       responseBody: response.data,
     );
-    log(res.toString());
+    // log(res.toString());
     if (res.isOk) {
       return UserData.fromJson(jsonDecode(res.body!));
     } else if (res.isApiError) {
@@ -180,7 +188,7 @@ class RESTClient {
       statusCode: response.statusCode ?? 0,
       responseBody: response.data ?? {},
     );
-    log(res.toString());
+    // log(res.toString());
     if (res.isOk) {
       List<Device> devices = [];
       for (var device in res.body) {
@@ -191,10 +199,10 @@ class RESTClient {
           case 'BLIND':
             devices.add(Blind.fromJson(device));
             break;
-          case 'FAN':
+          case 'WENTYLATOR':
             devices.add(Fan.fromJson(device));
             break;
-          case 'OUTLET':
+          case 'GNIAZDKO':
             devices.add(Outlet.fromJson(device));
             break;
           default:
@@ -202,6 +210,51 @@ class RESTClient {
         }
       }
       return devices;
+    } else if (res.isApiError) {
+      throw Exception(res.error);
+    } else {
+      throw Exception('Unknown error, status code: ${res.statusCode}');
+    }
+  }
+
+  Future<List<Sensor>> getSensors() async {
+    if (!isIPSet()) {
+      throw Exception('IP not set');
+    }
+    var response = await _dio.get(
+      'http://$_ip:8080/api/getSensors',
+      queryParameters: {
+        'token': _userData?.token,
+      },
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
+    RestResponse res = RestResponse(
+      statusCode: response.statusCode ?? 0,
+      responseBody: response.data ?? {},
+    );
+    // log(res.toString());
+    if (res.isOk) {
+      List<Sensor> sensors = [];
+      for (var sensor in res.body) {
+        switch (sensor['typ']) {
+          case 'THERMOMETR':
+            sensors.add(Thermometer.fromJson(sensor));
+            break;
+          case 'THERMOMETR_HYGROMETR':
+            sensors.add(HygroThermometer.fromJson(sensor));
+            break;
+          case 'TWILIGHT':
+            break;
+          case 'MOTION':
+            break;
+          case 'BUTTON':
+            sensors.add(Button.fromJson(sensor));
+            break;
+          default:
+            log("Error: Unknown device type");
+        }
+      }
+      return sensors;
     } else if (res.isApiError) {
       throw Exception(res.error);
     } else {
@@ -224,13 +277,13 @@ class RESTClient {
       statusCode: response.statusCode ?? 0,
       responseBody: response.data ?? {},
     );
-    log(res.toString());
+    // log(res.toString());
     if (res.isOk) {
       List<Room> rooms = [];
       for (var room in res.body) {
         rooms.add(Room.fromJson(room));
       }
-      log(rooms.toString());
+      // log(rooms.toString());
       return rooms;
     } else if (res.isApiError) {
       throw Exception(res.error);
@@ -254,7 +307,7 @@ class RESTClient {
       statusCode: response.statusCode ?? 0,
       responseBody: response.data ?? {},
     );
-    log(res.toString());
+    // log(res.toString());
     if (res.isOk) {
       return res.body;
     } else if (res.isApiError) {
@@ -280,7 +333,7 @@ class RESTClient {
       statusCode: response.statusCode ?? 0,
       responseBody: response.data ?? {},
     );
-    log(res.toString());
+    // log(res.toString());
     if (res.isOk) {
       return res.body;
     } else if (res.isApiError) {
@@ -306,7 +359,7 @@ class RESTClient {
       statusCode: response.statusCode ?? 0,
       responseBody: response.data ?? {},
     );
-    log(res.toString());
+    // log(res.toString());
     if (res.isOk) {
       return res.body;
     } else if (res.isApiError) {
@@ -338,7 +391,7 @@ class RESTClient {
         statusCode: response.statusCode ?? 0,
         responseBody: response.data ?? {},
       );
-      log(res.toString());
+      // log(res.toString());
       if (res.isOk) {
         return;
       } else if (res.isApiError) {
@@ -373,12 +426,452 @@ class RESTClient {
         statusCode: response.statusCode ?? 0,
         responseBody: response.data ?? {},
       );
-      log(res.toString());
+      // log(res.toString());
       if (res.isOk) {
         List<dynamic> resp = res.body;
         List<Map<String, dynamic>> devicesStates =
             resp.map((e) => e as Map<String, dynamic>).toList();
         return devicesStates;
+      } else if (res.isApiError) {
+        throw Exception(res.error);
+      } else {
+        throw Exception('Unknown error, status code: ${res.statusCode}');
+      }
+    } on DioError catch (e) {
+      log(e.toString());
+      throw Exception('Unknown error, status code: ${e.response?.statusCode}');
+    }
+  }
+
+  /// The function adds a new device to the database. It sends a request to the server.
+  Future<Device> addDevice(
+      {required int roomID,
+      required DeviceType deviceType,
+      required int slaveID,
+      required String name,
+      required int pin,
+      int? pinDown}) async {
+    if (!isIPSet()) {
+      throw Exception('IP not set');
+    }
+    try {
+      var response = await _dio.post(
+        'http://$_ip:8080/api/addDevice',
+        data: deviceType != DeviceType.blind
+            ? {
+                'token': _userData?.token,
+                'roomID': roomID,
+                'type': deviceType.toString(),
+                'slaveID': slaveID,
+                'name': name,
+                'pin': pin,
+              }
+            : {
+                'token': _userData?.token,
+                'roomID': roomID,
+                'type': deviceType.toString(),
+                'slaveID': slaveID,
+                'name': name,
+                'pin': pin,
+                'pin2': pinDown,
+              },
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
+
+      RestResponse res = RestResponse(
+        statusCode: response.statusCode ?? 0,
+        responseBody: response.data ?? {},
+      );
+
+      log(res.toString());
+
+      if (res.isOk) {
+        switch (deviceType) {
+          case DeviceType.light:
+            return Light.fromJson(res.body);
+          case DeviceType.blind:
+            return Blind.fromJson(res.body);
+          case DeviceType.fan:
+            return Fan.fromJson(res.body);
+          case DeviceType.outlet:
+            return Outlet.fromJson(res.body);
+          default:
+            throw Exception('Unknown device type');
+        }
+      } else if (res.isApiError) {
+        throw Exception(res.error);
+      } else {
+        throw Exception('Unknown error, status code: ${res.statusCode}');
+      }
+    } on DioError catch (e) {
+      log(e.toString());
+      throw Exception('Unknown error, status code: ${e.response?.statusCode}');
+    }
+  }
+
+  /// The function deletes a device from the database. It sends a request to the server.
+  /// Returns [true] if device was deleted
+  /// Returns [false] if device was not deleted
+  /// Throws [Exception] if error occured
+
+  Future<bool> deleteDevice({required int deviceID}) async {
+    if (!isIPSet()) {
+      throw Exception('IP not set');
+    }
+    try {
+      var response = await _dio.post(
+        'http://$_ip:8080/api/removeDevice',
+        data: {
+          'token': _userData?.token,
+          'deviceId': deviceID,
+        },
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
+
+      RestResponse res = RestResponse(
+        statusCode: response.statusCode ?? 0,
+        responseBody: response.data ?? {},
+      );
+
+      log(res.toString());
+
+      if (res.isOk) {
+        return res.body as String == 'OK';
+      } else if (res.isApiError) {
+        return false;
+      } else {
+        throw Exception('Unknown error, status code: ${res.statusCode}');
+      }
+    } on DioError catch (e) {
+      log(e.toString());
+      throw Exception('Unknown error, status code: ${e.response?.statusCode}');
+    }
+  }
+
+  Future<void> updateDevice(
+      {required int deviceID,
+      String? name,
+      int? slaveId,
+      int? room,
+      int? pin,
+      int? pinDown}) async {
+    if (!isIPSet()) {
+      throw Exception('IP not set');
+    }
+    try {
+      Map<String, Object?> data = {
+        'token': _userData?.token,
+        'deviceId': deviceID,
+      };
+      if (name != null) {
+        data['name'] = name;
+      }
+      if (slaveId != null) {
+        data['slaveId'] = slaveId;
+      }
+      if (room != null) {
+        data['room'] = room;
+      }
+      if (pin != null) {
+        data['pin'] = pin;
+      }
+      if (pinDown != null) {
+        data['pin2'] = pinDown;
+      }
+
+      var response = await _dio.post(
+        'http://$_ip:8080/api/updateDevice',
+        data: data,
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
+
+      RestResponse res = RestResponse(
+        statusCode: response.statusCode ?? 0,
+        responseBody: response.data ?? {},
+      );
+
+      log(res.toString());
+
+      if (res.isOk) {
+        return;
+      } else if (res.isApiError) {
+        throw Exception(res.error);
+      } else {
+        throw Exception('Unknown error, status code: ${res.statusCode}');
+      }
+    } on DioError catch (e) {
+      log(e.toString());
+      throw Exception('Unknown error, status code: ${e.response?.statusCode}');
+    }
+  }
+
+  Future<Device> getDevice(int deviceID) async {
+    if (!isIPSet()) {
+      throw Exception('IP not set');
+    }
+    try {
+      var response = await _dio.get(
+        'http://$_ip:8080/api/getDevice',
+        queryParameters: {
+          'token': _userData?.token,
+          'deviceId': deviceID,
+        },
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
+
+      RestResponse res = RestResponse(
+        statusCode: response.statusCode ?? 0,
+        responseBody: response.data ?? {},
+      );
+
+      log(res.toString());
+
+      if (res.isOk) {
+        switch (res.body['typ']) {
+          case 'LIGHT':
+            return Light.fromJson(res.body);
+          case 'BLIND':
+            return Blind.fromJson(res.body);
+          case 'WENTYLATOR':
+            return Fan.fromJson(res.body);
+          case 'GNIAZDKO':
+            return Outlet.fromJson(res.body);
+          default:
+            throw Exception('Unknown device type');
+        }
+      } else if (res.isApiError) {
+        throw Exception(res.error);
+      } else {
+        throw Exception('Unknown error, status code: ${res.statusCode}');
+      }
+    } on DioError catch (e) {
+      log(e.toString());
+      throw Exception('Unknown error, status code: ${e.response?.statusCode}');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getSensorsState() async {
+    if (!isIPSet()) {
+      throw Exception('IP not set');
+    }
+    try {
+      var response = await _dio.get(
+        'http://$_ip:8080/api/getSensorsState',
+        queryParameters: {
+          'token': _userData?.token,
+        },
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
+      RestResponse<dynamic> res = RestResponse(
+        statusCode: response.statusCode ?? 0,
+        responseBody: response.data ?? {},
+      );
+      // log(res.toString());
+      if (res.isOk) {
+        List<dynamic> resp = res.body;
+        List<Map<String, dynamic>> sensorsStates =
+            resp.map((e) => e as Map<String, dynamic>).toList();
+        return sensorsStates;
+      } else if (res.isApiError) {
+        throw Exception(res.error);
+      } else {
+        throw Exception('Unknown error, status code: ${res.statusCode}');
+      }
+    } on DioError catch (e) {
+      log(e.toString());
+      throw Exception('Unknown error, status code: ${e.response?.statusCode}');
+    }
+  }
+
+  Future<Sensor> addSensor({required Sensor sensor}) async {
+    if (!isIPSet()) {
+      throw Exception('IP not set');
+    }
+    Map<String, Object?> dataToSend;
+    switch (sensor.type) {
+      case SensorType.button:
+        dataToSend = {
+          'token': _userData?.token,
+          'roomID': sensor.roomId,
+          'type': sensor.type,
+          'slaveID': sensor.slaveID,
+          'onSlaveID': (sensor as Button).onSlaveID,
+          'name': sensor.name,
+          'pin': sensor.onSlavePin,
+          'funkcjeKlikniec':
+              jsonEncode(sensor.localFunctions.map((e) => e.toJson()).toList()),
+        };
+        break;
+      case SensorType.thermometer:
+      case SensorType.hygrometer:
+        dataToSend = {
+          'token': _userData?.token,
+          'roomID': sensor.roomId,
+          'slaveID': sensor.slaveID,
+          'name': sensor.name,
+          'type': sensor.type.toString(),
+          'adress': sensor.adress,
+        };
+        break;
+      case SensorType.hygroThermometer:
+        dataToSend = {
+          'token': _userData?.token,
+          'roomID': sensor.roomId,
+          'slaveID': sensor.slaveID,
+          'name': sensor.name,
+          'type': sensor.type.toString(),
+        };
+        break;
+      case SensorType.motion:
+        dataToSend = {
+          'token': _userData?.token,
+          'roomID': sensor.roomId,
+          'slaveID': sensor.slaveID,
+          'name': sensor.name,
+          'type': sensor.type.toString(),
+          'pin': (sensor as Motion).onSlavePin,
+        };
+        break;
+      case SensorType.twilight:
+        dataToSend = {
+          'token': _userData?.token,
+          'roomID': sensor.roomId,
+          'slaveID': sensor.slaveID,
+          'name': sensor.name,
+          'type': sensor.type.toString(),
+          'pin': (sensor as Twilight).onSlavePin,
+        };
+        break;
+      default:
+        throw Exception('Unknown sensor type');
+    }
+    try {
+      var response = await _dio.post(
+        'http://$_ip:8080/api/addSensor',
+        data: dataToSend,
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
+
+      RestResponse res = RestResponse(
+        statusCode: response.statusCode ?? 0,
+        responseBody: response.data ?? {},
+      );
+
+      log(res.toString());
+
+      if (res.isOk) {
+        switch (sensor.type) {
+          case SensorType.button:
+            return Button.fromJson(res.body);
+          case SensorType.thermometer:
+            return Thermometer.fromJson(res.body);
+          case SensorType.hygrometer:
+            return Hygrometer.fromJson(res.body);
+          case SensorType.hygroThermometer:
+            return HygroThermometer.fromJson(res.body);
+          case SensorType.motion:
+            return Motion.fromJson(res.body);
+          case SensorType.twilight:
+            return Twilight.fromJson(res.body);
+          default:
+            throw Exception('Unknown device type');
+        }
+      } else if (res.isApiError) {
+        throw Exception(res.error);
+      } else {
+        throw Exception('Unknown error, status code: ${res.statusCode}');
+      }
+    } on DioError catch (e) {
+      log(e.toString());
+      throw Exception('Unknown error, status code: ${e.response?.statusCode}');
+    }
+  }
+
+  //TODO delete sensor
+  Future<bool> removeSensor({required int sensorID}) async {
+    if (!isIPSet()) {
+      throw Exception('IP not set');
+    }
+    try {
+      var response = await _dio.post(
+        'http://$_ip:8080/api/removeSensor',
+        data: {
+          'token': _userData?.token,
+          'id': sensorID,
+        },
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
+
+      RestResponse res = RestResponse(
+        statusCode: response.statusCode ?? 0,
+        responseBody: response.data ?? {},
+      );
+
+      log(res.toString());
+
+      if (res.isOk) {
+        return res.body as bool;
+      } else if (res.isApiError) {
+        return false;
+      } else {
+        throw Exception('Unknown error, status code: ${res.statusCode}');
+      }
+    } on DioError catch (e) {
+      log(e.toString());
+      throw Exception('Unknown error, status code: ${e.response?.statusCode}');
+    }
+  }
+
+  //TODO update sensor
+  Future<void> updateSensor({
+    required int sensorID,
+    String? name,
+    int? slaveId,
+    int? roomId,
+    int? pin,
+    List<ButtonLocalClickFunction>? localFunctions,
+  }) async {
+    if (!isIPSet()) {
+      throw Exception('IP not set');
+    }
+
+    try {
+      Map<String, Object?> data = {
+        'token': _userData?.token,
+        'id': sensorID,
+      };
+      if (name != null) {
+        data['name'] = name;
+      }
+      if (slaveId != null) {
+        data['slaveId'] = slaveId;
+      }
+      if (roomId != null) {
+        data['room'] = roomId;
+      }
+      if (pin != null) {
+        data['pin'] = pin;
+      }
+      if (localFunctions != null) {
+        data['funkcjeKlikniec'] =
+            jsonEncode(localFunctions.map((e) => e.toJson()).toList());
+      }
+
+      var response = await _dio.post(
+        'http://$_ip:8080/api/updateSensor',
+        data: data,
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
+
+      RestResponse res = RestResponse(
+        statusCode: response.statusCode ?? 0,
+        responseBody: response.data ?? {},
+      );
+
+      log(res.toString());
+
+      if (res.isOk) {
+        return;
       } else if (res.isApiError) {
         throw Exception(res.error);
       } else {

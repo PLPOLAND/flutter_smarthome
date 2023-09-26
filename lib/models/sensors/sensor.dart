@@ -52,6 +52,8 @@ abstract class Sensor extends Cubit<SensorCubitState> {
         return Icons.thermostat;
       case SensorType.hygrometer:
         return Icons.water_drop;
+      case SensorType.hygroThermometer:
+        return Icons.dew_point;
       case SensorType.twilight:
         return Icons.brightness_4;
       case SensorType.motion:
@@ -132,7 +134,30 @@ enum SensorType {
   none,
   thermometer,
   hygrometer,
+  hygroThermometer,
   twilight,
   motion,
-  button,
+  button;
+
+  @override
+  String toString() {
+    switch (this) {
+      case SensorType.none:
+        return "none";
+      case SensorType.thermometer:
+        return "thermometer";
+      case SensorType.hygrometer:
+        return "hygrometer";
+      case SensorType.hygroThermometer:
+        return "hygroThermometer";
+      case SensorType.twilight:
+        return "twilight";
+      case SensorType.motion:
+        return "motion";
+      case SensorType.button:
+        return "button";
+      default:
+        return "none";
+    }
+  }
 }

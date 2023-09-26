@@ -13,11 +13,13 @@ class Room extends Cubit<RoomCubitState> {
   int get id => state._id;
   bool get isFavorite => state._isFavorite;
 
-  void setFavorite(bool isFavorite) async {
-    if (isFavorite) {
-      RESTClient().addFavoriteRoom(id);
-    } else {
-      RESTClient().removeFavoriteRoom(id);
+  void setFavorite(bool isFavorite, {bool setOnlyLocal = false}) async {
+    if (!setOnlyLocal) {
+      if (isFavorite) {
+        RESTClient().addFavoriteRoom(id);
+      } else {
+        RESTClient().removeFavoriteRoom(id);
+      }
     }
     //TODO exception handling
     emit(state.copyWith(isFavorite: isFavorite));

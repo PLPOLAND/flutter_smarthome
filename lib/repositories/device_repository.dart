@@ -32,10 +32,10 @@ class DevicesRepository {
         case 'BLIND':
           _devices.add(Blind.fromJson(device));
           break;
-        case 'FAN':
+        case 'WENTYLATOR':
           _devices.add(Fan.fromJson(device));
           break;
-        case 'OUTLET':
+        case 'GNIAZDKO':
           _devices.add(Outlet.fromJson(device));
           break;
         default:
@@ -49,47 +49,95 @@ class DevicesRepository {
     _devices.addAll(await client.getDevices());
   }
 
-  Future<void> addDevice(Device device) async {
-    _devices.add(device);
-    return Future.delayed(const Duration(
-        seconds:
-            1)); // TODO change this line after implementing the http request
+  Future<Device> addDevice(Device device) async {
+    Device newdev = await client.addDevice(
+      roomID: device.roomId,
+      deviceType: device.type,
+      slaveID: device.slaveID,
+      name: device.name,
+      pin: device.onSlavePin,
+      pinDown: device.type == DeviceType.blind
+          ? (device as Blind).onSlavePinDown
+          : null,
+    );
+    _devices.add(newdev);
+    return newdev;
   }
 
   Future<void> removeDevice(Device device) async {
+    await client.deleteDevice(deviceID: device.id);
     _devices.remove(device);
-    return Future.delayed(const Duration(
-        seconds:
-            1)); // TODO change this line after implementing the http request
+  }
+
+  Future<void> removeDeviceById(int deviceId) async {
+    var dev = getDeviceById(deviceId);
+    await removeDevice(dev);
   }
 
   Device getDeviceById(int deviceId) {
     return _devices.firstWhere((element) => element.id == deviceId);
   }
 
-  Future<void> updateDevice(Device newDevice) async {
-    final index = _devices.indexWhere((element) => element.id == newDevice.id);
-    if (index >= 0) {
-      _devices[index] = newDevice;
+  Future<Device> updateDevice(Device newDevice) async {
+    int index = _devices.indexWhere((element) => element.id == newDevice.id);
+    if (index == -1) {
+      return addDevice(newDevice);
     }
-    return Future.delayed(const Duration(
-        seconds:
-            1)); //TODO change this line after implementing the http request
+    if (_devices[index].type != newDevice.type) {
+      //if type changed, remove old device and add new one
+      await removeDevice(_devices[index]);
+      Device dev = await addDevice(newDevice);
+      return dev;
+    }
+    if (_devices[index].name != newDevice.name) {
+      await client.updateDevice(deviceID: newDevice.id, name: newDevice.name);
+    }
+    if (_devices[index].slaveID != newDevice.slaveID) {
+      await client.updateDevice(
+          deviceID: newDevice.id, slaveId: newDevice.slaveID);
+    }
+    if (_devices[index].onSlavePin != newDevice.onSlavePin) {
+      await client.updateDevice(
+          deviceID: newDevice.id, pin: newDevice.onSlavePin);
+    }
+    if (_devices[index].type == DeviceType.blind) {
+      if ((_devices[index] as Blind).onSlavePinDown !=
+          (newDevice as Blind).onSlavePinDown) {
+        await client.updateDevice(
+            deviceID: newDevice.id, pinDown: newDevice.onSlavePinDown);
+      }
+    }
+    if (_devices[index].roomId != newDevice.roomId) {
+      await client.updateDevice(deviceID: newDevice.id, room: newDevice.roomId);
+    }
+    var updatedDevice = await client.getDevice(_devices[index].id);
+    if (updatedDevice != newDevice) {
+      throw Exception("Error: Device not updated");
+    } else {
+      _devices[index] = updatedDevice;
+      log("Device updated");
+    }
+    return updatedDevice;
   }
 
   Future<void> updateStateOfDevices() async {
     var newStates = await client.getDevicesState();
     for (var device in _devices) {
       var newStateMap =
-          newStates.where((element) => element['id'] == device.id).first;
-      device.updateState(DeviceState.fromString(newStateMap['state']));
+          newStates.where((element) => element['id'] == device.id);
+      if (newStateMap.isNotEmpty) {
+        var element = newStateMap.first;
+        device.updateState(DeviceState.fromString(element['state']));
+      }
     }
   }
 
-  Future<void> updateListOfDevices() {
-    //TODO download list of devices from server and compare with local list
-    return Future.delayed(const Duration(
-        seconds:
-            1)); //TODO change this line after implementing the http request
+  Future<void> updateListOfDevices() async {
+    var newDevices = await client.getDevices();
+    for (var device in newDevices) {
+      if (!_devices.contains(device)) {
+        _devices.add(device);
+      }
+    }
   }
 }

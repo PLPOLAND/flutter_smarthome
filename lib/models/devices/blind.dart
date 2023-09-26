@@ -23,12 +23,17 @@ class Blind extends Device {
           onSlavePin: onSlavePinUp,
           onSlavePinDown: onSlavePinDown,
         ));
+
+  int get onSlavePinUp => (state as BlindCubitState).onSlavePin;
+  int get onSlavePinDown => (state as BlindCubitState).onSlavePinDown;
+
   @override
   Future<void> changeState() async {
     log("Blind: $name, state: $state");
     if (state.deviceState == DeviceState.up) {
       super.setState(DeviceState.down);
-    } else if (state.deviceState == DeviceState.down) {
+    } else if (state.deviceState == DeviceState.down ||
+        state.deviceState == DeviceState.middle) {
       super.setState(DeviceState.up);
     } else if (state.deviceState == DeviceState.run) {
       super.setState(DeviceState.middle);

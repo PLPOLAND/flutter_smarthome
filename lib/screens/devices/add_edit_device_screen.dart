@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_smarthome/helpers/rest_client/rest_client.dart';
+import 'package:flutter_smarthome/models/bloc/devices/devices_bloc.dart';
 import 'package:flutter_smarthome/models/devices/device.dart';
 import 'package:flutter_smarthome/models/devices/light.dart';
+import 'package:flutter_smarthome/models/devices/outlet.dart';
 import 'package:flutter_smarthome/repositories/device_repository.dart';
 import 'package:flutter_smarthome/repositories/rooms_repository.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +30,7 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController slaveAddressController = TextEditingController();
   TextEditingController slavePinController = TextEditingController();
+  TextEditingController slavePinDownController = TextEditingController();
 
   bool showSaveIndicator = false;
 
@@ -85,6 +89,7 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
             roomId: selectedRoomId,
             slaveId: int.parse(slaveAddressController.text),
             onSlavePinUp: int.parse(slavePinController.text),
+            onSlavePinDown: int.parse(slavePinDownController.text),
           );
           break;
         case DeviceType.outlet:
@@ -107,12 +112,16 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
           break;
       }
       if (device != null) {
-        await context.read<DevicesRepository>().addDevice(device);
-        setState(() {
-          showSaveIndicator = false;
-        });
-        if (context.mounted) {
-          Navigator.of(context).pop();
+        try {
+          context.read<DevicesBloc>().add(AddDevice(device));
+          setState(() {
+            showSaveIndicator = false;
+          });
+          if (context.mounted) {
+            Navigator.of(context).pop();
+          }
+        } catch (e) {
+          context.read<DevicesBloc>().add(Error(e.toString()));
         }
       }
     } else {
@@ -143,7 +152,7 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
           );
           break;
         case DeviceType.outlet:
-          newDevice = Fan(
+          newDevice = Outlet(
             id: oldDevice.id,
             onSlaveId: oldDevice.onSlaveID,
             name: nameController.text,
@@ -166,7 +175,7 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
           break;
       }
       if (newDevice != null) {
-        await context.read<DevicesRepository>().updateDevice(newDevice);
+        context.read<DevicesBloc>().add(UpdateDevice(newDevice));
         setState(() {
           showSaveIndicator = false;
         });
@@ -314,10 +323,7 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
                     },
                     value: selectedRoomId,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Text('Slave adress', style: _textStyle),
-                  ),
+                  const SizedBox(height: 10),
                   TextFormField(
                     controller: slaveAddressController,
                     decoration:
@@ -338,14 +344,13 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
                       return null;
                     },
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Text('Slave adress', style: _textStyle),
-                  ),
+                  const SizedBox(height: 10),
                   TextFormField(
                     controller: slavePinController,
-                    decoration:
-                        const InputDecoration(labelText: 'Slave Pin Number'),
+                    decoration: InputDecoration(
+                        labelText: selectedDeviceType != DeviceType.blind
+                            ? 'Slave Pin Number'
+                            : 'Slave Pin Up Number'),
                     textInputAction: TextInputAction.done,
                     maxLines: 1,
                     keyboardType: TextInputType.number,
@@ -362,6 +367,29 @@ class _AddEditDeviceScreenState extends State<AddEditDeviceScreen> {
                       return null;
                     },
                   ),
+                  if (selectedDeviceType == DeviceType.blind)
+                    const SizedBox(height: 10),
+                  if (selectedDeviceType == DeviceType.blind)
+                    TextFormField(
+                      controller: slavePinDownController,
+                      decoration: const InputDecoration(
+                          labelText: 'Slave Pin Down Number'),
+                      textInputAction: TextInputAction.done,
+                      maxLines: 1,
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please enter a number';
+                        }
+                        if (int.parse(value) > 255) {
+                          return 'Please enter a smaller number';
+                        }
+                        if (int.parse(value) < 0) {
+                          return 'Please enter a number bigger than 0';
+                        }
+                        return null;
+                      },
+                    ),
                   const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,

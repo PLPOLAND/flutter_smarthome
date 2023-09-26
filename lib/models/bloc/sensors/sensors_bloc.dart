@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_smarthome/models/sensors/sensor.dart';
 
 import '../../../repositories/sensors_repository.dart';
@@ -67,10 +68,61 @@ class SensorsBloc extends Bloc<SensorsEvent, SensorsState> {
       log('Stop updating sensors');
       emit(state.copyWith(stopUpdating: true));
     });
+    on<AddSensor>((event, emit) async {
+      log('Adding sensor');
+      emit(state.copyWith(status: SensorsStatus.adding));
+      try {
+        await _sensorsRepository.addSensor(event.sensor);
+      } on Exception catch (e) {
+        log('Error adding sensor: $e');
+        add(ErrorEvent.exception(e));
+        return;
+      }
+      emit(state.copyWith(
+        status: SensorsStatus.loaded,
+        sensors: _sensorsRepository.sensors,
+      ));
+    });
+    on<UpdateSensor>((event, emit) async {
+      log('Updating sensor');
+      emit(state.copyWith(status: SensorsStatus.updatingSensor));
+      try {
+        await _sensorsRepository.updateSensor(event.sensor);
+      } on Exception catch (e) {
+        log('Error updating sensor: $e');
+        add(ErrorEvent.exception(e));
+      }
+      emit(state.copyWith(
+        status: SensorsStatus.loaded,
+        sensors: _sensorsRepository.sensors,
+      ));
+    });
+    on<RemoveSensor>((event, emit) async {
+      log('Removing sensor');
+      emit(state.copyWith(status: SensorsStatus.removing));
+      try {
+        await _sensorsRepository.removeSensor(event.sensor);
+      } on Exception catch (e) {
+        log('Error removing sensor: $e');
+        add(ErrorEvent.exception(e));
+      }
+      emit(state.copyWith(
+        status: SensorsStatus.loaded,
+        sensors: _sensorsRepository.sensors,
+      ));
+    });
+    on<ErrorEvent>((event, emit) async {
+      log('Error: ${event.message}');
+      var tmpstate = state;
+      emit(
+          state.copyWith(status: SensorsStatus.error, errorMsg: event.message));
+      emit(tmpstate);
+    });
   }
 
   @override
   void onChange(Change<SensorsState> change) {
+    log('-----------------SENSORS------State----Changed----------------------------');
     log(change.toString());
     super.onChange(change);
   }

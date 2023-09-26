@@ -7,6 +7,9 @@ enum DevicesStatus {
   updating,
   loaded,
   error,
+  adding,
+  removing,
+  updatingDevice,
 }
 
 extension DevicesStatusExtension on DevicesStatus {
@@ -21,6 +24,12 @@ extension DevicesStatusExtension on DevicesStatus {
   bool get isLoaded => this == DevicesStatus.loaded;
 
   bool get isError => this == DevicesStatus.error;
+
+  bool get isAdding => this == DevicesStatus.adding;
+
+  bool get isRemoving => this == DevicesStatus.removing;
+
+  bool get isUpdatingDevice => this == DevicesStatus.updatingDevice;
 }
 
 class DevicesState extends Equatable {
@@ -35,23 +44,6 @@ class DevicesState extends Equatable {
   });
 
   const DevicesState.initial() : this._();
-
-  const DevicesState.demo({
-    required List<Device> devices,
-  }) : this._(devices: devices, status: DevicesStatus.demo);
-
-  const DevicesState.loading() : this._(status: DevicesStatus.loading);
-
-  const DevicesState.loaded({
-    required List<Device> devices,
-  }) : this._(
-          status: DevicesStatus.loaded,
-          devices: devices,
-        );
-
-  const DevicesState.error() : this._(status: DevicesStatus.error);
-
-  const DevicesState.updating() : this._(status: DevicesStatus.updating);
 
   @override
   List<Object> get props => [status, devices, stopUpdating];

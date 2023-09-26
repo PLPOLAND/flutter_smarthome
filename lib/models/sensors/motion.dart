@@ -45,6 +45,10 @@ class Motion extends Sensor {
   String toString() {
     return "Motion: ${super.toString()}, isMotionDetected: $isMotionDetected, onSlavePin: $onSlavePin";
   }
+
+  static Motion fromJson(Map<String, dynamic> json) {
+    throw UnimplementedError();
+  }
 }
 
 class MotionCubitState extends SensorCubitState {
