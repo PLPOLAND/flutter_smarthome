@@ -96,7 +96,7 @@ class SensorsListItemWidget extends StatelessWidget {
         sensorIcon = Icon(Icons.touch_app,
             color: Theme.of(context).colorScheme.onPrimary);
         sensorTrailing = Text(
-          "Local functions: ${(sensor as Button).localFunctions.length}",
+          "Functions: ${(sensor as Button).localFunctions.length}",
           style: TextStyle(
             color: Theme.of(context).colorScheme.onPrimary,
             fontSize: Theme.of(context).textTheme.titleMedium?.fontSize,
