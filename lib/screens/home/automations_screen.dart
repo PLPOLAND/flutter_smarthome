@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_smarthome/widgets/homeScreen/autmations/user_automation.dart';
 
 class AutomationsScreen extends StatelessWidget {
   static const routeName = '/automations';
@@ -8,7 +9,11 @@ class AutomationsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: const Text("Automations"),
-    );
+        child: SingleChildScrollView(
+            child: Column(
+      children: [
+        UserAutomation(),
+      ],
+    )));
   }
 }
