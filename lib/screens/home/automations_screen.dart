@@ -10,21 +10,36 @@ class AutomationsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         child: SingleChildScrollView(
-            child: Column(
-      children: [
-        UserAutomation(
-          name: "testowy",
-          description: "testowy opis",
-          icon: Icons.ac_unit,
-          onClick: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text("Funkcja Testowa"),
-              ),
-            );
-          },
-        ),
-      ],
+            child: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          UserAutomation(
+            name: "testowy",
+            description: "testowy opis",
+            icon: Icons.ac_unit,
+            onClick: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Funkcja Testowa"),
+                ),
+              );
+            },
+          ),
+          UserAutomation(
+            name: "testowy2",
+            description: "testowy opis2",
+            icon: Icons.access_alarm,
+            onClick: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Funkcja Testowa2"),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
     )));
   }
 }
