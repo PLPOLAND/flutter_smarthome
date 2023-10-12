@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_smarthome/widgets/homeScreen/autmations/user_automation.dart';
+import 'package:flutter_smarthome/models/automations/user_automation.dart';
+import 'package:flutter_smarthome/widgets/homeScreen/autmations/stateless_automation.dart';
 
 class AutomationsScreen extends StatelessWidget {
   static const routeName = '/automations';
@@ -8,38 +9,40 @@ class AutomationsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: SingleChildScrollView(
-            child: Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: [
-          UserAutomation(
-            name: "testowy",
-            description: "testowy opis",
-            icon: Icons.ac_unit,
-            onClick: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text("Funkcja Testowa"),
-                ),
-              );
-            },
-          ),
-          UserAutomation(
-            name: "testowy2",
-            description: "testowy opis2",
-            icon: Icons.access_alarm,
-            onClick: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text("Funkcja Testowa2"),
-                ),
-              );
-            },
-          ),
-        ],
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            StatelessAutomationWidget(
+              automation: UserAutomation(
+                id: 0,
+                name: "testowy",
+                description: "testowy opis testowej automatyzacji",
+                onClick: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("test"),
+                      showCloseIcon: true,
+                    ),
+                  );
+                },
+                userNickname: "testowy",
+                icon: Icons.light,
+              ),
+            ),
+            StatelessAutomationWidget(
+              automation: UserAutomation(
+                id: 1,
+                name: "testowy2",
+                onClick: () {},
+                userNickname: "testowy2",
+                icon: Icons.lightbulb,
+              ),
+            ),
+          ],
+        ),
       ),
-    )));
+    );
   }
 }

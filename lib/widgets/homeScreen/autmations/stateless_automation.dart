@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_smarthome/models/automations/automation.dart';
 import 'package:provider/provider.dart';
 
-class UserAutomation extends StatelessWidget {
-  final String name;
-  final String? description;
-  final IconData? icon;
-  final Function() onClick;
-  const UserAutomation({
+class StatelessAutomationWidget extends StatelessWidget {
+  final Automation automation;
+  final double height = 100;
+  final double iconSize = 35;
+  const StatelessAutomationWidget({
     Key? key,
-    required this.name,
-    required this.onClick,
-    this.description,
-    this.icon,
+    required this.automation,
   }) : super(key: key);
 
   @override
@@ -23,16 +20,16 @@ class UserAutomation extends StatelessWidget {
           color: Theme.of(context).colorScheme.primaryContainer,
           borderRadius: BorderRadius.circular(10),
         ),
-        height: 100,
+        height: height,
         width: double.infinity,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
             children: [
-              if (icon != null)
+              if (automation.icon != null)
                 Icon(
-                  icon,
-                  size: 40,
+                  automation.icon,
+                  size: iconSize,
                   color: Theme.of(context).colorScheme.onPrimaryContainer,
                 ),
               Expanded(
@@ -41,22 +38,22 @@ class UserAutomation extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: icon == null
+                    crossAxisAlignment: automation.icon == null
                         ? CrossAxisAlignment.start
                         : CrossAxisAlignment.center,
                     children: [
-                      Text(name,
+                      Text(automation.name,
                           style: Theme.of(context)
                               .textTheme
-                              .headlineMedium!
+                              .headlineSmall!
                               .copyWith(
                                 color: Theme.of(context)
                                     .colorScheme
                                     .onPrimaryContainer,
                               )),
-                      if (description != null)
+                      if (automation.description != null)
                         Text(
-                          description!,
+                          automation.description!,
                           style:
                               Theme.of(context).textTheme.labelMedium!.copyWith(
                                     color: Theme.of(context)
@@ -69,11 +66,11 @@ class UserAutomation extends StatelessWidget {
                 ),
               ),
               IconButton(
-                onPressed: onClick,
+                onPressed: automation.onClick,
                 icon: const Icon(
                     Icons.play_arrow), //TODO: change icon to play_arrow/stop
                 style: ButtonStyle(
-                  iconSize: MaterialStateProperty.all<double>(40),
+                  iconSize: MaterialStateProperty.all<double>(iconSize),
                   alignment: Alignment.center,
                   iconColor: MaterialStateProperty.resolveWith<Color?>(
                     (Set<MaterialState> states) {

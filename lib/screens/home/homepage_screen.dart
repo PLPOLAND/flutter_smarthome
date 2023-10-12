@@ -35,7 +35,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
       ),
       body: pages[currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        items: [
+        items: const [
           BottomNavigationBarItem(
               icon: Icon(Icons.favorite), label: "Ulubione"),
           BottomNavigationBarItem(
@@ -48,6 +48,14 @@ class _HomepageScreenState extends State<HomepageScreen> {
           });
         },
       ),
+      floatingActionButton: currentIndex == 1
+          ? FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed('/automations/addAutomation');
+              },
+              child: const Icon(Icons.add),
+            )
+          : null,
       drawer: const MainDrawer(),
     );
   }
