@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,6 +9,7 @@ import 'package:flutter_smarthome/models/bloc/sensors/sensors_bloc.dart';
 import 'package:flutter_smarthome/repositories/sensors_repository.dart';
 import 'package:flutter_smarthome/screens/test_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:window_size/window_size.dart';
 
 import 'helpers/rest_client/rest_client.dart';
 import 'models/bloc/auth/auth_bloc.dart';
@@ -26,6 +29,12 @@ import 'screens/settings_screen.dart';
 import 'themes/themes.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
+    setWindowMaxSize(const Size(double.infinity, double.infinity));
+    setWindowMinSize(const Size(500, 500));
+    print("platform is desktop");
+  }
   runApp(const MyApp());
 }
 
