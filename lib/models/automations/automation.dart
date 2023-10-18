@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_smarthome/models/automations/function_action.dart';
 
 class Automation {
   final int id;
@@ -6,6 +7,7 @@ class Automation {
   final String? description;
   final IconData? icon;
   final Function() onClick;
+  final List<FunctionAction> actions;
 
   const Automation({
     required this.id,
@@ -13,11 +15,12 @@ class Automation {
     required this.onClick,
     this.description,
     required this.icon,
+    required this.actions,
   });
 
   @override
   String toString() {
-    return 'Automation{name: $name, description: $description, icon: $icon, onClick: $onClick}';
+    return 'Automation{name: $name, description: $description, icon: $icon, onClick: $onClick, actions: $actions}';
   }
 
   Automation copyWith({
@@ -26,6 +29,7 @@ class Automation {
     String? description,
     IconData? icon,
     Function()? onClick,
+    List<FunctionAction>? actions,
   }) {
     return Automation(
       id: id ?? this.id,
@@ -33,6 +37,7 @@ class Automation {
       description: description ?? this.description,
       icon: icon ?? this.icon,
       onClick: onClick ?? this.onClick,
+      actions: actions ?? this.actions,
     );
   }
 }

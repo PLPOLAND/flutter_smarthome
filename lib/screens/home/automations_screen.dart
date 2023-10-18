@@ -18,20 +18,22 @@ class AutomationsScreen extends StatelessWidget {
           children: [
             AutomationGridElement.stateless(
               automation: Automation(
-                  id: 0,
-                  icon: Icons.ac_unit,
-                  name:
-                      "Bardzo długa nazwa testowa bardzo bardzo długa nazwa testowa",
-                  onClick: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content:
-                            Text(MediaQuery.of(context).size.width.toString()),
-                        showCloseIcon: true,
-                        duration: const Duration(milliseconds: 500),
-                      ),
-                    );
-                  }),
+                id: 0,
+                icon: Icons.ac_unit,
+                name:
+                    "Bardzo długa nazwa testowa bardzo bardzo długa nazwa testowa",
+                onClick: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content:
+                          Text(MediaQuery.of(context).size.width.toString()),
+                      showCloseIcon: true,
+                      duration: const Duration(milliseconds: 500),
+                    ),
+                  );
+                },
+                actions: [],
+              ),
             ),
             AutomationGridElement.stateless(
               automation: Automation(
@@ -39,6 +41,7 @@ class AutomationsScreen extends StatelessWidget {
                 icon: Icons.lightbulb,
                 name: "test2",
                 onClick: () {},
+                actions: List.empty(),
               ),
               // iconSize: 30,
             ),
@@ -51,6 +54,7 @@ class AutomationsScreen extends StatelessWidget {
               icon: Icons.ac_unit,
               name: "test3",
               onClick: () {},
+              actions: List.empty(),
             ),
             active: false,
           ),

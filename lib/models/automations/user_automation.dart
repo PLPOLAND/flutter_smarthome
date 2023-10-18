@@ -1,29 +1,32 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_smarthome/models/automations/function_action.dart';
 import 'package:flutter_smarthome/models/room.dart';
 
 import 'automation.dart';
 
 class UserAutomation extends Automation {
-  final String userNickname; //nick użytkownika do którego należy automatyzacja
+  final int userID; //nick użytkownika do którego należy automatyzacja
 
   const UserAutomation({
     required int id,
     required String name,
     required Function() onClick,
-    required this.userNickname,
+    required this.userID,
     String? description,
     IconData? icon,
+    required List<FunctionAction> actions,
   }) : super(
           id: id,
           name: name,
           onClick: onClick,
           description: description,
           icon: icon,
+          actions: actions,
         );
 
   @override
   String toString() {
-    return 'UserAutomation{userName: $userNickname,  super: ${super.toString()}';
+    return 'UserAutomation{userID: $userID,  super: ${super.toString()}';
   }
 
   @override
@@ -33,7 +36,8 @@ class UserAutomation extends Automation {
     String? description,
     IconData? icon,
     Function()? onClick,
-    String? userNickname,
+    int? userID,
+    List<FunctionAction>? actions,
   }) {
     return UserAutomation(
       id: id ?? this.id,
@@ -41,7 +45,8 @@ class UserAutomation extends Automation {
       description: description ?? this.description,
       icon: icon ?? this.icon,
       onClick: onClick ?? this.onClick,
-      userNickname: userNickname ?? this.userNickname,
+      actions: actions ?? this.actions,
+      userID: userID ?? this.userID,
     );
   }
 }
