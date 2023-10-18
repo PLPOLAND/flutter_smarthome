@@ -34,19 +34,24 @@ class _HomepageScreenState extends State<HomepageScreen> {
             Text("Witaj ${context.read<AuthBloc>().state.userData.showName}!"),
       ),
       body: pages[currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.favorite), label: "Ulubione"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.home), label: "Automatyzacje"),
-        ],
-        currentIndex: currentIndex,
-        onTap: (index) {
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: currentIndex,
+        onDestinationSelected: (index) {
           setState(() {
             currentIndex = index;
           });
         },
+        destinations: const [
+          NavigationDestination(
+              icon: Icon(Icons.favorite_border),
+              selectedIcon: Icon(Icons.favorite),
+              label: "Ulubione"),
+          NavigationDestination(
+              icon: Icon(Icons.home_outlined),
+              selectedIcon: Icon(Icons.home),
+              label: "Automatyzacje"),
+        ],
+        labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
       ),
       floatingActionButton: currentIndex == 1
           ? FloatingActionButton(
