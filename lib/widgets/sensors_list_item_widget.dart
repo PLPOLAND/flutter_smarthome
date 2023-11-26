@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_smarthome/models/bloc/sensors/sensors_bloc.dart';
+import 'package:flutter_smarthome/models/sensors/hygro_termometer.dart';
 import 'package:flutter_smarthome/repositories/rooms_repository.dart';
 import 'package:flutter_smarthome/screens/sensors/add_edit_sensor_screen.dart';
 import 'package:provider/provider.dart';
@@ -50,6 +52,17 @@ class SensorsListItemWidget extends StatelessWidget {
               fontSize: Theme.of(context).textTheme.titleMedium?.fontSize,
             ));
         break;
+      case SensorType.hygroThermometer:
+        sensorIcon = Icon(Icons.dew_point,
+            color: Theme.of(context).colorScheme.onPrimary);
+        sensorTrailing = Text(
+            //TODO implement
+            "${(sensor as HygroThermometer).temperatureToString()} °C \t ${(sensor as HygroThermometer).humidity} %",
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onPrimary,
+              fontSize: Theme.of(context).textTheme.titleMedium?.fontSize,
+            ));
+        break;
       case SensorType.motion:
         var motion = sensor as Motion;
         sensorIcon =
@@ -83,7 +96,7 @@ class SensorsListItemWidget extends StatelessWidget {
         sensorIcon = Icon(Icons.touch_app,
             color: Theme.of(context).colorScheme.onPrimary);
         sensorTrailing = Text(
-          "Local functions: ${(sensor as Button).localFunctions.length}",
+          "Functions: ${(sensor as Button).localFunctions.length}",
           style: TextStyle(
             color: Theme.of(context).colorScheme.onPrimary,
             fontSize: Theme.of(context).textTheme.titleMedium?.fontSize,
@@ -107,6 +120,13 @@ class SensorsListItemWidget extends StatelessWidget {
             arguments: {'sensorId': sensor.id},
           ),
           icon: const Icon(Icons.edit),
+          color: Theme.of(context).colorScheme.onPrimary,
+        ),
+        IconButton(
+          onPressed: () {
+            context.read<SensorsBloc>().add(RemoveSensor(sensor));
+          },
+          icon: const Icon(Icons.delete),
           color: Theme.of(context).colorScheme.onPrimary,
         ),
       ],
