@@ -7,6 +7,7 @@ import 'package:flutter_smarthome/models/bloc/devices/devices_bloc.dart';
 import 'package:flutter_smarthome/models/bloc/rooms/rooms_bloc.dart';
 import 'package:flutter_smarthome/models/bloc/sensors/sensors_bloc.dart';
 import 'package:flutter_smarthome/repositories/sensors_repository.dart';
+import 'package:flutter_smarthome/screens/automations/add_edit_automation_screent.dart';
 import 'package:flutter_smarthome/screens/test_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:window_size/window_size.dart';
@@ -117,6 +118,8 @@ class MyApp extends StatelessWidget {
                   AddEditSensorScreen.routeName: (context) =>
                       const AddEditSensorScreen(),
                   TestScreen.routeName: (context) => const TestScreen(),
+                  AddEditAutomationScreen.routeName: (context) =>
+                      const AddEditAutomationScreen(),
                 },
               );
             }));

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_smarthome/models/bloc/auth/auth_bloc.dart';
 import 'package:flutter_smarthome/models/bloc/rooms/rooms_bloc.dart';
 import 'package:flutter_smarthome/models/room.dart';
+import 'package:flutter_smarthome/screens/automations/add_edit_automation_screent.dart';
 import 'package:flutter_smarthome/screens/home/automations_screen.dart';
 import 'package:flutter_smarthome/screens/home/fav_screen.dart';
 import 'package:flutter_smarthome/widgets/homeScreen/room_card.dart';
@@ -56,7 +57,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
       floatingActionButton: currentIndex == 1
           ? FloatingActionButton(
               onPressed: () {
-                Navigator.of(context).pushNamed('/automations/addAutomation');
+                Navigator.of(context)
+                    .pushNamed(AddEditAutomationScreen.routeName);
               },
               child: const Icon(Icons.add),
             )
