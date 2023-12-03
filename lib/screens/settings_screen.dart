@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_smarthome/helpers/rest_client/rest_client.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_smarthome/themes/themes.dart';
 import 'package:flutter_smarthome/widgets/main_drawer.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,6 +19,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   Future<String> getServerIP() async {
+    return RESTClient().getIP() ?? "";
     return RESTClient().getIP() ?? "";
   }
 
@@ -54,7 +57,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               // ),
             ),
             const SettingsTitle("User Settings"),
-            ThemesMenager.getSettingsRow(context),
+            context.read<ThemesMenager>().getSettingsRow(context),
             //TODO add other settings etc.
             const SettingsTitle("About"),
             InkWell(

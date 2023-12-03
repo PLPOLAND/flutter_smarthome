@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_smarthome/models/devices/device.dart';
 import 'package:provider/provider.dart';
 
@@ -38,59 +39,59 @@ class _LightWidgetState extends State<LightWidget> {
                           : '${_sliderValue.toInt()}/${widget.lights.length}',
                 ),
                 const SizedBox(width: 10),
-                Slider(
-                  max: widget.lights.length.toDouble(),
-                  min: 0,
-                  divisions: widget.lights.length,
-                  activeColor: _sliderValue == 0
-                      ? Provider.of<ThemesMenager>(context).themeMode ==
-                              ThemeMode.light
-                          ? Colors.grey.withAlpha(0xA3)
-                          : Colors.black.withAlpha(0xA3)
-                      : Theme.of(context).colorScheme.onPrimaryContainer,
-                  inactiveColor: _sliderValue == 0
-                      ? Provider.of<ThemesMenager>(context).themeMode ==
-                              ThemeMode.light
-                          ? Colors.grey.withAlpha(0xA3)
-                          : Colors.black.withAlpha(0xA3)
-                      : Theme.of(context).colorScheme.onPrimaryContainer,
-                  label: _sliderValue == 0
-                      ? 'Off'
-                      : _sliderValue == widget.lights.length.toDouble()
-                          ? 'Full'
-                          : '${_sliderValue.toInt()}/${widget.lights.length}',
-                  value: _sliderValue,
-                  onChanged: (value) {
-                    setState(() {
-                      _sliderValue = value;
-                    });
-                  },
-                  onChangeEnd: (value) {
-                    if (value == 0) {
-                      for (var light in widget.lights) {
-                        light.setState(DeviceState.off);
+                BlocBuilder<ThemesMenager, ThemesMenagerState>(
+                  builder: (context, state) => Slider(
+                    max: widget.lights.length.toDouble(),
+                    min: 0,
+                    divisions: widget.lights.length,
+                    activeColor: _sliderValue == 0
+                        ? state.currentThemeMode == ThemeMode.light
+                            ? Colors.grey.withAlpha(0xA3)
+                            : Colors.black.withAlpha(0xA3)
+                        : Theme.of(context).colorScheme.onPrimaryContainer,
+                    inactiveColor: _sliderValue == 0
+                        ? state.currentThemeMode == ThemeMode.light
+                            ? Colors.grey.withAlpha(0xA3)
+                            : Colors.black.withAlpha(0xA3)
+                        : Theme.of(context).colorScheme.onPrimaryContainer,
+                    label: _sliderValue == 0
+                        ? 'Off'
+                        : _sliderValue == widget.lights.length.toDouble()
+                            ? 'Full'
+                            : '${_sliderValue.toInt()}/${widget.lights.length}',
+                    value: _sliderValue,
+                    onChanged: (value) {
+                      setState(() {
+                        _sliderValue = value;
+                      });
+                    },
+                    onChangeEnd: (value) {
+                      if (value == 0) {
+                        for (var light in widget.lights) {
+                          light.setState(DeviceState.off);
+                        }
+                      } else if (value == widget.lights.length.toDouble()) {
+                        for (var light in widget.lights) {
+                          light.setState(DeviceState.on);
+                        }
+                      } else {
+                        for (var i = 0; i < widget.lights.length; i++) {
+                          widget.lights[i].setState(i < value.toInt()
+                              ? DeviceState.on
+                              : DeviceState.off);
+                        }
                       }
-                    } else if (value == widget.lights.length.toDouble()) {
-                      for (var light in widget.lights) {
-                        light.setState(DeviceState.on);
+                    },
+                    semanticFormatterCallback: (value) {
+                      if (value == 0) {
+                        return 'Off';
+                      } else if (value == widget.lights.length.toDouble()) {
+                        return 'Full';
+                      } else {
+                        return '${value.toInt()}/${widget.lights.length}';
                       }
-                    } else {
-                      for (var i = 0; i < widget.lights.length; i++) {
-                        widget.lights[i].setState(i < value.toInt()
-                            ? DeviceState.on
-                            : DeviceState.off);
-                      }
-                    }
-                  },
-                  semanticFormatterCallback: (value) {
-                    if (value == 0) {
-                      return 'Off';
-                    } else if (value == widget.lights.length.toDouble()) {
-                      return 'Full';
-                    } else {
-                      return '${value.toInt()}/${widget.lights.length}';
-                    }
-                  },
+                    },
+                  ),
                 ),
               ],
             ),
