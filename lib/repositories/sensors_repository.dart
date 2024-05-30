@@ -158,7 +158,7 @@ class SensorsRepository {
       var newStateMap =
           newStates.where((element) => element['id'] == sensor.id);
       for (var state in newStateMap) {
-        log(state.toString());
+        // log(state.toString());
         switch (sensor.type) {
           case SensorType.button:
             //TODO implement
@@ -172,7 +172,7 @@ class SensorsRepository {
             hygrometer.humidity = (state['state'][1] as double).toInt();
             break;
           default:
-            print("Error: Unknown sensor type");
+            log("Error: Unknown sensor type: ${sensor.type}");
         }
       }
     }

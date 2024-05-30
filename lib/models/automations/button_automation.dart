@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/widgets.dart';
+import 'package:flutter_smarthome/helpers/rest_client/rest_client.dart';
 import 'package:flutter_smarthome/models/automations/automation.dart';
 import 'package:flutter_smarthome/models/automations/function_action.dart';
 import 'package:flutter_smarthome/models/sensors/button.dart';
@@ -8,13 +11,14 @@ class ButtonAutomation extends Automation {
   ButtonAutomation({
     required super.id,
     required super.name,
-    required super.onClick,
+    // required super.onClick,
     super.description,
-    required super.icon,
+    super.icon,
     required super.actions,
     required this.button,
   });
 
+  @override
   ButtonAutomation copyWith({
     int? id,
     String? name,
@@ -29,9 +33,27 @@ class ButtonAutomation extends Automation {
       name: name ?? this.name,
       description: description ?? this.description,
       icon: icon ?? this.icon,
-      onClick: onClick ?? this.onClick,
+      // onClick: onClick ?? this.onClick,
       actions: actions ?? this.actions,
       button: button ?? this.button,
     );
+  }
+
+  static Automation fromJson(Map<String, dynamic> json) {
+    log(json.toString());
+    return ButtonAutomation(
+      id: json['id'],
+      name: json['name'],
+      // onClick: () {},
+      actions: (json['actions'] as List<dynamic>)
+          .map<FunctionAction>((e) => FunctionAction.fromJson(e))
+          .toList(),
+      button: Button.fromJson(json['button']),
+    );
+  }
+
+  void onClick() {
+    log("ButtonAutomation onClick");
+    RESTClient().runFunction(id);
   }
 }

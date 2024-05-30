@@ -101,7 +101,7 @@ class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
 
   @override
   void onChange(Change<DevicesState> change) {
-    log(change.toString());
-    super.onChange(change);
+    // log(change.toString());
+    // super.onChange(change);
   }
 }

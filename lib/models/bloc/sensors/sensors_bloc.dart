@@ -122,8 +122,8 @@ class SensorsBloc extends Bloc<SensorsEvent, SensorsState> {
 
   @override
   void onChange(Change<SensorsState> change) {
-    log('-----------------SENSORS------State----Changed----------------------------');
-    log(change.toString());
-    super.onChange(change);
+    // log('-----------------SENSORS------State----Changed----------------------------');
+    // log(change.toString());
+    // super.onChange(change);
   }
 }

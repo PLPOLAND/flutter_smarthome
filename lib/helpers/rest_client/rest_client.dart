@@ -3,6 +3,8 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_smarthome/models/auth/user_data.dart';
+import 'package:flutter_smarthome/models/automations/automation.dart';
+import 'package:flutter_smarthome/models/automations/button_automation.dart';
 import 'package:flutter_smarthome/models/sensors/hygro_termometer.dart';
 import 'package:flutter_smarthome/models/sensors/hygrometer.dart';
 import 'package:flutter_smarthome/models/sensors/motion.dart';
@@ -483,7 +485,7 @@ class RESTClient {
         responseBody: response.data ?? {},
       );
 
-      log(res.toString());
+      // log(res.toString());
 
       if (res.isOk) {
         switch (deviceType) {
@@ -533,7 +535,7 @@ class RESTClient {
         responseBody: response.data ?? {},
       );
 
-      log(res.toString());
+      // log(res.toString());
 
       if (res.isOk) {
         return res.body as String == 'OK';
@@ -590,7 +592,7 @@ class RESTClient {
         responseBody: response.data ?? {},
       );
 
-      log(res.toString());
+      // log(res.toString());
 
       if (res.isOk) {
         return;
@@ -624,7 +626,7 @@ class RESTClient {
         responseBody: response.data ?? {},
       );
 
-      log(res.toString());
+      // log(res.toString());
 
       if (res.isOk) {
         switch (res.body['typ']) {
@@ -757,7 +759,7 @@ class RESTClient {
         responseBody: response.data ?? {},
       );
 
-      log(res.toString());
+      // log(res.toString());
 
       if (res.isOk) {
         switch (sensor.type) {
@@ -807,7 +809,7 @@ class RESTClient {
         responseBody: response.data ?? {},
       );
 
-      log(res.toString());
+      // log(res.toString());
 
       if (res.isOk) {
         return res.body as bool;
@@ -868,7 +870,7 @@ class RESTClient {
         responseBody: response.data ?? {},
       );
 
-      log(res.toString());
+      // log(res.toString());
 
       if (res.isOk) {
         return;
@@ -899,7 +901,7 @@ class RESTClient {
         statusCode: response.statusCode ?? 0,
         responseBody: response.data ?? {},
       );
-      log(res.toString());
+      // log(res.toString());
       if (res.isOk) {
         return;
       } else if (res.isApiError) {
@@ -908,6 +910,82 @@ class RESTClient {
         throw Exception('Unknown error, status code: ${res.statusCode}');
       }
     } on DioError catch (e) {
+      log(e.toString());
+      throw Exception('Unknown error, status code: ${e.response?.statusCode}');
+    }
+  }
+
+  Future<List<Automation>> getAutomations() async {
+    if (!isIPSet()) {
+      throw Exception('IP not set');
+    }
+    try {
+      var response = await _dio.get(
+        'http://$_ip:8080/api/getAutomations',
+        queryParameters: {
+          'token': _userData?.token,
+        },
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
+
+      RestResponse<List<dynamic>> res = RestResponse(
+        statusCode: response.statusCode ?? 0,
+        responseBody: response.data ?? {},
+      );
+
+      log(res.toString());
+
+      if (res.isOk) {
+        List<Automation> automations = [];
+        for (Map<String, dynamic> automationData in res.body!) {
+          switch (automationData['type']) {
+            case 'BUTTON':
+              automations.add(ButtonAutomation.fromJson(automationData));
+              break;
+            default:
+              throw Exception(
+                  'Unknown automation type: ${automationData['typ']}');
+          }
+        }
+        return automations;
+      } else if (res.isApiError) {
+        throw Exception(res.error);
+      } else {
+        throw Exception('Unknown error, status code: ${res.statusCode}');
+      }
+    } on DioException catch (e) {
+      log(e.toString());
+      throw Exception('Unknown error, status code: ${e.response?.statusCode}');
+    }
+  }
+
+  void runFunction(int id) async {
+    if (!isIPSet()) {
+      throw Exception('IP not set');
+    }
+    try {
+      var response = await _dio.post(
+        'http://$_ip:8080/api/runAutomation',
+        queryParameters: {
+          'token': _userData?.token,
+          'id': id,
+        },
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
+
+      RestResponse<String> res = RestResponse(
+        statusCode: response.statusCode ?? 0,
+        responseBody: response.data ?? {},
+      );
+
+      if (res.isOk) {
+        return;
+      } else if (res.isApiError) {
+        throw Exception(res.error);
+      } else {
+        throw Exception('Unknown error, status code: ${res.statusCode}');
+      }
+    } on DioException catch (e) {
       log(e.toString());
       throw Exception('Unknown error, status code: ${e.response?.statusCode}');
     }

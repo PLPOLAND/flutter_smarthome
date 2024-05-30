@@ -10,7 +10,7 @@ class UserAutomation extends Automation {
   const UserAutomation({
     required int id,
     required String name,
-    required Function() onClick,
+    // required Function() onClick,
     required this.userID,
     String? description,
     IconData? icon,
@@ -18,7 +18,7 @@ class UserAutomation extends Automation {
   }) : super(
           id: id,
           name: name,
-          onClick: onClick,
+          // onClick: onClick,
           description: description,
           icon: icon,
           actions: actions,
@@ -35,7 +35,7 @@ class UserAutomation extends Automation {
     String? name,
     String? description,
     IconData? icon,
-    Function()? onClick,
+    // Function()? onClick,
     int? userID,
     List<FunctionAction>? actions,
   }) {
@@ -44,7 +44,7 @@ class UserAutomation extends Automation {
       name: name ?? this.name,
       description: description ?? this.description,
       icon: icon ?? this.icon,
-      onClick: onClick ?? this.onClick,
+      // onClick: onClick ?? this.onClick,
       actions: actions ?? this.actions,
       userID: userID ?? this.userID,
     );

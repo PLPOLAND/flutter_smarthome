@@ -3,9 +3,11 @@ import 'dart:io';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_smarthome/models/bloc/automations/automations_bloc.dart';
 import 'package:flutter_smarthome/models/bloc/devices/devices_bloc.dart';
 import 'package:flutter_smarthome/models/bloc/rooms/rooms_bloc.dart';
 import 'package:flutter_smarthome/models/bloc/sensors/sensors_bloc.dart';
+import 'package:flutter_smarthome/repositories/automations_repository.dart';
 import 'package:flutter_smarthome/repositories/sensors_repository.dart';
 import 'package:flutter_smarthome/screens/automations/add_edit_automation_screent.dart';
 import 'package:flutter_smarthome/screens/test_screen.dart';
@@ -63,6 +65,9 @@ class MyApp extends StatelessWidget {
         RepositoryProvider(create: (BuildContext context) {
           return RoomsRepository();
         }),
+        RepositoryProvider(create: (BuildContext context) {
+          return AutomationsRepository();
+        }),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -77,6 +82,10 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider<RoomsBloc>(
             create: (context) => RoomsBloc(context.read<RoomsRepository>()),
+          ),
+          BlocProvider<AutomationsBloc>(
+            create: (context) =>
+                AutomationsBloc(context.read<AutomationsRepository>()),
           ),
         ],
         child: MultiProvider(

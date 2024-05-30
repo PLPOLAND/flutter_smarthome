@@ -6,21 +6,21 @@ class Automation {
   final String name;
   final String? description;
   final IconData? icon;
-  final Function() onClick;
+  // final Function() onClick;
   final List<FunctionAction> actions;
 
   const Automation({
     required this.id,
     required this.name,
-    required this.onClick,
+    // required this.onClick,
     this.description,
-    required this.icon,
+    this.icon,
     required this.actions,
   });
 
   @override
   String toString() {
-    return 'Automation{name: $name, description: $description, icon: $icon, onClick: $onClick, actions: $actions}';
+    return 'Automation{name: $name, description: $description, icon: $icon, actions: $actions}';
   }
 
   Automation copyWith({
@@ -28,7 +28,7 @@ class Automation {
     String? name,
     String? description,
     IconData? icon,
-    Function()? onClick,
+    // Function()? onClick,
     List<FunctionAction>? actions,
   }) {
     return Automation(
@@ -36,7 +36,7 @@ class Automation {
       name: name ?? this.name,
       description: description ?? this.description,
       icon: icon ?? this.icon,
-      onClick: onClick ?? this.onClick,
+      // onClick: onClick ?? this.onClick,
       actions: actions ?? this.actions,
     );
   }

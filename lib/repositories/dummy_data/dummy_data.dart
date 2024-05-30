@@ -579,3 +579,91 @@ var dummy_sensors = [
     "slaveAdress": 22
   }
 ];
+var dummy_automations = [
+  {
+    "id": 0,
+    "name": "Światła Marek",
+    "actions": [
+      {
+        "device": {
+          "@type": "Light",
+          "id": 9,
+          "room": 3,
+          "slaveID": 15,
+          "onSlaveID": 1,
+          "name": "Poziom 1",
+          "typ": "LIGHT",
+          "state": "OFF",
+          "pin": 13
+        },
+        "activeDeviceState": "ON",
+        "allowReverse": true
+      },
+      {
+        "device": {
+          "@type": "Light",
+          "id": 10,
+          "room": 3,
+          "slaveID": 15,
+          "onSlaveID": 2,
+          "name": "Poziom 2",
+          "typ": "LIGHT",
+          "state": "OFF",
+          "pin": 12
+        },
+        "activeDeviceState": "ON",
+        "allowReverse": true
+      }
+    ],
+    "reversState": true,
+    "type": "BUTTON",
+    "button": {
+      "@type": "Button",
+      "id": 106,
+      "room": 3,
+      "onSlaveID": 4,
+      "addres": null,
+      "nazwa": "Światło",
+      "typ": "BUTTON",
+      "pin": 14,
+      "funkcjeKlikniec": [
+        {
+          "state": "NONE",
+          "type": "CLICKED",
+          "clicks": 1,
+          "device": {
+            "@type": "Light",
+            "id": 9,
+            "room": 3,
+            "slaveID": 15,
+            "onSlaveID": 1,
+            "name": "Poziom 1",
+            "typ": "LIGHT",
+            "state": "OFF",
+            "pin": 13
+          }
+        },
+        {
+          "state": "NONE",
+          "type": "CLICKED",
+          "clicks": 2,
+          "device": {
+            "@type": "Light",
+            "id": 10,
+            "room": 3,
+            "slaveID": 15,
+            "onSlaveID": 2,
+            "name": "Poziom 2",
+            "typ": "LIGHT",
+            "state": "OFF",
+            "pin": 12
+          }
+        }
+      ],
+      "slaveAdress": 15
+    },
+    "clicks": 3,
+    "clickType": "CLICKED",
+    "active": false
+  },
+];

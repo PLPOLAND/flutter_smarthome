@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_smarthome/models/automations/automation.dart';
+import 'package:flutter_smarthome/models/automations/button_automation.dart';
 
 class AutomationGridElement extends StatelessWidget {
   final Automation automation;
   final double iconSize;
   final bool active;
-  // final double height;
-  // final double width;
 
   const AutomationGridElement.stateless({
     super.key,
@@ -44,7 +43,11 @@ class AutomationGridElement extends StatelessWidget {
       child: Material(
         color: Colors.white.withOpacity(0),
         child: InkWell(
-          onTap: automation.onClick,
+          onTap: automation is ButtonAutomation
+              ? () {
+                  (automation as ButtonAutomation).onClick();
+                }
+              : null,
           splashColor: Theme.of(context).colorScheme.secondaryContainer,
           borderRadius: BorderRadius.circular(10),
           child: Padding(
