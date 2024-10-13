@@ -16,10 +16,10 @@ import '../models/devices/light.dart';
 import '../models/devices/outlet.dart';
 
 class AutomationsRepository {
-  final List<Automation> _automations = [];
+  final Map<String, Automation> _automations = {};
 
   RESTClient client = RESTClient();
-  List<Automation> get automations => [..._automations];
+  Map<String, Automation> get automations => {..._automations};
 
   Future<void> loadDemoData() async {
     //DEMO
@@ -28,15 +28,18 @@ class AutomationsRepository {
     for (var automation in input) {
       switch (automation['typ']) {
         case 'BUTTON':
-          _automations.add(ButtonAutomation(
-            id: automation['id'] as int,
-            name: automation['name'] as String,
-            icon: null,
-            button: automation['button'] as Button,
-            actions: (automation['actions'] as List<Map<String, Object>>)
-                .map<FunctionAction>((e) => FunctionAction.fromJson(e))
-                .toList(),
-          ));
+          _automations.putIfAbsent(
+            automation['id'] as String,
+            () => ButtonAutomation(
+              id: automation['id'] as int,
+              name: automation['name'] as String,
+              icon: null,
+              button: automation['button'] as Button,
+              actions: (automation['actions'] as List<Map<String, Object>>)
+                  .map<FunctionAction>((e) => FunctionAction.fromJson(e))
+                  .toList(),
+            ),
+          );
           break;
         default:
           log("Error: Unknown device type");
@@ -46,7 +49,18 @@ class AutomationsRepository {
 
   Future<void> loadAutomations() async {
     _automations.clear();
-    _automations.addAll(await client.getAutomations());
+    _automations.addEntries((await client.getAutomations())
+        .map((e) => MapEntry(e.id.toString(), e)));
+  }
+
+  Future<void> updateStateOfAutomations() async {
+    for (var element in _automations.values) {
+      var newState = await client.getAutomationState(element.id);
+      if (newState != element.active) {
+        _automations[element.id.toString()] =
+            element.copyWith(active: newState);
+      }
+    }
   }
 
   // Future<Device> addDevice(Device device) async {

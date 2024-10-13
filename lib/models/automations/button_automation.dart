@@ -16,6 +16,7 @@ class ButtonAutomation extends Automation {
     super.icon,
     required super.actions,
     required this.button,
+    super.active = false,
   });
 
   @override
@@ -27,6 +28,7 @@ class ButtonAutomation extends Automation {
     Function()? onClick,
     List<FunctionAction>? actions,
     Button? button,
+    bool? active,
   }) {
     return ButtonAutomation(
       id: id ?? this.id,
@@ -36,6 +38,7 @@ class ButtonAutomation extends Automation {
       // onClick: onClick ?? this.onClick,
       actions: actions ?? this.actions,
       button: button ?? this.button,
+      active: active ?? this.active,
     );
   }
 
@@ -49,11 +52,7 @@ class ButtonAutomation extends Automation {
           .map<FunctionAction>((e) => FunctionAction.fromJson(e))
           .toList(),
       button: Button.fromJson(json['button']),
+      active: json['active'],
     );
-  }
-
-  void onClick() {
-    log("ButtonAutomation onClick");
-    RESTClient().runFunction(id);
   }
 }

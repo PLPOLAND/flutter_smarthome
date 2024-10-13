@@ -6,17 +6,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smarthome/helpers/rest_client/rest_client.dart';
 
 abstract class Device extends Cubit<DeviceCubitState> {
-  Device(int id, int roomId, int slaveId, int onSlaveId, String name,
-      DeviceType type, DeviceState state, int onSlavePin)
-      : super(DeviceCubitState(
-            id, roomId, slaveId, onSlaveId, name, type, state, onSlavePin));
+  Device(
+    int id,
+    int roomId,
+    int slaveId,
+    int onSlaveId,
+    String name,
+    DeviceType type,
+    DeviceState state,
+    int onSlavePin,
+    bool fav,
+  ) : super(DeviceCubitState(
+          id,
+          roomId,
+          slaveId,
+          onSlaveId,
+          name,
+          type,
+          state,
+          onSlavePin,
+          fav,
+        ));
 
   Device.state(DeviceCubitState state) : super(state);
 
   /// The function changes the state of the device. It sends a request to the server.
-  void setState(DeviceState newState) {
+  void setState(DeviceState newState) async {
     if (deviceState != newState) {
-      RESTClient().changeDeviceState(deviceId: id, state: newState);
+      log("Device $id state changing to $newState");
+      await RESTClient().changeDeviceState(deviceId: id, state: newState);
+      log("Device $id state changed to $newState");
       emit(state.copyWith(state: newState));
     }
   }
@@ -60,6 +79,10 @@ abstract class Device extends Cubit<DeviceCubitState> {
     emit(state.copyWith(type: type));
   }
 
+  set isFav(bool fav) {
+    emit(state.copyWith(fav: fav));
+  }
+
   int get id => state.id;
   int get onSlavePin => state.onSlavePin;
   int get roomId => state.roomId;
@@ -67,6 +90,7 @@ abstract class Device extends Cubit<DeviceCubitState> {
   int get onSlaveID => state.onSlaveID;
   String get name => state.name;
   DeviceState get deviceState => state.deviceState;
+  bool get isFav => state.isFav;
 
   DeviceType get type => state.type;
 
@@ -115,9 +139,10 @@ class DeviceCubitState extends Equatable {
   final String _name;
   final DeviceType _type;
   final DeviceState _state;
+  final bool _fav;
 
   const DeviceCubitState(this._id, this._roomId, this._slaveId, this._onSlaveId,
-      this._name, this._type, this._state, this._onSlavePin);
+      this._name, this._type, this._state, this._onSlavePin, this._fav);
 
   int get id => _id;
   int get onSlavePin => _onSlavePin;
@@ -126,7 +151,7 @@ class DeviceCubitState extends Equatable {
   int get onSlaveID => _onSlaveId;
   String get name => _name;
   DeviceState get deviceState => _state;
-
+  bool get isFav => _fav;
   DeviceType get type => _type;
 
   @override
@@ -134,16 +159,16 @@ class DeviceCubitState extends Equatable {
     return "{id: $_id, roomId: $_roomId, slaveId: $_slaveId, onSlaveId: $_onSlaveId, name: $_name, type: $_type, state: $_state}";
   }
 
-  DeviceCubitState copyWith({
-    int? id,
-    int? roomId,
-    int? slaveId,
-    int? onSlaveId,
-    String? name,
-    DeviceType? type,
-    DeviceState? state,
-    int? onSlavePin,
-  }) {
+  DeviceCubitState copyWith(
+      {int? id,
+      int? roomId,
+      int? slaveId,
+      int? onSlaveId,
+      String? name,
+      DeviceType? type,
+      DeviceState? state,
+      int? onSlavePin,
+      bool? fav}) {
     return DeviceCubitState(
       id ?? _id,
       roomId ?? _roomId,
@@ -153,6 +178,7 @@ class DeviceCubitState extends Equatable {
       type ?? _type,
       state ?? _state,
       onSlavePin ?? _onSlavePin,
+      fav ?? _fav,
     );
   }
 
@@ -251,4 +277,11 @@ enum DeviceState {
         return DeviceState.none;
     }
   }
+
+  get isOn => this == DeviceState.on;
+  get isOff => this == DeviceState.off;
+  get isUp => this == DeviceState.up;
+  get isDown => this == DeviceState.down;
+  get isMiddle => this == DeviceState.middle;
+  get isRun => this == DeviceState.run;
 }

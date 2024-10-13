@@ -11,8 +11,9 @@ class Light extends Device {
     int onSlavePin = -1,
     String name = "No Name",
     DeviceState state = DeviceState.off,
+    bool isFav = false,
   }) : super(id, roomId, slaveId, onSlaveId, name, DeviceType.light, state,
-            onSlavePin);
+            onSlavePin, isFav);
   @override
   Future<void> changeState() async {
     if (state.deviceState == DeviceState.on) {

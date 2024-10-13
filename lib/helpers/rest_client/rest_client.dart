@@ -319,6 +319,31 @@ class RESTClient {
     }
   }
 
+  Future<String> getFavoriteDevices() async {
+    if (!isIPSet()) {
+      throw Exception('IP not set');
+    }
+    var response = await _dio.get(
+      'http://$_ip:8080/api/getFavoriteDevices',
+      queryParameters: {
+        'token': _userData?.token,
+      },
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
+    RestResponse res = RestResponse(
+      statusCode: response.statusCode ?? 0,
+      responseBody: response.data ?? {},
+    );
+    // log(res.toString());
+    if (res.isOk) {
+      return res.body;
+    } else if (res.isApiError) {
+      throw Exception(res.error);
+    } else {
+      throw Exception('Unknown error, status code: ${res.statusCode}');
+    }
+  }
+
   Future<String> addFavoriteRoom(int roomID) async {
     if (!isIPSet()) {
       throw Exception('IP not set');
@@ -980,6 +1005,38 @@ class RESTClient {
 
       if (res.isOk) {
         return;
+      } else if (res.isApiError) {
+        throw Exception(res.error);
+      } else {
+        throw Exception('Unknown error, status code: ${res.statusCode}');
+      }
+    } on DioException catch (e) {
+      log(e.toString());
+      throw Exception('Unknown error, status code: ${e.response?.statusCode}');
+    }
+  }
+
+  Future<bool> getAutomationState(int id) async {
+    if (!isIPSet()) {
+      throw Exception('IP not set');
+    }
+    try {
+      var response = await _dio.get(
+        'http://$_ip:8080/api/getAutomationState',
+        queryParameters: {
+          'token': _userData?.token,
+          'id': id,
+        },
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
+
+      RestResponse<bool> res = RestResponse(
+        statusCode: response.statusCode ?? 0,
+        responseBody: response.data ?? {},
+      );
+
+      if (res.isOk) {
+        return res.body ?? false;
       } else if (res.isApiError) {
         throw Exception(res.error);
       } else {

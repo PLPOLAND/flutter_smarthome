@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_smarthome/models/automations/automation.dart';
 import 'package:flutter_smarthome/models/automations/button_automation.dart';
+import 'package:flutter_smarthome/models/automations/user_automation.dart';
 
 class AutomationGridElement extends StatelessWidget {
   final Automation automation;
@@ -11,18 +12,15 @@ class AutomationGridElement extends StatelessWidget {
     super.key,
     required this.automation,
     double? iconSize,
-
-    // required this.height,
-    // required this.width,
   })  : iconSize = iconSize ?? 35,
         active = true;
 
-  const AutomationGridElement.statefull(
-      {Key? key,
-      required this.automation,
-      double? iconSize,
-      required this.active})
-      : iconSize = iconSize ?? 35,
+  const AutomationGridElement.statefull({
+    Key? key,
+    required this.automation,
+    double? iconSize,
+    required this.active,
+  })  : iconSize = iconSize ?? 35,
         super(key: key);
 
   @override
@@ -43,10 +41,8 @@ class AutomationGridElement extends StatelessWidget {
       child: Material(
         color: Colors.white.withOpacity(0),
         child: InkWell(
-          onTap: automation is ButtonAutomation
-              ? () {
-                  (automation as ButtonAutomation).onClick();
-                }
+          onTap: automation is ButtonAutomation || automation is UserAutomation
+              ? () => automation.onClick()
               : null,
           splashColor: Theme.of(context).colorScheme.secondaryContainer,
           borderRadius: BorderRadius.circular(10),

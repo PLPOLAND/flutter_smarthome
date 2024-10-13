@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/widgets.dart';
+import 'package:flutter_smarthome/helpers/rest_client/rest_client.dart';
 import 'package:flutter_smarthome/models/automations/function_action.dart';
 
 class Automation {
@@ -8,6 +11,7 @@ class Automation {
   final IconData? icon;
   // final Function() onClick;
   final List<FunctionAction> actions;
+  final bool active;
 
   const Automation({
     required this.id,
@@ -16,6 +20,7 @@ class Automation {
     this.description,
     this.icon,
     required this.actions,
+    this.active = false,
   });
 
   @override
@@ -30,6 +35,7 @@ class Automation {
     IconData? icon,
     // Function()? onClick,
     List<FunctionAction>? actions,
+    bool? active,
   }) {
     return Automation(
       id: id ?? this.id,
@@ -38,6 +44,12 @@ class Automation {
       icon: icon ?? this.icon,
       // onClick: onClick ?? this.onClick,
       actions: actions ?? this.actions,
+      active: active ?? this.active,
     );
+  }
+
+  void onClick() {
+    log("ButtonAutomation onClick");
+    RESTClient().runFunction(id);
   }
 }

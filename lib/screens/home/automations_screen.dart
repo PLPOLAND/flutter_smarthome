@@ -24,10 +24,10 @@ class AutomationsScreen extends StatelessWidget {
                 text: "Automations",
                 expandable: true,
                 children: [
-                  ...state.automation
+                  ...state.automation.values
                       .map((e) => AutomationGridElement.statefull(
                             automation: e,
-                            active: false,
+                            active: e.active,
                           ))
                       .toList(),
                   //   AutomationGridElement.stateless(

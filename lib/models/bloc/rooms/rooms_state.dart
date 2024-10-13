@@ -53,6 +53,8 @@ class RoomsState extends Equatable {
 
   const RoomsState.updating() : this._(status: RoomsStatus.updating);
 
+  List<Room> get favRooms => rooms.where((room) => room.isFavorite).toList();
+
   @override
   List<Object> get props => [status, rooms, stopUpdating];
 

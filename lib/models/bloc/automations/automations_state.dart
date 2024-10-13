@@ -34,13 +34,13 @@ extension SensorsStatusExtension on AutomationStatus {
 
 class AutomationsState extends Equatable {
   final AutomationStatus status;
-  final List<Automation> automation;
+  final Map<String, Automation> automation;
   final bool stopUpdating;
   final String errorMsg;
 
   const AutomationsState._({
     this.status = AutomationStatus.initial,
-    this.automation = const [],
+    this.automation = const {},
     this.stopUpdating = false,
     this.errorMsg = '',
   });
@@ -48,13 +48,13 @@ class AutomationsState extends Equatable {
   const AutomationsState.initial() : this._();
 
   const AutomationsState.demo({
-    required List<Automation> automations,
+    required Map<String, Automation> automations,
   }) : this._(automation: automations, status: AutomationStatus.demo);
 
   const AutomationsState.loading() : this._(status: AutomationStatus.loading);
 
   const AutomationsState.loaded({
-    required List<Automation> automations,
+    required Map<String, Automation> automations,
   }) : this._(
           status: AutomationStatus.loaded,
           automation: automations,
@@ -73,7 +73,7 @@ class AutomationsState extends Equatable {
 
   AutomationsState copyWith({
     AutomationStatus? status,
-    List<Automation>? automation,
+    Map<String, Automation>? automation,
     bool? stopUpdating,
     String? errorMsg,
   }) {

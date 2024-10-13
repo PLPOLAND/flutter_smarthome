@@ -15,6 +15,7 @@ class UserAutomation extends Automation {
     String? description,
     IconData? icon,
     required List<FunctionAction> actions,
+    bool active = false,
   }) : super(
           id: id,
           name: name,
@@ -22,6 +23,7 @@ class UserAutomation extends Automation {
           description: description,
           icon: icon,
           actions: actions,
+          active: active,
         );
 
   @override
@@ -38,6 +40,7 @@ class UserAutomation extends Automation {
     // Function()? onClick,
     int? userID,
     List<FunctionAction>? actions,
+    bool? active,
   }) {
     return UserAutomation(
       id: id ?? this.id,
@@ -47,6 +50,7 @@ class UserAutomation extends Automation {
       // onClick: onClick ?? this.onClick,
       actions: actions ?? this.actions,
       userID: userID ?? this.userID,
+      active: active ?? this.active,
     );
   }
 }

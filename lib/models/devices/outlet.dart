@@ -11,8 +11,18 @@ class Outlet extends Device {
     int onSlavePin = -1,
     String name = "No Name",
     DeviceState state = DeviceState.off,
-  }) : super(id, roomId, slaveId, onSlaveId, name, DeviceType.outlet, state,
-            onSlavePin);
+    bool isFav = false,
+  }) : super(
+          id,
+          roomId,
+          slaveId,
+          onSlaveId,
+          name,
+          DeviceType.outlet,
+          state,
+          onSlavePin,
+          isFav,
+        );
   @override
   Future<void> changeState() async {
     if (state.deviceState == DeviceState.on) {

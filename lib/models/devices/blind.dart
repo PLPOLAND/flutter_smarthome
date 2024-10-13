@@ -12,6 +12,7 @@ class Blind extends Device {
     int onSlavePinDown = -1,
     String name = "No Name",
     DeviceState state = DeviceState.down,
+    bool isFav = false,
   }) : super.state(BlindCubitState(
           id: id,
           roomId: roomId,
@@ -22,6 +23,7 @@ class Blind extends Device {
           state: state,
           onSlavePin: onSlavePinUp,
           onSlavePinDown: onSlavePinDown,
+          isFav: isFav,
         ));
 
   int get onSlavePinUp => (state as BlindCubitState).onSlavePin;
@@ -93,6 +95,7 @@ class BlindCubitState extends DeviceCubitState {
     required DeviceState state,
     required int onSlavePin,
     required onSlavePinDown,
+    required bool isFav,
   })  : _onSlavePinDown = onSlavePinDown,
         super(
           id,
@@ -103,6 +106,7 @@ class BlindCubitState extends DeviceCubitState {
           type,
           state,
           onSlavePin,
+          isFav,
         );
 
   @override
@@ -122,6 +126,7 @@ class BlindCubitState extends DeviceCubitState {
     DeviceState? state,
     int? onSlavePin,
     int? onSlavePinDown,
+    bool? fav,
   }) {
     return BlindCubitState(
       id: id ?? this.id,
@@ -133,6 +138,7 @@ class BlindCubitState extends DeviceCubitState {
       state: state ?? deviceState,
       onSlavePin: onSlavePin ?? this.onSlavePin,
       onSlavePinDown: onSlavePinDown ?? _onSlavePinDown,
+      isFav: fav ?? this.isFav,
     );
   }
 }

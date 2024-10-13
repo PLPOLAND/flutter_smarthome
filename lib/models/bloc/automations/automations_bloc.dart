@@ -58,16 +58,20 @@ class AutomationsBloc extends Bloc<AutomationsEvent, AutomationsState> {
       // emit(state.copyWith(status: AutomationStatus.loaded));
     });
     on<UpdateStateOfAutomations>((event, emit) async {
-      // log('Updating state of sensors');
-      // emit(state.copyWith(status: AutomationStatus.updating));
-      // // await _sensorsRepository.updateStateOfSensors();
-      // //rerun this event after time
-      // Future.delayed(_automationsStateUpdateInterval).then((value) {
-      //   if (!state.stopUpdating) {
-      //     add(UpdateStateOfAutomations());
-      //   }
-      // });
-      // emit(state.copyWith(status: AutomationStatus.loaded));
+      log('Updating state of sensors');
+      emit(state.copyWith(status: AutomationStatus.updating));
+      var automations = _automationsRepository.automations;
+      await _automationsRepository.updateStateOfAutomations();
+      //rerun this event after time
+      Future.delayed(_automationsStateUpdateInterval).then((value) {
+        if (!state.stopUpdating) {
+          add(UpdateStateOfAutomations());
+        }
+      });
+      emit(state.copyWith(
+        status: AutomationStatus.loaded,
+        automation: _automationsRepository.automations,
+      ));
     });
     on<StopUpdatingAutomations>((event, emit) async {
       log('Stop updating sensors');
