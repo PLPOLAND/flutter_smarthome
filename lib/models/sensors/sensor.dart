@@ -139,6 +139,46 @@ enum SensorType {
   motion,
   button;
 
+  bool isTemperature() {
+    return this == SensorType.thermometer ||
+        this == SensorType.hygroThermometer;
+  }
+
+  bool isHumidity() {
+    return this == SensorType.hygrometer || this == SensorType.hygroThermometer;
+  }
+
+  bool isTwilight() {
+    return this == SensorType.twilight;
+  }
+
+  bool isMotion() {
+    return this == SensorType.motion;
+  }
+
+  bool isButton() {
+    return this == SensorType.button;
+  }
+
+  static SensorType fromString(String type) {
+    switch (type.toLowerCase()) {
+      case "thermometer":
+        return SensorType.thermometer;
+      case "hygrometer":
+        return SensorType.hygrometer;
+      case "hygroThermometer":
+        return SensorType.hygroThermometer;
+      case "twilight":
+        return SensorType.twilight;
+      case "motion":
+        return SensorType.motion;
+      case "button":
+        return SensorType.button;
+      default:
+        return SensorType.none;
+    }
+  }
+
   @override
   String toString() {
     switch (this) {

@@ -1,4 +1,5 @@
-import 'dart:io';
+import 'package:flutter/foundation.dart';
+import 'package:universal_io/io.dart';
 
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
@@ -33,10 +34,12 @@ import 'themes/themes.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
-    setWindowMaxSize(const Size(double.infinity, double.infinity));
-    setWindowMinSize(const Size(500, 500));
-    print("platform is desktop");
+  if (!kIsWeb) {
+    if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
+      setWindowMaxSize(const Size(double.infinity, double.infinity));
+      setWindowMinSize(const Size(500, 500));
+      print("platform is desktop");
+    }
   }
   runApp(const MyApp());
 }

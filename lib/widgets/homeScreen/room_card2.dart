@@ -3,22 +3,30 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_smarthome/models/devices/blind.dart';
 import 'package:flutter_smarthome/models/devices/device.dart';
 import 'package:flutter_smarthome/models/sensors/sensor.dart';
+import 'package:flutter_smarthome/screens/room_detail_page.dart';
 import 'package:flutter_smarthome/widgets/homeScreen/blind_widget2.dart';
 import 'package:flutter_smarthome/widgets/homeScreen/dual_state_device_widget.dart';
+import 'package:flutter_smarthome/widgets/homeScreen/sensor_widget2.dart';
 
 import '../../models/room.dart';
 import '../../repositories/sensors_repository.dart';
 import 'sensor_widget.dart';
 
-class RoomCard2 extends StatelessWidget {
+class RoomCard2 extends StatefulWidget {
   final Room room;
   final List<Device> devices;
   const RoomCard2({required this.room, required this.devices, super.key});
 
   @override
+  State<RoomCard2> createState() => _RoomCard2State();
+}
+
+class _RoomCard2State extends State<RoomCard2> {
+  bool show = true;
+  @override
   Widget build(BuildContext context) {
     final sensors =
-        context.read<SensorsRepository>().getSensorsByRoomId(room.id);
+        context.read<SensorsRepository>().getSensorsByRoomId(widget.room.id);
     final bool anyThermometer = sensors.any((sensor) =>
         sensor.type == SensorType.thermometer ||
         sensor.type == SensorType.hygrometer ||
@@ -27,8 +35,8 @@ class RoomCard2 extends StatelessWidget {
         sensor.type == SensorType.hygrometer);
 
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      padding: const EdgeInsets.all(10),
+      margin: const EdgeInsets.symmetric(vertical: 5),
+      // padding: const EdgeInsets.all(10),
       width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
@@ -39,48 +47,79 @@ class RoomCard2 extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  room.name,
-                  style: const TextStyle(fontSize: 20),
-                  textAlign: TextAlign.left,
-                ),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (anyThermometer) ...{
-                      ...sensors.map((e) {
-                        if (e.type == SensorType.thermometer ||
-                            e.type == SensorType.hygrometer ||
-                            e.type == SensorType.hygroThermometer) {
-                          return BlocBuilder<Sensor, SensorCubitState>(
-                              builder: (context, state) {
-                                return SensorWidget(
-                                  sensor: e,
-                                );
-                              },
-                              bloc: e);
-                        }
-                        return const SizedBox(width: 0, height: 0);
-                      }),
-                    },
-                  ],
-                )
-              ],
+            padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+            child: InkWell(
+              onTap: () => setState(() {
+                show = !show;
+              }),
+              onLongPress: () => Navigator.pushNamed(
+                  context, RoomDetailScreen.routeName,
+                  arguments: widget.room),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    widget.room.name,
+                    style: const TextStyle(fontSize: 20),
+                    textAlign: TextAlign.left,
+                  ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (anyThermometer && !show) ...{
+                        ...sensors.map((e) {
+                          if (e.type == SensorType.thermometer ||
+                              e.type == SensorType.hygrometer ||
+                              e.type == SensorType.hygroThermometer) {
+                            return BlocBuilder<Sensor, SensorCubitState>(
+                                builder: (context, state) {
+                                  return SensorWidget(
+                                    sensor: e,
+                                  );
+                                },
+                                bloc: e);
+                          }
+                          return const SizedBox(width: 0, height: 0);
+                        }),
+                      },
+                      IconButton(
+                        onPressed: () => setState(() {
+                          show = !show;
+                        }),
+                        icon: !show
+                            ? Icon(Icons.arrow_drop_down)
+                            : Icon(Icons.arrow_drop_up),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-          const SizedBox(height: 10),
-          if (devices.isEmpty) const Center(child: Text('No devices')),
-          if (devices.any((device) =>
-              device.type == DeviceType.light ||
-              device.type == DeviceType.outlet ||
-              device.type == DeviceType.fan))
+          // const SizedBox(height: 10),
+          if (widget.devices.isEmpty) const Center(child: Text('No devices')),
+          // if (devices.any((device) =>
+          //     device.type == DeviceType.light ||
+          //     device.type == DeviceType.outlet ||
+          //     device.type == DeviceType.fan))
+          if (show)
             Wrap(
               children: [
-                ...devices
+                ...sensors
+                    .where((sensor) =>
+                        sensor.type == SensorType.thermometer ||
+                        sensor.type == SensorType.hygrometer)
+                    .map(
+                      (e) => BlocBuilder<Sensor, SensorCubitState>(
+                        builder: (context, state) {
+                          return SensorWidget2(
+                            sensor: e,
+                          );
+                        },
+                        bloc: e,
+                      ),
+                    ),
+                ...widget.devices
                     .where((device) =>
                         device.type == DeviceType.light ||
                         device.type == DeviceType.outlet ||
@@ -93,7 +132,7 @@ class RoomCard2 extends StatelessWidget {
                         bloc: e,
                       ),
                     ),
-                ...devices
+                ...widget.devices
                     .where((device) => device.type == DeviceType.blind)
                     .map(
                       (e) => BlocBuilder<Device, DeviceCubitState>(

@@ -1,3 +1,4 @@
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,7 +24,8 @@ class _DualStateDeviceWidget extends State<DualStateDeviceWidget> {
     return BlocBuilder<Device, DeviceCubitState>(
         bloc: widget.device,
         builder: (context, state) {
-          IconData icon = Device.icon(widget.device.type);
+          IconData icon = Device.icon(widget.device.type,
+              isOn: widget.device.deviceState.isOn);
 
           return Padding(
             padding: const EdgeInsets.all(2.0),
@@ -53,19 +55,32 @@ class _DualStateDeviceWidget extends State<DualStateDeviceWidget> {
                               icon,
                               color: widget.device.deviceState.isOn
                                   ? widget.device.type == DeviceType.light
-                                      ? Colors.yellow
-                                      : Colors.green
+                                      ? Colors.yellow.harmonizeWith(
+                                          Theme.of(context).colorScheme.primary)
+                                      : Colors.green.harmonizeWith(
+                                          Theme.of(context).colorScheme.primary)
                                   : Theme.of(context)
                                       .colorScheme
                                       .onPrimaryContainer,
-                              size: 30,
+                              shadows: widget.device.type == DeviceType.light &&
+                                      widget.device.deviceState.isOn
+                                  ? [
+                                      BoxShadow(
+                                        color: Colors.black38,
+                                        blurRadius: 10,
+                                        spreadRadius: 1,
+                                        offset: Offset(1, 1),
+                                      )
+                                    ]
+                                  : null,
+                              size: 35,
                             ),
                           ],
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 5),
+                            horizontal: 15, vertical: 5),
                         child: Row(
                           children: [
                             FittedBox(

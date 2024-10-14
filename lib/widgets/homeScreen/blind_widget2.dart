@@ -76,38 +76,47 @@ class _DualStateDeviceWidget extends State<BlindWidget2> {
                       ],
                     ),
                     SizedBox(
-                      width: 50,
+                      width: 60,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          if (widget.device.deviceState.isRun)
-                            Expanded(
-                              child: InkWell(
-                                  onTap: () => widget.device
-                                      .setState(DeviceState.middle),
-                                  child: const Arrow(icon: Icons.pause)),
+                          // if (!widget.device.deviceState.isRun &&
+                          //     !widget.device.deviceState.isUp)
+                          Expanded(
+                            child: InkWell(
+                              onTap: widget.device.deviceState.isRun ||
+                                      widget.device.deviceState.isUp
+                                  ? null
+                                  : () =>
+                                      widget.device.setState(DeviceState.up),
+                              // hoverColor: Colors.transparent,
+                              child: const Arrow(icon: Icons.arrow_upward),
                             ),
-                          if (!widget.device.deviceState.isRun &&
-                              !widget.device.deviceState.isUp)
-                            Expanded(
-                              child: InkWell(
-                                onTap: () =>
-                                    widget.device.setState(DeviceState.up),
-                                // hoverColor: Colors.transparent,
-                                child: const Arrow(icon: Icons.arrow_upward),
-                              ),
-                            ),
+                          ),
+                          // if (widget.device.deviceState.isRun)
+                          Expanded(
+                            child: InkWell(
+                                onTap: !widget.device.deviceState.isRun
+                                    ? null
+                                    : () => widget.device
+                                        .setState(DeviceState.middle),
+                                child: const Arrow(icon: Icons.pause)),
+                          ),
                           // if (!widget.device.deviceState.isRun) Divider(),
-                          if (!widget.device.deviceState.isRun &&
-                              !widget.device.deviceState.isDown)
-                            Expanded(
-                              child: InkWell(
-                                onTap: () =>
-                                    widget.device.setState(DeviceState.down),
-                                // hoverColor: Colors.transparent,
-                                child: const Arrow(icon: Icons.arrow_downward),
-                              ),
+                          // if (!widget.device.deviceState.isRun &&
+                          //     !widget.device.deviceState.isDown)
+                          Expanded(
+                            child: InkWell(
+                              onTap: widget.device.deviceState.isRun ||
+                                      widget.device.deviceState.isDown
+                                  ? null
+                                  : () =>
+                                      widget.device.setState(DeviceState.down),
+                              // hoverColor: Colors.transparent,
+                              child: const Arrow(icon: Icons.arrow_downward),
                             ),
+                          ),
                         ],
                       ),
                     ),

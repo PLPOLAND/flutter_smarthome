@@ -94,16 +94,32 @@ abstract class Device extends Cubit<DeviceCubitState> {
 
   DeviceType get type => state.type;
 
-  static IconData icon(DeviceType type) {
+  static IconData icon(DeviceType type, {bool isOn = false}) {
     switch (type) {
       case DeviceType.light:
-        return Icons.lightbulb_outline;
+        if (isOn) {
+          return Icons.lightbulb;
+        } else {
+          return Icons.lightbulb_outline;
+        }
       case DeviceType.outlet:
-        return Icons.power_outlined;
+        if (isOn) {
+          return Icons.power;
+        } else {
+          return Icons.power_outlined;
+        }
       case DeviceType.blind:
-        return Icons.blinds_outlined;
+        if (isOn) {
+          return Icons.blinds;
+        } else {
+          return Icons.blinds_outlined;
+        }
       case DeviceType.fan:
-        return Icons.heat_pump_outlined;
+        if (isOn) {
+          return Icons.heat_pump;
+        } else {
+          return Icons.heat_pump_outlined;
+        }
       default:
         return Icons.error_outline;
     }

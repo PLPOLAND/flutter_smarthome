@@ -39,6 +39,7 @@ dependencies:
   equatable: ^2.0.5
   http: ^0.13.5
   package_info_plus: ^4.0.2
+  universal_io: ^2.2.2
   window_size:
     git:
       url: https://github.com/google/flutter-desktop-embedding

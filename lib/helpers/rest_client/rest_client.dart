@@ -79,6 +79,7 @@ class RESTClient {
               headers: {
                 'Content-Type': 'application/json',
               },
+
               sendTimeout: const Duration(milliseconds: 100),
               // receiveTimeout: Duration(milliseconds: 100),
             ));
@@ -91,7 +92,7 @@ class RESTClient {
           }
         }
       } on Exception catch (_) {
-        // print('Error 192.168.1.$i');
+        print('Error 192.168.1.$i');
       }
     }
   }
@@ -100,7 +101,7 @@ class RESTClient {
   /// returns [true] if server is online
   Future<bool> checkServer(String ip) async {
     try {
-      // print('Trying 192.168.1.$i');
+      print('Trying ip');
       var response = await _dio.get('http://$ip:8080/api/homeData',
           options: Options(
             headers: {

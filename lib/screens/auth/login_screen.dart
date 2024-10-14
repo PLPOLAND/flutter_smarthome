@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter_smarthome/models/bloc/lan_scanner/lan_scanner_bloc.dart';
@@ -80,6 +81,9 @@ class _LoginScreenState extends State<LoginScreen> {
           current.status == ScannnerStatus.done ||
           current.status == ScannnerStatus.found,
       builder: (context, state) {
+        if (kIsWeb) {
+          state.servers = ["192.168.1.4"];
+        }
         if (state.servers.isEmpty) {
           return Row(
             children: [
