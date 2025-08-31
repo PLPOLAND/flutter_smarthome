@@ -9,22 +9,24 @@ class Thermometer extends Sensor {
   /// @param name - name of the sensor
   /// @param temperature - temperature measured by the sensor  (in Celsius)
   /// @param adress - adress of the sensor, set by SmartHomeHost
-  Thermometer(
-      {int id = -1,
-      required int roomId,
-      int slaveId = -1,
-      int onSlaveId = -1,
-      required String name,
-      List<int> adress = const [0, 0, 0, 0, 0, 0, 0, 0],
-      double temperature = -127.0})
-      : super.state(ThermometerCubitState(
+  Thermometer({
+    int id = -1,
+    required int roomId,
+    int slaveId = -1,
+    int onSlaveId = -1,
+    required String name,
+    List<int> adress = const [0, 0, 0, 0, 0, 0, 0, 0],
+    double temperature = -127.0,
+    bool isFavorite = false,
+  }) : super.state(ThermometerCubitState(
             id: id,
             roomId: roomId,
             slaveId: slaveId,
             onSlaveId: onSlaveId,
             name: name,
             adress: adress,
-            temperature: temperature));
+            temperature: temperature,
+            isFavorite: isFavorite));
 
   set temperature(double temperature) {
     ThermometerCubitState st = state as ThermometerCubitState;
@@ -56,15 +58,16 @@ class Thermometer extends Sensor {
 }
 
 class ThermometerCubitState extends SensorCubitState {
-  const ThermometerCubitState(
-      {int id = -1,
-      required int roomId,
-      int slaveId = -1,
-      int onSlaveId = -1,
-      required String name,
-      List<int> adress = const [0, 0, 0, 0, 0, 0, 0, 0],
-      double temperature = -127.0})
-      : _temperature = temperature,
+  const ThermometerCubitState({
+    int id = -1,
+    required int roomId,
+    int slaveId = -1,
+    int onSlaveId = -1,
+    required String name,
+    List<int> adress = const [0, 0, 0, 0, 0, 0, 0, 0],
+    double temperature = -127.0,
+    bool isFavorite = false,
+  })  : _temperature = temperature,
         super(
           id,
           roomId,
@@ -73,6 +76,7 @@ class ThermometerCubitState extends SensorCubitState {
           name,
           SensorType.thermometer,
           adress,
+          isFavorite,
         );
 
   final double _temperature;
@@ -91,6 +95,7 @@ class ThermometerCubitState extends SensorCubitState {
     SensorType? type,
     List<int>? adress,
     double? temperature,
+    bool? isFavorite,
   }) {
     return ThermometerCubitState(
       id: id ?? this.id,
@@ -100,6 +105,7 @@ class ThermometerCubitState extends SensorCubitState {
       name: name ?? this.name,
       adress: adress ?? this.adress,
       temperature: temperature ?? this.temperature,
+      isFavorite: isFavorite ?? this.isFavorite,
     );
   }
 }

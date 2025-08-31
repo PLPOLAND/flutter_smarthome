@@ -1,12 +1,13 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_smarthome/helpers/rest_client/rest_client.dart';
 
 abstract class Sensor extends Cubit<SensorCubitState> {
   Sensor(int id, int roomId, int slaveId, int onSlaveId, String name,
-      SensorType type, List<int>? adress)
-      : super(SensorCubitState(
-            id, roomId, slaveId, onSlaveId, name, type, adress));
+      SensorType type, List<int>? adress, bool? isFavorite)
+      : super(SensorCubitState(id, roomId, slaveId, onSlaveId, name, type,
+            adress, isFavorite ?? false));
 
   Sensor.state(SensorCubitState state) : super(state);
 
@@ -38,6 +39,17 @@ abstract class Sensor extends Cubit<SensorCubitState> {
     emit(state.copyWith(adress: adress));
   }
 
+  void setIsFav(bool fav, {bool setOnlyLocal = false}) {
+    emit(state.copyWith(isFavorite: fav));
+    if (!setOnlyLocal) {
+      if (fav) {
+        RESTClient().addFavoriteDevice(id);
+      } else {
+        RESTClient().removeFavoriteDevice(id);
+      }
+    }
+  }
+
   int get id => state.id;
   int get roomId => state.roomId;
   int get slaveID => state.slaveId;
@@ -45,6 +57,7 @@ abstract class Sensor extends Cubit<SensorCubitState> {
   String get name => state.name;
   SensorType get type => state.type;
   List<int>? get adress => state.adress;
+  bool get isFavorite => state._isFavorite;
 
   static IconData icon(SensorType type) {
     switch (type) {
@@ -74,6 +87,7 @@ class SensorCubitState extends Equatable {
   final String _name;
   final List<int>? _adress;
   final SensorType _type;
+  final bool _isFavorite;
 
   const SensorCubitState(
     int id,
@@ -83,13 +97,15 @@ class SensorCubitState extends Equatable {
     String name,
     SensorType type,
     List<int>? adress,
+    bool isFavorite,
   )   : _id = id,
         _roomId = roomId,
         _slaveId = slaveId,
         _onSlaveId = onSlaveId,
         _name = name,
         _type = type,
-        _adress = adress;
+        _adress = adress,
+        _isFavorite = isFavorite;
 
   int get id => _id;
   int get roomId => _roomId;
@@ -98,15 +114,16 @@ class SensorCubitState extends Equatable {
   String get name => _name;
   get adress => _adress;
   SensorType get type => _type;
+  bool get isFavorite => _isFavorite;
 
   @override
   String toString() {
-    return 'SensorCubitState{id: $id, roomId: $roomId, slaveId: $slaveId, onSlaveId: $onSlaveId, name: $name, adress: $_adress, type: $type}';
+    return 'SensorCubitState{id: $id, roomId: $roomId, slaveId: $slaveId, onSlaveId: $onSlaveId, name: $name, adress: $_adress, type: $type, isFavorite: $_isFavorite}';
   }
 
   @override
   List<Object?> get props =>
-      [id, roomId, slaveId, onSlaveId, name, _adress, type];
+      [id, roomId, slaveId, onSlaveId, name, _adress, type, _isFavorite];
 
   SensorCubitState copyWith({
     int? id,
@@ -116,6 +133,7 @@ class SensorCubitState extends Equatable {
     String? name,
     List<int>? adress,
     SensorType? type,
+    bool? isFavorite,
   }) {
     return SensorCubitState(
       id ?? this.id,
@@ -125,6 +143,7 @@ class SensorCubitState extends Equatable {
       name ?? this.name,
       type ?? this.type,
       adress ?? _adress,
+      isFavorite ?? _isFavorite,
     );
   }
 }

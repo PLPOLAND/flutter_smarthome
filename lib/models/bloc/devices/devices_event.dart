@@ -15,6 +15,8 @@ class LoadDevices extends DevicesEvent {}
 ///Load demo data
 class LoadDemo extends DevicesEvent {}
 
+class UpdateFavoriteDevices extends DevicesEvent {}
+
 ///Update list of devices
 class UpdateDevices extends DevicesEvent {}
 

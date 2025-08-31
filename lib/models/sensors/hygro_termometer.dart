@@ -12,6 +12,7 @@ class HygroThermometer extends Sensor {
     List<int> adress = const [0, 0, 0, 0, 0, 0, 0, 0],
     double temperature = -127.0,
     int humidity = 0,
+    bool isFavorite = false,
   }) : super.state(HygroThermometerCubitState(
           id: id,
           roomId: roomId,
@@ -21,6 +22,7 @@ class HygroThermometer extends Sensor {
           adress: adress,
           temperature: temperature,
           humidity: humidity,
+          isFavorite: isFavorite,
         ));
 
   set temperature(double temperature) {
@@ -75,6 +77,7 @@ class HygroThermometerCubitState extends SensorCubitState {
     List<int> adress = const [0, 0, 0, 0, 0, 0, 0, 0],
     double temperature = -127.0,
     int humidity = 0,
+    bool isFavorite = false,
   })  : _humidity = humidity,
         _temperature = temperature,
         super(
@@ -85,6 +88,7 @@ class HygroThermometerCubitState extends SensorCubitState {
           name,
           SensorType.hygroThermometer,
           adress,
+          isFavorite,
         );
 
   double get temperature => _temperature;
@@ -106,6 +110,7 @@ class HygroThermometerCubitState extends SensorCubitState {
     List<int>? adress,
     double? temperature,
     int? humidity,
+    bool? isFavorite,
   }) {
     return HygroThermometerCubitState(
       id: id ?? this.id,
@@ -116,6 +121,7 @@ class HygroThermometerCubitState extends SensorCubitState {
       adress: adress ?? this.adress,
       temperature: temperature ?? this.temperature,
       humidity: humidity ?? this.humidity,
+      isFavorite: isFavorite ?? this.isFavorite,
     );
   }
 }

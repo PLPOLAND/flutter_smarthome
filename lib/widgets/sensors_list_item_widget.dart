@@ -12,10 +12,15 @@ import '../models/sensors/sensor.dart';
 import '../models/sensors/thermometer.dart';
 import '../models/sensors/twilight.dart';
 
-class SensorsListItemWidget extends StatelessWidget {
+class SensorsListItemWidget extends StatefulWidget {
   final Sensor sensor;
   const SensorsListItemWidget({required this.sensor, super.key});
 
+  @override
+  State<SensorsListItemWidget> createState() => _SensorsListItemWidgetState();
+}
+
+class _SensorsListItemWidgetState extends State<SensorsListItemWidget> {
   @override
   Widget build(BuildContext context) {
     final RoomsRepository rooms = Provider.of<RoomsRepository>(context);
@@ -27,17 +32,17 @@ class SensorsListItemWidget extends StatelessWidget {
       borderRadius: BorderRadius.circular(5),
       gradient: LinearGradient(colors: [
         Theme.of(context).colorScheme.primary,
-        Color.alphaBlend(Colors.white.withAlpha(0x55),
+        Color.alphaBlend(Colors.white.withAlpha(0x25),
             Theme.of(context).colorScheme.primary),
       ]),
     );
 
-    switch (sensor.type) {
+    switch (widget.sensor.type) {
       case SensorType.thermometer:
         sensorIcon = Icon(Icons.thermostat,
             color: Theme.of(context).colorScheme.onPrimary);
         sensorTrailing =
-            Text("${(sensor as Thermometer).temperatureToString()} °C",
+            Text("${(widget.sensor as Thermometer).temperatureToString()} °C",
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.onPrimary,
                   fontSize: Theme.of(context).textTheme.titleMedium?.fontSize,
@@ -46,25 +51,26 @@ class SensorsListItemWidget extends StatelessWidget {
       case SensorType.hygrometer:
         sensorIcon = Icon(Icons.water_drop,
             color: Theme.of(context).colorScheme.onPrimary);
-        sensorTrailing = Text("${(sensor as Hygrometer).humidityToString()} %",
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onPrimary,
-              fontSize: Theme.of(context).textTheme.titleMedium?.fontSize,
-            ));
+        sensorTrailing =
+            Text("${(widget.sensor as Hygrometer).humidityToString()} %",
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  fontSize: Theme.of(context).textTheme.titleMedium?.fontSize,
+                ));
         break;
       case SensorType.hygroThermometer:
         sensorIcon = Icon(Icons.dew_point,
             color: Theme.of(context).colorScheme.onPrimary);
         sensorTrailing = Text(
             //TODO implement
-            "${(sensor as HygroThermometer).temperatureToString()} °C \t ${(sensor as HygroThermometer).humidity} %",
+            "${(widget.sensor as HygroThermometer).temperatureToString()} °C \t ${(widget.sensor as HygroThermometer).humidity} %",
             style: TextStyle(
               color: Theme.of(context).colorScheme.onPrimary,
               fontSize: Theme.of(context).textTheme.titleMedium?.fontSize,
             ));
         break;
       case SensorType.motion:
-        var motion = sensor as Motion;
+        var motion = widget.sensor as Motion;
         sensorIcon =
             Icon(Icons.speed, color: Theme.of(context).colorScheme.onPrimary);
         sensorTrailing = const Text("");
@@ -76,7 +82,7 @@ class SensorsListItemWidget extends StatelessWidget {
         }
         break;
       case SensorType.twilight:
-        var twilight = sensor as Twilight;
+        var twilight = widget.sensor as Twilight;
         sensorIcon = Icon(Icons.brightness_4,
             color: Theme.of(context).colorScheme.onPrimary);
         sensorTrailing = Text("${twilight.valueToString()} %",
@@ -96,7 +102,7 @@ class SensorsListItemWidget extends StatelessWidget {
         sensorIcon = Icon(Icons.touch_app,
             color: Theme.of(context).colorScheme.onPrimary);
         sensorTrailing = Text(
-          "Functions: ${(sensor as Button).localFunctions.length}",
+          "Functions: ${(widget.sensor as Button).localFunctions.length}",
           style: TextStyle(
             color: Theme.of(context).colorScheme.onPrimary,
             fontSize: Theme.of(context).textTheme.titleMedium?.fontSize,
@@ -117,14 +123,14 @@ class SensorsListItemWidget extends StatelessWidget {
         IconButton(
           onPressed: () => Navigator.of(context).pushNamed(
             AddEditSensorScreen.routeName,
-            arguments: {'sensorId': sensor.id},
+            arguments: {'sensorId': widget.sensor.id},
           ),
           icon: const Icon(Icons.edit),
           color: Theme.of(context).colorScheme.onPrimary,
         ),
         IconButton(
           onPressed: () {
-            context.read<SensorsBloc>().add(RemoveSensor(sensor));
+            context.read<SensorsBloc>().add(RemoveSensor(widget.sensor));
           },
           icon: const Icon(Icons.delete),
           color: Theme.of(context).colorScheme.onPrimary,
@@ -159,14 +165,31 @@ class SensorsListItemWidget extends StatelessWidget {
             ],
           ),
           title: Text(
-            sensor.name,
+            widget.sensor.name,
             style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
           ),
           subtitle: Text(
-            rooms.getRoomById(sensor.roomId).name,
+            rooms.getRoomById(widget.sensor.roomId).name,
             style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
           ),
-          trailing: sensorTrailing,
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              sensorTrailing,
+              IconButton(
+                  onPressed: () {
+                    setState(() {
+                      widget.sensor.setIsFav(!widget.sensor.isFavorite,
+                          setOnlyLocal: false);
+                      context.read<SensorsBloc>().add(UpdateFavoriteSensors());
+                    });
+                  },
+                  icon: Icon(
+                    widget.sensor.isFavorite ? Icons.star : Icons.star_border,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  )),
+            ],
+          ),
         ),
       ),
     );

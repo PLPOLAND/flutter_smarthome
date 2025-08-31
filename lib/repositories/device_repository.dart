@@ -47,9 +47,7 @@ class DevicesRepository {
   Future<void> loadDevices() async {
     _devices.clear();
     _devices.addAll(await client.getDevices());
-    for (var dev in _devices) {
-      dev.isFav = true;
-    }
+    await loadFavorite();
   }
 
   Future<Device> addDevice(Device device) async {
@@ -145,12 +143,12 @@ class DevicesRepository {
   }
 
   Future<void> loadFavorite() async {
-    String favouriteDevices = await client.getFavoriteRooms();
+    String favouriteDevices = await client.getFavoriteDevices();
     var favouriteRoomsList = favouriteDevices.split(",");
     log(favouriteRoomsList.toString());
     for (Device device in _devices) {
       if (favouriteRoomsList.contains(device.id.toString())) {
-        device.isFav = true;
+        device.setIsFav(true, setOnlyLocal: true);
       }
     }
   }

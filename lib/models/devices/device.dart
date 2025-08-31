@@ -79,8 +79,15 @@ abstract class Device extends Cubit<DeviceCubitState> {
     emit(state.copyWith(type: type));
   }
 
-  set isFav(bool fav) {
+  void setIsFav(bool fav, {bool setOnlyLocal = false}) {
     emit(state.copyWith(fav: fav));
+    if (!setOnlyLocal) {
+      if (fav) {
+        RESTClient().addFavoriteDevice(id);
+      } else {
+        RESTClient().removeFavoriteDevice(id);
+      }
+    }
   }
 
   int get id => state.id;

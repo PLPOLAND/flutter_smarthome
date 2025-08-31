@@ -40,6 +40,14 @@ class SensorsBloc extends Bloc<SensorsEvent, SensorsState> {
         sensors: _sensorsRepository.sensors,
       ));
     });
+    on<UpdateFavoriteSensors>((event, emit) async {
+      log('Updating favorite sensors');
+      emit(state.copyWith(status: SensorsStatus.updating));
+      emit(state.copyWith(
+        status: SensorsStatus.loaded,
+        sensors: _sensorsRepository.sensors,
+      ));
+    });
     on<UpdateSensors>((event, emit) async {
       log('Updating list of sensors');
       emit(state.copyWith(status: SensorsStatus.updating));

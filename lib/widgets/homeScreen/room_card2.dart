@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_smarthome/models/devices/blind.dart';
 import 'package:flutter_smarthome/models/devices/device.dart';
+import 'package:flutter_smarthome/models/devices/light.dart';
 import 'package:flutter_smarthome/models/sensors/sensor.dart';
 import 'package:flutter_smarthome/screens/room_detail_page.dart';
 import 'package:flutter_smarthome/widgets/homeScreen/blind_widget2.dart';
 import 'package:flutter_smarthome/widgets/homeScreen/dual_state_device_widget.dart';
+import 'package:flutter_smarthome/widgets/homeScreen/dual_state_multi_device_widget.dart';
 import 'package:flutter_smarthome/widgets/homeScreen/sensor_widget2.dart';
 
 import '../../models/room.dart';
@@ -15,7 +17,14 @@ import 'sensor_widget.dart';
 class RoomCard2 extends StatefulWidget {
   final Room room;
   final List<Device> devices;
-  const RoomCard2({required this.room, required this.devices, super.key});
+  final List<Sensor> sensors;
+  RoomCard2({
+    required this.room,
+    List<Device>? devices,
+    super.key,
+    List<Sensor>? sensors,
+  })  : devices = devices ?? [],
+        sensors = sensors ?? [];
 
   @override
   State<RoomCard2> createState() => _RoomCard2State();
@@ -97,7 +106,7 @@ class _RoomCard2State extends State<RoomCard2> {
             ),
           ),
           // const SizedBox(height: 10),
-          if (widget.devices.isEmpty) const Center(child: Text('No devices')),
+          // if (widget.devices.isEmpty) const Center(child: Text('No devices')),
           // if (devices.any((device) =>
           //     device.type == DeviceType.light ||
           //     device.type == DeviceType.outlet ||
@@ -105,16 +114,29 @@ class _RoomCard2State extends State<RoomCard2> {
           if (show)
             Wrap(
               children: [
-                ...sensors
+                ...widget.sensors
                     .where((sensor) =>
                         sensor.type == SensorType.thermometer ||
                         sensor.type == SensorType.hygrometer)
                     .map(
                       (e) => BlocBuilder<Sensor, SensorCubitState>(
                         builder: (context, state) {
-                          return SensorWidget2(
-                            sensor: e,
-                          );
+                          return e.isFavorite
+                              ? SensorWidget2(
+                                  sensor: e,
+                                )
+                              : Container();
+                        },
+                        bloc: e,
+                      ),
+                    ),
+                _createFullLightWidget(widget.devices),
+                ...widget.devices
+                    .where((device) => device.type == DeviceType.blind)
+                    .map(
+                      (e) => BlocBuilder<Device, DeviceCubitState>(
+                        builder: (context, state) {
+                          return BlindWidget2(device: e as Blind);
                         },
                         bloc: e,
                       ),
@@ -128,16 +150,6 @@ class _RoomCard2State extends State<RoomCard2> {
                       (e) => BlocBuilder<Device, DeviceCubitState>(
                         builder: (context, state) {
                           return DualStateDeviceWidget(device: e);
-                        },
-                        bloc: e,
-                      ),
-                    ),
-                ...widget.devices
-                    .where((device) => device.type == DeviceType.blind)
-                    .map(
-                      (e) => BlocBuilder<Device, DeviceCubitState>(
-                        builder: (context, state) {
-                          return BlindWidget2(device: e as Blind);
                         },
                         bloc: e,
                       ),
@@ -199,5 +211,13 @@ class _RoomCard2State extends State<RoomCard2> {
         ],
       ),
     );
+  }
+
+  Widget _createFullLightWidget(List<Device> devices) {
+    final List<Light> lights = devices.whereType<Light>().toList();
+
+    return lights.isEmpty
+        ? Container()
+        : DualStateMultiDeviceWidget(devices: lights);
   }
 }

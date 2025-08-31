@@ -38,6 +38,12 @@ class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
         devices: _devicesRepository.devices,
       ));
     });
+    on<UpdateFavoriteDevices>((event, emit) async {
+      emit(state.copyWith(status: DevicesStatus.updating));
+      emit(state.copyWith(
+        status: DevicesStatus.loaded,
+      ));
+    });
     on<UpdateDevices>((event, emit) async {
       log('Updating list of devices');
       emit(state.copyWith(status: DevicesStatus.updating));

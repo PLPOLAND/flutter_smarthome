@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter_smarthome/helpers/rest_client/rest_client.dart';
+import 'package:flutter_smarthome/models/devices/device.dart';
 import 'package:flutter_smarthome/models/sensors/hygro_termometer.dart';
 import 'package:flutter_smarthome/models/sensors/motion.dart';
 import 'package:flutter_smarthome/models/sensors/thermometer.dart';
@@ -59,6 +60,7 @@ class SensorsRepository {
   Future<void> loadSensors() async {
     _sensors.clear();
     _sensors.addAll(await client.getSensors());
+    await loadFavorite();
   }
 
   List<Sensor> get sensors => [..._sensors];
@@ -177,5 +179,16 @@ class SensorsRepository {
       }
     }
     return Future.delayed(const Duration(seconds: 1));
+  }
+
+  loadFavorite() async {
+    String favouriteDevices = await client.getFavoriteDevices();
+    var favouriteRoomsList = favouriteDevices.split(",");
+    log(favouriteRoomsList.toString());
+    for (Sensor sensor in _sensors) {
+      if (favouriteRoomsList.contains(sensor.id.toString())) {
+        sensor.setIsFav(true, setOnlyLocal: true);
+      }
+    }
   }
 }

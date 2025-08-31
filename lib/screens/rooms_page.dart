@@ -16,49 +16,34 @@ class RoomsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Room> rooms = context.read<RoomsRepository>().rooms;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Rooms'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              Navigator.of(context).pushNamed('/rooms/add-room');
-            },
-          ),
-        ],
-      ),
-      body: BlocBuilder<RoomsBloc, RoomsState>(
-          bloc: context.read<RoomsBloc>(),
-          builder: (context, state) {
-            if (state.status.isLoaded || state.status.isDemo) {
-              return GridView.builder(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                itemCount: rooms.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount:
-                      MediaQuery.of(context).orientation == Orientation.portrait
-                          ? 2
-                          : 3,
-                  childAspectRatio: 2 / 1,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                ),
-                itemBuilder: (context, index) {
-                  return BlocBuilder(
-                    bloc: rooms[index],
-                    builder: (context, state) {
-                      return RoomWidget(room: rooms[index]);
-                    },
-                  );
-                },
-              );
-            } else {
-              return const Center(child: CircularProgressIndicator());
-            }
-          }),
-      drawer: const MainDrawer(),
-    );
+    return BlocBuilder<RoomsBloc, RoomsState>(
+        bloc: context.read<RoomsBloc>(),
+        builder: (context, state) {
+          if (state.status.isLoaded || state.status.isDemo) {
+            return GridView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              itemCount: rooms.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount:
+                    MediaQuery.of(context).orientation == Orientation.portrait
+                        ? 2
+                        : 3,
+                childAspectRatio: 2 / 1,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
+              itemBuilder: (context, index) {
+                return BlocBuilder(
+                  bloc: rooms[index],
+                  builder: (context, state) {
+                    return RoomWidget(room: rooms[index]);
+                  },
+                );
+              },
+            );
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        });
   }
 }

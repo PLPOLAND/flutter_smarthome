@@ -11,53 +11,33 @@ class DevicesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Devices'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              Navigator.of(context).pushNamed('/devices/add-edit-device');
-            },
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).pushNamed('/devices/add-edit-device');
-        },
-        child: const Icon(Icons.add),
-      ),
-      drawer: const MainDrawer(),
-      body: BlocConsumer<DevicesBloc, DevicesState>(
-        listener: ((context, state) {
-          if (state.status == DevicesStatus.error) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text("Error"),
-                backgroundColor: Colors.red,
-              ),
-            );
-          }
-        }),
-        builder: (context, state) {
-          return ListView.builder(
-            itemBuilder: (context, index) {
-              if (index == state.devices.length) {
-                return const SizedBox(
-                  height: 80,
-                );
-              }
-              return BlocBuilder<Device, DeviceCubitState>(
-                  bloc: state.devices[index],
-                  builder: (context, locState) =>
-                      DevicesListItemWidget(state.devices[index]));
-            },
-            itemCount: state.devices.length + 1,
+    return BlocConsumer<DevicesBloc, DevicesState>(
+      listener: ((context, state) {
+        if (state.status == DevicesStatus.error) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Error"),
+              backgroundColor: Colors.red,
+            ),
           );
-        },
-      ),
+        }
+      }),
+      builder: (context, state) {
+        return ListView.builder(
+          itemBuilder: (context, index) {
+            if (index == state.devices.length) {
+              return const SizedBox(
+                height: 80,
+              );
+            }
+            return BlocBuilder<Device, DeviceCubitState>(
+                bloc: state.devices[index],
+                builder: (context, locState) =>
+                    DevicesListItemWidget(state.devices[index]));
+          },
+          itemCount: state.devices.length + 1,
+        );
+      },
     );
   }
 }

@@ -105,9 +105,10 @@ class ButtonCubitState extends SensorCubitState {
     required SensorType type,
     required int onSlavePin,
     required List<ButtonLocalClickFunction> localFunctions,
+    bool isFavorite = false,
   })  : _onSlavePin = onSlavePin,
         _localFunctions = localFunctions,
-        super(id, roomId, slaveId, onSlaveId, name, type, null);
+        super(id, roomId, slaveId, onSlaveId, name, type, null, isFavorite);
 
   int get onSlavePin => _onSlavePin;
   List<ButtonLocalClickFunction> get localFunctions => _localFunctions;
@@ -135,6 +136,7 @@ class ButtonCubitState extends SensorCubitState {
     SensorType? type,
     int? onSlavePin,
     List<ButtonLocalClickFunction>? localFunctions,
+    bool? isFavorite,
   }) {
     return ButtonCubitState(
       id: id ?? this.id,
@@ -145,6 +147,7 @@ class ButtonCubitState extends SensorCubitState {
       type: type ?? this.type,
       onSlavePin: onSlavePin ?? this.onSlavePin,
       localFunctions: localFunctions ?? this.localFunctions,
+      isFavorite: isFavorite ?? this.isFavorite,
     );
   }
 }

@@ -371,6 +371,58 @@ class RESTClient {
     }
   }
 
+  Future<String> addFavoriteDevice(int deviceID) async {
+    if (!isIPSet()) {
+      throw Exception('IP not set');
+    }
+    var response = await _dio.post(
+      'http://$_ip:8080/api/addFavoriteDevice',
+      data: {
+        'token': _userData?.token,
+        'deviceId': deviceID,
+      },
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
+    RestResponse res = RestResponse(
+      statusCode: response.statusCode ?? 0,
+      responseBody: response.data ?? {},
+    );
+    // log(res.toString());
+    if (res.isOk) {
+      return res.body;
+    } else if (res.isApiError) {
+      throw Exception(res.error);
+    } else {
+      throw Exception('Unknown error, status code: ${res.statusCode}');
+    }
+  }
+
+  Future<String> removeFavoriteDevice(int roomID) async {
+    if (!isIPSet()) {
+      throw Exception('IP not set');
+    }
+    var response = await _dio.post(
+      'http://$_ip:8080/api/removeFavoriteDevice',
+      data: {
+        'token': _userData?.token,
+        'deviceId': roomID,
+      },
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
+    RestResponse res = RestResponse(
+      statusCode: response.statusCode ?? 0,
+      responseBody: response.data ?? {},
+    );
+    // log(res.toString());
+    if (res.isOk) {
+      return res.body;
+    } else if (res.isApiError) {
+      throw Exception(res.error);
+    } else {
+      throw Exception('Unknown error, status code: ${res.statusCode}');
+    }
+  }
+
   Future<String> removeFavoriteRoom(int roomID) async {
     if (!isIPSet()) {
       throw Exception('IP not set');

@@ -64,16 +64,17 @@ class Hygrometer extends Sensor {
 class HygrometerCubitState extends SensorCubitState {
   late final int _humidity;
 
-  HygrometerCubitState(
-      {int id = -1,
-      required int roomId,
-      int slaveId = -1,
-      int onSlaveId = -1,
-      required String name,
-      List<int> adress = const [0, 0, 0, 0, 0, 0, 0, 0],
-      int humidity = 0})
-      : super(id, roomId, slaveId, onSlaveId, name, SensorType.hygrometer,
-            adress) {
+  HygrometerCubitState({
+    int id = -1,
+    required int roomId,
+    int slaveId = -1,
+    int onSlaveId = -1,
+    required String name,
+    List<int> adress = const [0, 0, 0, 0, 0, 0, 0, 0],
+    int humidity = 0,
+    bool isFavorite = false,
+  }) : super(id, roomId, slaveId, onSlaveId, name, SensorType.hygrometer,
+            adress, isFavorite) {
     if (humidity < 0 || humidity > 100) {
       throw Exception(
           "Invalid higro: {$humidity}"); //TODO make custom exception
@@ -103,7 +104,8 @@ class HygrometerCubitState extends SensorCubitState {
       String? name,
       SensorType? type,
       List<int>? adress,
-      int? humidity}) {
+      int? humidity,
+      bool? isFavorite}) {
     return HygrometerCubitState(
         id: id ?? this.id,
         roomId: roomId ?? this.roomId,

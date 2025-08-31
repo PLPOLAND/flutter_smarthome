@@ -17,6 +17,7 @@ class Motion extends Sensor {
     int onSlavePin = -1,
     required String name,
     bool isMotionDetected = false,
+    bool isFavorite = false,
   }) : super.state(MotionCubitState(
           id: id,
           roomId: roomId,
@@ -25,6 +26,7 @@ class Motion extends Sensor {
           name: name,
           isMotionDetected: isMotionDetected,
           onSlavePin: onSlavePin,
+          isFavorite: isFavorite,
         ));
 
   set motionDetected(bool isMotionDetected) {
@@ -63,9 +65,11 @@ class MotionCubitState extends SensorCubitState {
     onSlavePin = -1,
     required String name,
     bool isMotionDetected = false,
+    bool isFavorite = false,
   })  : _onSlavePin = onSlavePin,
         _isMotionDetected = isMotionDetected,
-        super(id, roomId, slaveId, onSlaveId, name, SensorType.motion, null);
+        super(id, roomId, slaveId, onSlaveId, name, SensorType.motion, null,
+            isFavorite);
 
   bool get isMotionDetected => _isMotionDetected;
   int get onSlavePin => _onSlavePin;
@@ -93,6 +97,7 @@ class MotionCubitState extends SensorCubitState {
     SensorType? type,
     bool? isMotionDetected,
     int? onSlavePin,
+    bool? isFavorite,
   }) {
     return MotionCubitState(
       id: id ?? this.id,
@@ -102,6 +107,7 @@ class MotionCubitState extends SensorCubitState {
       name: name ?? this.name,
       isMotionDetected: isMotionDetected ?? this.isMotionDetected,
       onSlavePin: onSlavePin ?? this.onSlavePin,
+      isFavorite: isFavorite ?? this.isFavorite,
     );
   }
 }

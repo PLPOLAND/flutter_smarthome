@@ -18,6 +18,7 @@ class Twilight extends Sensor {
     required String name,
     double value = 0,
     required dayValue,
+    bool isFavorite = false,
   }) : super.state(TwilightCubitState(
             id: id,
             roomId: roomId,
@@ -26,7 +27,8 @@ class Twilight extends Sensor {
             onSlaveId: onSlaveId,
             name: name,
             value: value,
-            dayValue: dayValue));
+            dayValue: dayValue,
+            isFavorite: isFavorite));
 
   set value(double value) {
     if (value < 0) {
@@ -73,19 +75,21 @@ class TwilightCubitState extends SensorCubitState {
   final int _onSlavePin;
   final double _dayValue;
 
-  const TwilightCubitState(
-      {int id = -1,
-      required int roomId,
-      int slaveId = -1,
-      int onSlaveId = -1,
-      required onSlavePin,
-      required String name,
-      double value = 0,
-      required dayValue})
-      : _dayValue = dayValue,
+  const TwilightCubitState({
+    int id = -1,
+    required int roomId,
+    int slaveId = -1,
+    int onSlaveId = -1,
+    required onSlavePin,
+    required String name,
+    double value = 0,
+    required dayValue,
+    bool isFavorite = false,
+  })  : _dayValue = dayValue,
         _onSlavePin = onSlavePin,
         _value = value,
-        super(id, roomId, slaveId, onSlaveId, name, SensorType.twilight, null);
+        super(id, roomId, slaveId, onSlaveId, name, SensorType.twilight, null,
+            isFavorite);
 
   bool get isDay => _value >= _dayValue;
   double get value => _value;
@@ -116,6 +120,7 @@ class TwilightCubitState extends SensorCubitState {
     double? value,
     int? onSlavePin,
     double? dayValue,
+    bool? isFavorite,
   }) {
     return TwilightCubitState(
       id: id ?? this.id,
@@ -126,6 +131,7 @@ class TwilightCubitState extends SensorCubitState {
       value: value ?? this.value,
       onSlavePin: onSlavePin ?? this.onSlavePin,
       dayValue: dayValue ?? this.dayValue,
+      isFavorite: isFavorite ?? this.isFavorite,
     );
   }
 }

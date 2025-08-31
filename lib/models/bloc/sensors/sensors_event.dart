@@ -18,6 +18,8 @@ class LoadDemoSensors extends SensorsEvent {}
 ///Update list of sensors
 class UpdateSensors extends SensorsEvent {}
 
+class UpdateFavoriteSensors extends SensorsEvent {}
+
 ///Update state of sensors
 class UpdateStateOfSensors extends SensorsEvent {}
 
